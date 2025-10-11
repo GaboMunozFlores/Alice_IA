@@ -1,11 +1,89 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>Iniciar Sesión</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+</head>
+
+<body class="is-preload">
+    <div id="page-wrapper">
+
+        <div id="header-wrapper">
+            <div id="header" class="container">
+
+                <h1 id="logo"><a href="index.html">Telephasic</a></h1>
+
+                <nav id="nav">
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li class="break"><a href="registro.html">Crear Cuenta</a></li>
+                        <li class="current"><a href="login.html">Iniciar Sesión</a></li>
+                    </ul>
+                </nav>
+
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="container" id="login-main-content">
+
+                <section class="col-6 col-12-narrower estilo_login">
+
+                    <header>
+                        <h2 class="titulo">Iniciar sesión o crear cuenta</h2>
+                    </header>
+
+                    <form method="post" action="/ruta-de-tu-servidor-para-login">
+                        <div class="row gtr-50">
+
+                            <div class="col-12 etiqueta-texto">
+                                <label for="id-input-amazon">Ingresa el número de celular o el correo
+                                    electrónico</label>
+                            </div>
+
+                            <div class="col-12">
+                                <input name="email_or_phone" id="id-input-amazon" type="text" required />
+                            </div>
+
+                            <div class="col-12">
+                                <ul class="actions">
+                                    <li><input type="submit" value="Continuar" class="button continuar" /></li>
+                                </ul>
+                            </div>
+
+                            <div class="col-12 texto-legal">
+                                <p>Al continuar, aceptas las <a href="#">Condiciones de uso</a> y el <a href="#">Aviso
+                                        de privacidad</a> de la compañía.</p>
+                            </div>
+
+                            <div class="col-12 enlace-ayuda">
+                                <a href="#">¿Necesitas ayuda?</a>
+                            </div>
+                            
+                        </div>
+                    </form>
+
+                </section>
+            </div>
+        </div>
+
 </body>
-</html>
+<footer>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.dropotron.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+</footer>
