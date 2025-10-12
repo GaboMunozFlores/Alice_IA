@@ -1,11 +1,35 @@
 @import url("fontawesome-all.min.css");
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300italic,400,400italic,600");
 
+
+
 /*
 	Telephasic by Pixelarity
 	pixelarity.com | hello@pixelarity.com
 	License: pixelarity.com/license
 */
+#LogoPrincipal {
+    width: min(550px, 55vw);
+    height: min(550px, 55vw);
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    margin: -110px auto 20px auto; 
+    opacity: 0.2;
+}
+
+.btn-Inicio,.btn-Registro {
+	display: inline-block;
+	color: inherit;
+	background: none;
+	text-decoration: none;
+	border: solid 1px #c2c7cc;
+	border-radius: 0.35em;
+	padding: 0.8em 2em 0.8em 2em;
+	cursor: pointer;
+	outline: 0;
+}
 
 html,
 body,
@@ -332,7 +356,8 @@ header {
 
 header>p {
 	display: block;
-	color: #3ec9c9;
+	/*color: #3ec9c9;
+	*/
 	padding: 0.75em 0 1em 0;
 	font-size: 1.5em;
 	line-height: 1.5em;
@@ -2106,7 +2131,7 @@ table.default tfoot {
 	border-top: solid 1px #D2D7DC;
 }
 
-/* Button */
+ Button 
 
 input[type="button"],
 input[type="submit"],
@@ -2119,13 +2144,14 @@ button,
 	transition: color 0.25s ease-in-out, border-color 0.25s ease-in-out, background-color 0.25s ease-in-out;
 	display: inline-block;
 	color: inherit;
-	background: none;
+	background: #1F538F;
 	text-decoration: none;
 	border: solid 1px #c2c7cc;
-	border-radius: 0.35em;
+	border-radius: 0.80em;
 	padding: 0.8em 2em 0.8em 2em;
 	cursor: pointer;
 	outline: 0;
+	/* aqui*/ 
 }
 
 input[type="button"]:hover,
@@ -2134,7 +2160,7 @@ input[type="reset"]:hover,
 button:hover,
 .button:hover {
 	color: #3ec9c9;
-	border-color: rgba(243, 88, 88, 0.5);
+	border-color:#42474c;
 }
 
 /* Icons */
@@ -2358,6 +2384,7 @@ estilos del login
 	background: #f6f8fb url("images/image-wrapper.svg");
 }
 
+/*
 #header-wrapper {
 	position: relative;
 	padding: 4em 0 2em 0;
@@ -2370,6 +2397,10 @@ estilos del login
 	background-size: 100% 620%;
 	background-size: 128px 128px, 100% 620%, auto;
 	background-repeat: repeat, no-repeat, no-repeat;
+}
+*/
+#header-wrapper {
+	background-color: #80B5D1;
 }
 
 .homepage #header-wrapper {
@@ -2434,6 +2465,11 @@ estilos del login
 	width: 100%;
 	height: 4em;
 	line-height: 4em;
+	background-color: #80B5D1;
+;
+	color: #ffffff;
+	/*aqui fue
+	*/
 }
 
 #nav>ul {
@@ -3038,7 +3074,7 @@ estilos del login
 		margin-top: 0;
 	}
 
-	/* Hero */
+	/* Hero 
 
 	#hero {
 		padding: 2.5em 2em 0 2em;
@@ -3047,6 +3083,7 @@ estilos del login
 	#hero header {
 		margin: 0 0 1.25em 0;
 	}
+		*/
 
 	#hero header h2 {
 		font-size: 1.5em;
@@ -3357,59 +3394,67 @@ estilos del login
 		margin-bottom: 1em;
 	}
 
-	
+
 
 }
 
 /* Estilos para el Botón de Google */
 
 #btn-google {
-    /* Flexbox y Alineación (flex, items-center, justify-center) */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    /* Dimensiones y Relleno (w-full, py-2, px-4) */
-    width: 100%;
-    padding: 8px 16px; /* py-2 (8px) y px-4 (16px) */
-    
-    /* Apariencia y Tipografía (bg-white, text-gray-700, font-medium) */
-    background-color: #FFFFFF;
-    color: #4B5563; /* Tailwind gray-700 */
-    font-weight: 500;
-    
-    /* Borde y Esquinas (border, border-gray-300, rounded-lg) */
-    border: 1px solid #D1D5DB; /* Tailwind gray-300 */
-    border-radius: 0.5rem; /* rounded-lg */
-    
-    /* Sombra (shadow-md) */
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-    
-    /* Transición para efectos suaves (transition duration-150 ease-in-out) */
-    transition: all 150ms ease-in-out;
-    
-    /* Comportamiento del cursor */
-    cursor: pointer;
+	/* Flexbox y Alineación (flex, items-center, justify-center) */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	/* Dimensiones y Relleno (w-full, py-2, px-4) */
+	width: 100%;
+	padding: 8px 16px;
+	/* py-2 (8px) y px-4 (16px) */
+
+	/* Apariencia y Tipografía (bg-white, text-gray-700, font-medium) */
+	background-color: #FFFFFF;
+	color: #4B5563;
+	/* Tailwind gray-700 */
+	font-weight: 500;
+
+	/* Borde y Esquinas (border, border-gray-300, rounded-lg) */
+	border: 1px solid #D1D5DB;
+	/* Tailwind gray-300 */
+	border-radius: 0.5rem;
+	/* rounded-lg */
+
+	/* Sombra (shadow-md) */
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+
+	/* Transición para efectos suaves (transition duration-150 ease-in-out) */
+	transition: all 150ms ease-in-out;
+
+	/* Comportamiento del cursor */
+	cursor: pointer;
 }
 
 /* Estado al pasar el ratón (hover:bg-gray-50) */
 #btn-google:hover {
-    background-color: #F9FAFB; /* Tailwind gray-50 */
+	background-color: #F9FAFB;
+	/* Tailwind gray-50 */
 }
 
 /* Estado de Enfoque (focus:outline-none, focus:ring-2, focus:ring-offset-2, focus:ring-gray-300) */
 #btn-google:focus {
-    outline: none;
-    /* Crea el efecto de 'ring' con un offset (anillo blanco y luego gris) */
-    box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #D1D5DB; 
+	outline: none;
+	/* Crea el efecto de 'ring' con un offset (anillo blanco y luego gris) */
+	box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #D1D5DB;
 }
 
 /* Estilos para la Imagen (Icono de Google) */
 #btn-google img {
-    /* Dimensiones (w-5 h-5) */
-    width: 1.25rem; /* 20px */
-    height: 1.25rem; /* 20px */
-    
-    /* Margen a la derecha (mr-3) */
-    margin-right: 0.75rem; /* 12px */
+	/* Dimensiones (w-5 h-5) */
+	width: 1.25rem;
+	/* 20px */
+	height: 1.25rem;
+	/* 20px */
+
+	/* Margen a la derecha (mr-3) */
+	margin-right: 0.75rem;
+	/* 12px */
 }
