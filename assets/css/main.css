@@ -3357,59 +3357,67 @@ estilos del login
 		margin-bottom: 1em;
 	}
 
-	
+
 
 }
 
 /* Estilos para el Botón de Google */
 
 #btn-google {
-    /* Flexbox y Alineación (flex, items-center, justify-center) */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    /* Dimensiones y Relleno (w-full, py-2, px-4) */
-    width: 100%;
-    padding: 8px 16px; /* py-2 (8px) y px-4 (16px) */
-    
-    /* Apariencia y Tipografía (bg-white, text-gray-700, font-medium) */
-    background-color: #FFFFFF;
-    color: #4B5563; /* Tailwind gray-700 */
-    font-weight: 500;
-    
-    /* Borde y Esquinas (border, border-gray-300, rounded-lg) */
-    border: 1px solid #D1D5DB; /* Tailwind gray-300 */
-    border-radius: 0.5rem; /* rounded-lg */
-    
-    /* Sombra (shadow-md) */
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-    
-    /* Transición para efectos suaves (transition duration-150 ease-in-out) */
-    transition: all 150ms ease-in-out;
-    
-    /* Comportamiento del cursor */
-    cursor: pointer;
+	/* Flexbox y Alineación (flex, items-center, justify-center) */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	/* Dimensiones y Relleno (w-full, py-2, px-4) */
+	width: 100%;
+	padding: 8px 16px;
+	/* py-2 (8px) y px-4 (16px) */
+
+	/* Apariencia y Tipografía (bg-white, text-gray-700, font-medium) */
+	background-color: #FFFFFF;
+	color: #4B5563;
+	/* Tailwind gray-700 */
+	font-weight: 500;
+
+	/* Borde y Esquinas (border, border-gray-300, rounded-lg) */
+	border: 1px solid #D1D5DB;
+	/* Tailwind gray-300 */
+	border-radius: 0.5rem;
+	/* rounded-lg */
+
+	/* Sombra (shadow-md) */
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+
+	/* Transición para efectos suaves (transition duration-150 ease-in-out) */
+	transition: all 150ms ease-in-out;
+
+	/* Comportamiento del cursor */
+	cursor: pointer;
 }
 
 /* Estado al pasar el ratón (hover:bg-gray-50) */
 #btn-google:hover {
-    background-color: #F9FAFB; /* Tailwind gray-50 */
+	background-color: #F9FAFB;
+	/* Tailwind gray-50 */
 }
 
 /* Estado de Enfoque (focus:outline-none, focus:ring-2, focus:ring-offset-2, focus:ring-gray-300) */
 #btn-google:focus {
-    outline: none;
-    /* Crea el efecto de 'ring' con un offset (anillo blanco y luego gris) */
-    box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #D1D5DB; 
+	outline: none;
+	/* Crea el efecto de 'ring' con un offset (anillo blanco y luego gris) */
+	box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #D1D5DB;
 }
 
 /* Estilos para la Imagen (Icono de Google) */
 #btn-google img {
-    /* Dimensiones (w-5 h-5) */
-    width: 1.25rem; /* 20px */
-    height: 1.25rem; /* 20px */
-    
-    /* Margen a la derecha (mr-3) */
-    margin-right: 0.75rem; /* 12px */
+	/* Dimensiones (w-5 h-5) */
+	width: 1.25rem;
+	/* 20px */
+	height: 1.25rem;
+	/* 20px */
+
+	/* Margen a la derecha (mr-3) */
+	margin-right: 0.75rem;
+	/* 12px */
 }
