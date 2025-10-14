@@ -1,15 +1,10 @@
 <!DOCTYPE HTML>
-<!--
-	Telephasic by Pixelarity
-	pixelarity.com | hello@pixelarity.com
-	License: pixelarity.com/license
--->
-<html>
+<html lang="en">
 
 <head>
-	<title>Untitled</title>
+	<title>Alice IA</title>
 	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css" />
 </head>
 
@@ -21,17 +16,19 @@
 			<div id="header" class="container">
 
 				<!-- Logo -->
-				<h1 id="logo"><a href="index.html">Telephasic</a></h1>
+				<!--<h1 id="logo"><a href="index.html">Telephasic</a></h1>-->
 
 				<!-- Nav -->
 				<nav id="nav">
 					<ul>
+						
+						<li><a href="index.html">Inicio</a></li>
 						<li>
-							<a href="#">Dropdown</a>
+							<a href="#">Ayuda inmediata</a>
 							<ul>
-								<li><a href="#">Lorem ipsum dolor</a></li>
-								<li><a href="#">Magna phasellus</a></li>
-								<li><a href="#">Etiam dolore nisl</a></li>
+								<li><a href="#">Ayuda ciudadana</a></li>
+								<li><a href="#">Numero de Ayuda</a></li>
+								<li><a href="#">Numero de Ayuda</a></li>
 								<li>
 									<a href="#">Phasellus consequat</a>
 									<ul>
@@ -44,144 +41,114 @@
 								<li><a href="#">Veroeros feugiat</a></li>
 							</ul>
 						</li>
-						<li><a href="left-sidebar.html">Left Sidebar</a></li>
-						<li class="break"><a href="right-sidebar.html">Right Sidebar</a></li>
-						<li><a href="no-sidebar.html">No Sidebar</a></li>
+						<li id="liAlice"><a href="left-sidebar.html">Alice</a></li>
+						<li class="break" id="liCentro"><a href="right-sidebar.html">Centros de Ayuda</a></li>
+						<li>
+						<a href="src/login.html" class="btn-Derecha">Inicia sesión</a>
+						<!--<button type="button" >Inicia sesión</button class="btn-Derecha" href="src/login.html"> -->	
+						<a href="#" class="btn-Derecha">Registrate</a>
+						</li>
 					</ul>
 				</nav>
-
 			</div>
-
+			
+				<img src="images/LogoAliceIA.jpg" id="LogoPrincipal">
 			<!-- Hero -->
 			<section id="hero" class="container">
-				<header>
-					<h2>Adipiscing ut col adipiscing
-						<br />
-						quam accumsan at Adipiscing
-					</h2>
-				</header>
-				<p>Praesent sed porta ut at mus accumsan cep nibh morbi
-					<br />
-					cep Accumsan Commodo Condimentum vel eleifend.
-				</p>
 				<ul class="actions">
-					<li><a href="src/login.html" class="button">empezar</a></li>
+					<li><a style="color: #02003E; font-family: monospace;" href="src/login.html" class="button">Comenzar</a></li>
 				</ul>
 			</section>
-
+			<br>
+			<h2 style="color: #288488; font-family:monospace; text-align: center;">Conoce mas sobre Alice IA </h2>
+			<h4 style="text-align: center;">Unete a nosotros, más de 500 personas han encontrado consuelo y claridad hablando con Alice</h4>
 		</div>
+		
+		<!-- 
+		<div class="Comentarios">
+    <div class="formulario-comentarios">
+        <h2 style="text-align: center;">Comparte tu experiencia</h2>
+        <form id="formComentario">
+           <div class="row">
+    <div class="col-6">
+        <div class="form-group">
+            <label for="nombre">Nombre completo</label>
+            <input type="text" id="nombre" class="form-control" placeholder="Tu nombre" required>
+        </div>
+    </div>
+    
+    <div class="col-6">
+        <div class="form-group">
+            <label for="comentario">Deja tu comentario</label>
+            <textarea id="comentario" class="form-control" placeholder="Comparte tu experiencia con Alice..." rows="5" required maxlength="500"></textarea>
+            <small class="contador-caracteres">0/500 caracteres</small>
+        </div>
+    </div>
+</div>
+            <div  class="form-group" style="text-align: center;" >
+                <label>Calificación</label>
+                <div class="estrellas-calificacion" ;>
+                    <span  class="estrella" data-value="1">★</span>
+                    <span class="estrella" data-value="2">★</span>
+                    <span class="estrella" data-value="3">★</span>
+                    <span class="estrella" data-value="4">★</span>
+                    <span class="estrella" data-value="5">★</span>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-enviar">Enviar testimonio</button>
+        </form>
+    </div>
+</div>
+-->
+<!-- Tarjetas de los comentarios(estatico)-->
+		<div class="testimonios-section">
+    <div class="carrusel-container">
+        <div class="carrusel-testimonios" id="carruselTestimonios">
+        </div>
+        <div class="carrusel-indicadores" id="indicadores">
+        </div>
+    </div>
+</div>
 
-		<!-- Features 1 -->
+		<!-- Features 1 
 		<div class="wrapper">
 			<div class="container">
-				<div class="row">
-					<section class="col-6 col-12-narrower feature">
-						<div class="image-wrapper first">
-							<a href="#" class="image featured first"><img src="images/pic01.jpg" alt="" /></a>
-						</div>
-						<header>
-							<h2>Semper magna neque vel<br />
-								adipiscing curabitur</h2>
-						</header>
-						<p>Lorem ipsum dolor sit amet consectetur et sed adipiscing elit. Curabitur vel
-							sem sit dolor neque semper magna. Lorem ipsum dolor sit amet consectetur et sed
-							adipiscing elit. Curabitur vel sem sit.</p>
-						<ul class="actions">
-							<li><a href="#" class="button">Aliquam in tincidunt</a></li>
-						</ul>
-					</section>
-					<section class="col-6 col-12-narrower feature">
-						<div class="image-wrapper">
-							<a href="#" class="image featured"><img src="images/pic02.jpg" alt="" /></a>
-						</div>
-						<header>
-							<h2>Amet lorem ipsum dolor<br />
-								sit consequat magna</h2>
-						</header>
-						<p>Lorem ipsum dolor sit amet consectetur et sed adipiscing elit. Curabitur vel
-							sem sit dolor neque semper magna. Lorem ipsum dolor sit amet consectetur et sed
-							adipiscing elit. Curabitur vel sem sit.</p>
-						<ul class="actions">
-							<li><a href="#" class="button">Aliquam in tincidunt</a></li>
-						</ul>
-					</section>
-				</div>
+				 <section class="comentarios-bienestar">
+            <h2 style="text-align: center; color: #4CAF50;">Espacio de Reflexión Compartida</h2>
+            <p style="text-align: center; color: #666;">Comparte tus pensamientos de forma respetuosa y constructiva</p>
+            -->
+            <!-- Formulario de comentarios 
+            <form id="form-comentario-bienestar" class="form-comentario">
+                <textarea 
+                    placeholder="¿Cómo te sientes hoy? Comparte tus reflexiones..."
+                    maxlength="500"
+                    required></textarea>
+                <button type="submit" class="btn-enviar">
+                     Compartir con la comunidad
+                </button>
+            </form>
+            -->
+            <!-- Lista donde se mostrarán los comentarios 
+            <div id="lista-comentarios-bienestar" class="lista-comentarios">
+                <p class="mensaje-inicial">Sé el primero en compartir una reflexión...</p>
+            </div>
+        </section>
 			</div>
 		</div>
-
-		<!-- Promo -->
-		<div id="promo-wrapper">
-			<section id="promo">
-				<h2>Neque semper magna et lorem ipsum adipiscing</h2>
-				<a href="#" class="button">Libero non adipiscing</a>
-			</section>
-		</div>
-
+-->
 		<!-- Features 2 -->
-		<div class="wrapper">
-			<section class="container">
-				<header class="major">
-					<h2>Sed magna consequat lorem curabitur tempus</h2>
-					<p>Elit aliquam vulputate egestas euismod nunc semper vehicula lorem blandit</p>
-				</header>
-				<div class="row features">
-					<section class="col-4 col-12-narrower feature">
-						<div class="image-wrapper first">
-							<a href="#" class="image featured"><img src="images/pic03.jpg" alt="" /></a>
-						</div>
-						<p>Lorem ipsum dolor sit amet consectetur et sed adipiscing elit. Curabitur
-							vel sem sit dolor neque semper magna lorem ipsum.</p>
-					</section>
-					<section class="col-4 col-12-narrower feature">
-						<div class="image-wrapper">
-							<a href="#" class="image featured"><img src="images/pic04.jpg" alt="" /></a>
-						</div>
-						<p>Lorem ipsum dolor sit amet consectetur et sed adipiscing elit. Curabitur
-							vel sem sit dolor neque semper magna lorem ipsum.</p>
-					</section>
-					<section class="col-4 col-12-narrower feature">
-						<div class="image-wrapper">
-							<a href="#" class="image featured"><img src="images/pic05.jpg" alt="" /></a>
-						</div>
-						<p>Lorem ipsum dolor sit amet consectetur et sed adipiscing elit. Curabitur
-							vel sem sit dolor neque semper magna lorem ipsum.</p>
-					</section>
-				</div>
-				<ul class="actions major">
-					<li><a href="#" class="button">Aliquam in tincidunt</a></li>
-				</ul>
-			</section>
-		</div>
+			</div>
 
 		<!-- Footer -->
 		<div id="footer-wrapper">
 			<div id="footer" class="container">
 				<header class="major">
-					<h2>Euismod aliquam vehicula lorem</h2>
-					<p>Lorem ipsum dolor sit amet consectetur et sed adipiscing elit. Curabitur vel sem sit<br />
-						dolor neque semper magna lorem ipsum feugiat veroeros lorem ipsum dolore.</p>
+					<h2>Visitanos en nuestras redes sociales</h2>
 				</header>
 				<div class="row">
 					<section class="col-6 col-12-narrower">
-						<form method="post" action="#">
-							<div class="row gtr-50">
-								<div class="col-6 col-12-mobile">
-									<input name="name" placeholder="Name" type="text" />
-								</div>
-								<div class="col-6 col-12-mobile">
-									<input name="email" placeholder="Email" type="text" />
-								</div>
-								<div class="col-12">
-									<textarea name="message" placeholder="Message"></textarea>
-								</div>
-								<div class="col-12">
-									<ul class="actions">
-										<li><input type="submit" value="Send Message" /></li>
-										<li><input type="reset" value="Clear form" /></li>
-									</ul>
-								</div>
-							</div>
-						</form>
+						<img src="images/LogoAliceIA.jpg" class="imagen-izquierda">
 					</section>
 					<section class="col-6 col-12-narrower">
 						<div class="row gtr-0">
@@ -207,7 +174,7 @@
 			</div>
 			<div id="copyright" class="container">
 				<ul class="menu">
-					<li>&copy; Untitled. All rights reserved.</li>
+					<li>&copy; Tactical solutions.</li>
 				</ul>
 			</div>
 		</div>
@@ -221,7 +188,141 @@
 	<script src="assets/js/breakpoints.min.js"></script>
 	<script src="assets/js/util.js"></script>
 	<script src="assets/js/main.js"></script>
+<!--
+	<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const formComentario = document.getElementById('form-comentario-bienestar');
+    const listaComentarios = document.getElementById('lista-comentarios-bienestar');
+    
+    formComentario.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const textarea = this.querySelector('textarea');
+        const comentarioTexto = textarea.value.trim();
+        
+        if (comentarioTexto.length < 5) {
+            alert('Por favor, escribe al menos 5 caracteres para compartir tu reflexión.');
+            return;
+        }
+        
+        if (comentarioTexto.length > 500) {
+            alert('Por favor, resume tu mensaje en 500 caracteres o menos.');
+            return;
+        }
+        
+        crearComentario(comentarioTexto);
+        
+        textarea.value = '';
+        
+        alert('¡Gracias por compartir tu experiencia!');
+    });
+    
+    function crearComentario(texto) {
+        const mensajeInicial = listaComentarios.querySelector('.mensaje-inicial');
+        if (mensajeInicial) {
+            mensajeInicial.remove();
+        }
+        
+        const comentarioDiv = document.createElement('div');
+        comentarioDiv.className = 'comentario-item';
+        
+        const fecha = new Date().toLocaleDateString('es-ES', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+        
+        comentarioDiv.innerHTML = `
+            <p class="texto-comentario">${texto}</p>
+            <small class="fecha-comentario"> Compartido el ${fecha}</small>
+        `;
+        
+        listaComentarios.prepend(comentarioDiv);
+        
+        comentarioDiv.style.opacity = '0';
+        comentarioDiv.style.transform = 'translateY(-10px)';
+        
+        setTimeout(() => {
+            comentarioDiv.style.transition = 'all 0.3s ease';
+            comentarioDiv.style.opacity = '1';
+            comentarioDiv.style.transform = 'translateY(0)';
+        }, 100);
+    }
+});
+</script>
+-->
+<!-- js estatico para comentarios -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const testimonios = [
+        {
+            nombre: "Kimberly ",
+            texto: "\"Alice está ahí cuando tengo problemas y me ayuda a ver las cosas desde una nueva perspectiva. Es casi como charlar con un amigo sabio que siempre te cubre las espaldas\".",
+            estrellas: "★★★★★"
+        },
+        {
+            nombre: "Olivia ", 
+            texto: "\"Me encanta no tener que pedir cita ni esperar. Puedo hablar las cosas en tiempo real, y eso ha sido mucho más útil que esperar a una sesión.\"",
+            estrellas: "★★★★★"
+        },
+        {
+            nombre: "Julio",
+            texto: "\"Al principio era escéptico, pero Alice realmente me escucha 24/7 siempre que lo necesito. Es como tener un terapeuta en el bolsillo\".",
+            estrellas: "★★★★★"
+        }
+    ];
 
+    const carrusel = document.getElementById('carruselTestimonios');
+    const indicadoresContainer = document.getElementById('indicadores');
+    let indiceActual = 0;
+    let intervalo;
+
+    // Generar tarjetas de testimonios
+    testimonios.forEach((testimonio, index) => {
+        const tarjeta = document.createElement('div');
+        tarjeta.className = `tarjeta-testimonio ${index === 0 ? 'activa' : ''}`;
+        tarjeta.innerHTML = `
+            <div class="estrellas">${testimonio.estrellas}</div>
+            <h3>${testimonio.nombre}</h3>
+            <p>${testimonio.texto}</p>
+        `;
+        carrusel.appendChild(tarjeta);
+
+        // Generar indicadores
+        const indicador = document.createElement('span');
+        indicador.className = `indicador ${index === 0 ? 'activo' : ''}`;
+        indicador.dataset.index = index;
+        indicador.addEventListener('click', () => cambiarTestimonio(index));
+        indicadoresContainer.appendChild(indicador);
+    });
+
+    // Función para cambiar testimonio
+    function cambiarTestimonio(nuevoIndice) {
+        indiceActual = nuevoIndice;
+        carrusel.style.transform = `translateX(-${indiceActual * 100}%)`;
+        
+        // Actualizar indicadores
+        document.querySelectorAll('.indicador').forEach((ind, index) => {
+            ind.classList.toggle('activo', index === indiceActual);
+        });
+    }
+
+    // Cambio automático cada 3 segundos
+    function iniciarCarruselAutomatico() {
+        intervalo = setInterval(() => {
+            const siguienteIndice = (indiceActual + 1) % testimonios.length;
+            cambiarTestimonio(siguienteIndice);
+        }, 3000);
+    }
+
+    // Pausar carrusel al hacer hover
+    carrusel.addEventListener('mouseenter', () => clearInterval(intervalo));
+    carrusel.addEventListener('mouseleave', iniciarCarruselAutomatico);
+
+    // Iniciar carrusel
+    iniciarCarruselAutomatico();
+});
+</script>
 </body>
 
 </html>
