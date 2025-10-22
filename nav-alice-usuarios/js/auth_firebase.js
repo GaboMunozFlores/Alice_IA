@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 import { getAnalytics } from 'https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js';
 
 const firebaseConfig = {
@@ -33,6 +33,30 @@ function signInWithGoogle() {
             alert("Error al iniciar sesión con Google: " + error.message);
         });
 }
+
+const signInEmailPassword = document.querySelector("#signin-form")
+
+signInEmailPassword.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const email = signInEmailPassword['signin_email'].value
+    const password = signInEmailPassword['signin_password'].value
+    console.log(email, password);
+
+    try {
+        // Crear usuario con email y contraseña en Firebase y redirigir al chatbot
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+        console.log(userCredential);
+        window.location.href = "index.html";
+    } catch (error) {
+        console.error("Error al crear usuario: ", error.message);
+        alert("Error al crear usuario: " + error.message);
+        console.log(error.code);
+
+
+    }
+
+})
 
 // Asignar evento al botón de Google
 document.getElementById("btn-google").addEventListener("click", signInWithGoogle);
