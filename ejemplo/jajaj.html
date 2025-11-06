@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,7 +24,8 @@
             width: 100%;
         }
 
-        h1, h2 {
+        h1,
+        h2 {
             color: #333;
             text-align: center;
         }
@@ -40,7 +42,7 @@
             border-radius: 5px;
             margin-bottom: 10px;
         }
-        
+
         button {
             padding: 10px 20px;
             border: none;
@@ -95,6 +97,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="container">
@@ -107,13 +110,13 @@
         <div class="items-lista">
             <h2>Tareas</h2>
             <ul id="items-ul">
-                </ul>
+            </ul>
         </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script type="module">
@@ -153,7 +156,7 @@
                         // UPDATE: Si hay un ID de edición, actualiza el documento
                         const docRef = doc(db, "natt", editId);
                         await updateDoc(docRef, { texto: texto });
-                        
+
                         Swal.fire('Actualizado', 'El documento se ha actualizado correctamente.', 'success');
                         editId = null;
                         submitBtn.textContent = 'Guardar';
@@ -190,13 +193,13 @@
                 `;
                 itemsUl.appendChild(li);
             });
-            
+
             // Agrega los event listeners para los botones de editar y eliminar
             document.querySelectorAll('.edit-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const id = e.target.dataset.id;
                     const texto = e.target.closest('.item-row').querySelector('.item-texto').textContent;
-                    
+
                     editId = id;
                     itemTextoInput.value = texto;
                     submitBtn.textContent = 'Actualizar';
