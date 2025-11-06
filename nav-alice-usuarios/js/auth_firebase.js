@@ -3,7 +3,6 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPas
 import { getAnalytics } from 'https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js';
 
 
-
 export { auth, displayErrorAlert, displaySuccessAlert };
 
 const firebaseConfig = {
