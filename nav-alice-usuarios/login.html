@@ -1,12 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/src/login.js">
+</head>
 <!DOCTYPE HTML>
 <html>
 
 <head>
-    <title>Crear Cuenta</title>
+    <title>Iniciar Sesión</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="../assets/css/main.css" />
-    <script type="module" src="../nav-alice-usuarios/js/auth_firebase.js"></script>
+    <link rel="stylesheet" href="assets/css/main.css" />
 </head>
 
 <body class="is-preload">
@@ -15,8 +24,7 @@
         <div id="header-wrapper">
             <div id="header" class="container">
 
-                <h1 id="logo"><a href="/index.html">Telephasic</a></h1>
-
+                <h1 id="logo"><a href="index.html">Telephasic</a></h1>
             </div>
         </div>
         <div class="wrapper">
@@ -25,10 +33,10 @@
                 <section class="col-6 col-12-narrower estilo_login">
 
                     <header>
-                        <h2 class="titulo">crear cuenta</h2>
+                        <h2 class="titulo">Iniciar sesión</h2>
                     </header>
 
-                    <form method="post" id="singin-form">
+                    <form method="post" id="login-form">
                         <div class="row gtr-50">
 
                             <div class="col-12 etiqueta-texto">
@@ -37,7 +45,7 @@
                             </div>
 
                             <div class="col-12">
-                                <input name="email" id="signin_email" type="text" required />
+                                <input name="email" id="login_email" type="text" required />
                             </div>
 
 
@@ -46,12 +54,12 @@
                             </div>
 
                             <div class="col-12">
-                                <input name="password" id="signin_password" type="password" required />
+                                <input name="password" id="login_password" type="password" required />
                             </div>
 
                             <div class="col-12">
                                 <ul class="actions">
-                                    <li><input type="submit" value="Continuar" class="button continuar" /></li>
+                                    <li><input type="submit" value="Continuar" class="button-continuar" /></li>
                                 </ul>
                             </div>
 
@@ -59,23 +67,24 @@
                                 <p>Al continuar, aceptas las <a href="#">Condiciones de uso</a> y el <a href="#">Aviso
                                         de privacidad</a> de la compañía.</p>
                             </div>
+
+                            <div class="col-12 enlace-ayuda">
+                                <a href="signin.html">¿crear cuenta?</a>
+                            </div>
+
                         </div>
                     </form>
-                    <section class="flex justify-center items-center min-h-screen bg-gray-100">
-                        <div class="bg-white p-8 rounded-lg shadow-lg w-96 text-center">
-                            <h1 class="text-2xl font-semibold text-gray-800 mb-6">Iniciar Sesión</h1>
 
-                            <button id="btn-google"> <img src="../images/googleLogo.png" alt="Google Icon"
-                                    class="w-6 h-6 mr-2"> Iniciar sesión con Google </button>
-                        </div>
-                    </section>
                 </section>
-
             </div>
         </div>
-
+<script src=""></script>
 </body>
 <footer>
-
-
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.dropotron.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
 </footer>

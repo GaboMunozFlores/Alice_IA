@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar Sesión - Psicólogo</title>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles_registro.css">
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>Iniciar Sesión</h2>
+
+    <input id="emailLogin" type="email" placeholder="Correo electrónico">
+    
+    <div class="password-container">
+      <input id="passwordLogin" type="password" placeholder="Contraseña">
+      <span id="togglePasswordLogin" class="eye-icon">👁️</span>
+    </div>
+
+    <p id="loginError" class="mensaje-error"></p>
+    <p id="loginExito" class="mensaje-exito">✅ Iniciando sesión...</p>
+
+    <button id="loginBtn">Entrar</button>
+
+    <p class="extra-link">
+      ¿No tienes cuenta? <a href="registro_psicologo.html">Regístrate aquí</a>
+    </p>
+  </div>
+
+  <script src="login_psicologo.js"></script>
+</body>
+</html>

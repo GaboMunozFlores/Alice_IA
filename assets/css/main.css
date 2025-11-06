@@ -9,25 +9,27 @@
 	License: pixelarity.com/license
 */
 #LogoPrincipal {
-    width: min(550px, 55vw);
-    height: min(550px, 55vw);
-    border-radius: 50%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-    margin: -110px auto 20px auto; 
-    opacity: 0.2;
+	width: min(550px, 55vw);
+	height: min(550px, 55vw);
+	border-radius: 50%;
+	object-fit: cover;
+	object-position: center;
+	display: block;
+	margin: -110px auto 20px auto;
+	opacity: 0.2;
 }
 
 .imagen-izquierda {
-    float: left;          
-    margin: 0;            
-    margin-right: 15px;  
-    margin-bottom: 15px;  
-    display: block;       
-    max-width: 100%;     
+	float: left;
+	margin: 0;
+	margin-right: 15px;
+	margin-bottom: 15px;
+	display: block;
+	max-width: 100%;
 }
-.btn-Derecha,.btn-Derecha {
+
+.btn-Derecha,
+.btn-Derecha {
 	background: none;
 	text-decoration: none;
 	border: solid 1px #c2c7cc;
@@ -35,185 +37,188 @@
 	padding-left: 20% !important;
 	outline: 0;
 }
-.btn-Derecha{
+
+.btn-Derecha {
 	margin-left: auto;
-    margin-right: 10px;
+	margin-right: 10px;
 }
 
 
 nav ul li {
-    margin: 0 !important;
-    padding:0 !important;
+	margin: 0 !important;
+	padding: 0 !important;
 }
 
 /*donde ingresan los comentarios*/
-.Comentarios{
-	  text-align: center;
-    padding: 3rem 1rem;
+.Comentarios {
+	text-align: center;
+	padding: 3rem 1rem;
 	background-color: #D4CDCD;
 }
+
 /*Comentarios estaticos (visulizacion, o sea, las tarjetas)*/
 .testimonios-section {
-    text-align: center;
-    padding: 3rem 1rem;
+	text-align: center;
+	padding: 3rem 1rem;
 	background-color: #ebe5e5;
 }
 
 .carrusel-container {
-    position: relative;
-    max-width: 600px;
-    margin: 2rem auto;
-    overflow: hidden;
+	position: relative;
+	max-width: 600px;
+	margin: 2rem auto;
+	overflow: hidden;
 }
 
 .carrusel-testimonios {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
-	
+	display: flex;
+	transition: transform 0.5s ease-in-out;
+
 }
+
 .tarjeta-testimonio {
-    min-width: 100%;
-    padding: 2rem;
-    background: white;
-    border-radius: 15px;
-    box-sizing: border-box;
-	
+	min-width: 100%;
+	padding: 2rem;
+	background: white;
+	border-radius: 15px;
+	box-sizing: border-box;
+
 }
 
 .estrellas {
-    color: #FFD700;
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
+	color: #FFD700;
+	font-size: 1.5rem;
+	margin-bottom: 1rem;
 }
 
 .tarjeta-testimonio h3 {
-    color: #333;
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
+	color: #333;
+	margin-bottom: 1rem;
+	font-size: 1.2rem;
 }
 
 .tarjeta-testimonio p {
-    color: #666;
-    font-style: italic;
-    line-height: 1.6;
+	color: #666;
+	font-style: italic;
+	line-height: 1.6;
 }
 
 .carrusel-indicadores {
-    display: flex;
-    justify-content: center;
-    margin-top: 2rem;
-    gap: 10px;
+	display: flex;
+	justify-content: center;
+	margin-top: 2rem;
+	gap: 10px;
 }
 
 .indicador {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: #ccc;
-    cursor: pointer;
-    transition: background 0.3s ease;
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background: #ccc;
+	cursor: pointer;
+	transition: background 0.3s ease;
 }
 
 .indicador.activo {
-    background: #4CAF50;
+	background: #4CAF50;
 }
 
 .formulario-comentarios {
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+	max-width: 800px;
+	margin: 2rem auto;
+	padding: 2rem;
+	background: white;
+	border-radius: 15px;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
 .row {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 0 -10px;
+	display: flex;
+	flex-wrap: wrap;
+	margin: 0 -10px;
 }
 
 .col-md-6 {
-    flex: 0 0 50%;
-    padding: 0 10px;
-    box-sizing: border-box;
+	flex: 0 0 50%;
+	padding: 0 10px;
+	box-sizing: border-box;
 }
 
 @media (max-width: 768px) {
-    .col-md-6 {
-        flex: 0 0 100%;
-        margin-bottom: 1rem;
-    }
+	.col-md-6 {
+		flex: 0 0 100%;
+		margin-bottom: 1rem;
+	}
 }
 
 .form-group {
-    margin-bottom: 1.5rem;
+	margin-bottom: 1.5rem;
 }
 
 .form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-    color: #333;
+	display: block;
+	margin-bottom: 0.5rem;
+	font-weight: bold;
+	color: #333;
 }
 
 .form-control {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-family: inherit;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease;
+	width: 100%;
+	padding: 12px;
+	border: 2px solid #e0e0e0;
+	border-radius: 8px;
+	font-size: 1rem;
+	font-family: inherit;
+	box-sizing: border-box;
+	transition: border-color 0.3s ease;
 }
 
 .form-control:focus {
-    outline: none;
-    border-color: #4CAF50;
+	outline: none;
+	border-color: #4CAF50;
 }
 
 /* Estrellas de calificación */
 .estrellas-calificacion {
-    display: flex;
-    gap: 5px;
+	display: flex;
+	gap: 5px;
 }
 
 .estrella {
-    font-size: 2rem;
-    color: #ddd;
-    cursor: pointer;
-    transition: color 0.2s ease;
+	font-size: 2rem;
+	color: #ddd;
+	cursor: pointer;
+	transition: color 0.2s ease;
 }
 
 .estrella:hover,
 .estrella.seleccionada {
-    color: #FFD700;
+	color: #FFD700;
 }
 
 /* Botón de enviar */
 .btn-enviar {
-    background: linear-gradient(135deg, #4CAF50, #45a049);
-    color: white;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 25px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-    width: 100%;
+	background: linear-gradient(135deg, #4CAF50, #45a049);
+	color: white;
+	border: none;
+	padding: 12px 30px;
+	border-radius: 25px;
+	font-size: 1rem;
+	cursor: pointer;
+	transition: transform 0.2s ease;
+	width: 100%;
 }
 
 .btn-enviar:hover {
-    transform: translateY(-2px);
+	transform: translateY(-2px);
 }
 
 /* Contador de caracteres */
 .contador-caracteres {
-    display: block;
-    text-align: right;
-    color: #666;
-    margin-top: 5px;
+	display: block;
+	text-align: right;
+	color: #666;
+	margin-top: 5px;
 }
 
 /* seccion de comentariooos
@@ -2380,9 +2385,7 @@ table.default tfoot {
 	border-top: solid 1px #D2D7DC;
 }
 
- Button 
-
-input[type="button"],
+Button input[type="button"],
 input[type="submit"],
 input[type="reset"],
 button,
@@ -2392,15 +2395,15 @@ button,
 	-ms-transition: color 0.25s ease-in-out, border-color 0.25s ease-in-out, background-color 0.25s ease-in-out;
 	transition: color 0.25s ease-in-out, border-color 0.25s ease-in-out, background-color 0.25s ease-in-out;
 	display: inline-block;
-	color: inherit;
-	background: #1F538F;
+	color: #FFFFFF;
+	background: #80B5D1;
 	text-decoration: none;
 	border: solid 1px #c2c7cc;
 	border-radius: 0.80em;
 	padding: 0.8em 2em 0.8em 2em;
 	cursor: pointer;
 	outline: 0;
-	/* aqui*/ 
+	/* aqui*/
 }
 
 input[type="button"]:hover,
@@ -2409,7 +2412,7 @@ input[type="reset"]:hover,
 button:hover,
 .button:hover {
 	color: #3ec9c9;
-	border-color:#42474c;
+	border-color: #42474c;
 }
 
 /* Icons */
@@ -2715,7 +2718,7 @@ estilos del login
 	height: 4em;
 	line-height: 4em;
 	background-color: #80B5D1;
-;
+	;
 	color: #ffffff;
 	/*aqui fue
 	*/
@@ -2729,6 +2732,7 @@ estilos del login
 	display: inline-block;
 	margin-left: 1em;
 }
+
 /*
 #nav>ul>li>ul {
 	display: none;
@@ -2756,6 +2760,7 @@ estilos del login
 	background-color: rgba(255, 255, 255, 0.15);
 	color: #fff;
 }
+
 /*
 #nav>ul>li:first-child {
 	margin-left: 0;
