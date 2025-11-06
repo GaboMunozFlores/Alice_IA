@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Ayuda inmediata</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css" />
+</head>
+
+<body class="homepage is-preload">
+	<div id="page-wrapper">
+
+		<!-- Header -->
+		<div id="header-wrapper">
+			<div id="header" class="container">
+				<nav id="nav">
+					<ul>
+
+						<li><a href="index.html">Inicio</a></li>
+						<li>
+							<a href="src/Ayuda.html">Ayuda inmediata</a>
+							<ul>
+								<li> <a href="javascript:void(0)" id="btnAyuda" class="whatsapp-link">
+										<img src="../images/Whatsapp.png" alt="WhatsApp Ayuda" class="whatsapp-icon">
+									</a>
+								</li>
+								<li><a href="#">Numero de Ayuda</a></li>
+								<li><a href="#">Numero de Ayuda</a></li>
+								<li>
+									<a href="#">Phasellus consequat</a>
+									<ul>
+										<li><a href="#">Lorem ipsum dolor</a></li>
+										<li><a href="#">Phasellus consequat</a></li>
+										<li><a href="#">Magna phasellus</a></li>
+										<li><a href="#">Etiam dolore nisl</a></li>
+									</ul>
+								</li>
+								<li><a href="#">Veroeros feugiat</a></li>
+							</ul>
+						</li>
+						<li id="liAlice"><a href="left-sidebar.html">Alice</a></li>
+						<li class="break" id="liCentro"><a href="right-sidebar.html">Centros de Ayuda</a></li>
+						<li>
+							<a href="src/login.html" class="btn-Derecha">Inicia sesión</a>
+							<!--<button type="button" >Inicia sesión</button class="btn-Derecha" href="src/login.html"> -->
+							<a href="#" class="btn-Derecha">Registrate</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+
+		<section class="ayuda">
+			<div class="contenedor">
+				<div class="directorio" id="directorio">
+					<h2>Ayuda Inmediata</h2>
+
+				</div>
+			</div>
+		</section>
+
+	</div>
+
+
+	<script>
+		// firebase de alicee (la fakin conexion que no se conecta hdsptm)
+
+		const firebaseConfig = {
+			apiKey: "AIzaSyCYBxXKhQkz07VK5cZW7R-vnZ5ABJvpI8o",
+			authDomain: "alice-i4.firebaseapp.com",
+			projectId: "alice-i4",
+			storageBucket: "alice-i4.firebasestorage.app",
+			messagingSenderId: "421473638243",
+			appId: "1:421473638243:web:de39a5a29940442ef52556",
+		};
+
+		firebase.initializeApp(firebaseConfig);
+		const db = firebase.firestore();
+
+		const directorio = document.getElementById('directorio');
+
+		db.collection("ayudaInmediata").get().then((querySnapshot) => {
+			querySnapshot.forEach((doc) => {
+				const data = doc.data();
+
+				// Crear la fakin tarjeta
+				const tarjeta = document.createElement('div');
+				tarjeta.classList.add('tarjeta', data.tipo);
+
+				tarjeta.innerHTML = `
+      <h3>${data.nombre}</h3>
+      <p>${data.descripcion}</p>
+      <button>${data.tipo === 'tel' ? ' Llamar ahora' : ' Abrir chat'}</button>
+    `;
+
+				// Acción del botón
+				const boton = tarjeta.querySelector('button');
+				if (data.tipo === 'tel') {
+					boton.onclick = () => window.location.href = `tel:${data.whatsapp}`;
+				} else if (data.tipo === 'chat') {
+					boton.onclick = () => window.open(`https://wa.me/${data.whatsapp}`, '_blank');
+				}
+
+				directorio.appendChild(tarjeta);
+			});
+		}).catch((error) => {
+			console.error("Error al cargar ayuda:", error);
+		});
+
+
+	</script>
+
+	<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+	<script src="js/ayuda.js"></script>
+
+	<script type="module" src="ayuda.js"></script>
+	<script src="../assets/js/jquery.min.js"></script>
+	<script src="../assets/js/jquery.dropotron.min.js"></script>
+	<script src="../assets/js/browser.min.js"></script>
+	<script src="../assets/js/breakpoints.min.js"></script>
+	<script src="../assets/js/util.js"></script>
+	<script src="../assets/js/main.js"></script>
+
+</body>
+
+</html>
