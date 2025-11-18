@@ -6,11 +6,29 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="../assets/css/main.css" />
-    <script type="../nav-alice-usuarios/js/auth_firebase.js"></script>
+    <script type="module" src="../nav-alice-usuarios/js/auth_firebase.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        .valid {
+            color: green;
+            font-weight: bold;
+        }
+
+        .invalid {
+            color: red;
+        }
+
+        #password-validation-list {
+            list-style: none;
+            /* Opcional: para quitar los puntos */
+            padding-left: 0;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 
-<body class="is-preload">
+<body class="col-12 is-preload">
     <div id="page-wrapper">
 
         <div class="wrapper">
@@ -26,7 +44,7 @@
                         <div class="row gtr-50">
 
                             <div class="col-12 etiqueta-texto">
-                                <label for="id-input-login">Ingresa tu correo
+                                <label for="signin_email">Ingresa tu correo
                                     electrónico</label>
                             </div>
 
@@ -36,12 +54,35 @@
 
 
                             <div class="col-12 etiqueta-texto">
-                                <label for="id-input-login">Ingresa tu contraseña </label>
+                                <label for="signin_password">Ingresa tu contraseña </label>
                             </div>
 
                             <div class="col-12">
                                 <input name="password" id="signin_password" type="password" required />
                             </div>
+
+                            <div class="col-12">
+                                <ul id="password-validation-list">
+                                    <li id="val-length" class="invalid">Mínimo 8 caracteres</li>
+                                    <li id="val-uppercase" class="invalid">Al menos una letra mayúscula (A-Z)</li>
+                                    <li id="val-number" class="invalid">Al menos un número (0-9)</li>
+                                </ul>
+                            </div>
+
+                            <div class="col-12 etiqueta-texto">
+                                <label for="signin_confirm_password">Confirma tu contraseña</label>
+                            </div>
+
+                            <div class="col-12">
+                                <input name="confirm_password" id="signin_confirm_password" type="password" required />
+                            </div>
+
+                            <div class="col-12">
+                                <ul id="password-validation-match">
+                                    <li id="val-match" class="invalid">Las contraseñas deben coincidir</li>
+                                </ul>
+                            </div>
+
 
                             <div class="col-12">
                                 <ul class="actions">
@@ -57,7 +98,7 @@
                     </form>
                     <section class="flex justify-center items-center min-h-screen bg-gray-100">
                         <div class="bg-white p-8 rounded-lg shadow-lg w-96 text-center">
-                            <h1 class="text-2xl font-semibold text-gray-800 mb-6">crear cuenta</h1>
+                            <h1 class="text-2xl font-semibold text-gray-800 mb-6">crear cuenta con: </h1>
 
                             <button id="btn-google"> <img src="../images/googleLogo.png" alt="Google Icon"
                                     class="w-6 h-6 mr-2"> Iniciar sesión con Google </button>
@@ -69,3 +110,5 @@
         </div>
 
 </body>
+
+</html>
