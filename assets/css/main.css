@@ -1,13 +1,71 @@
 @import url("fontawesome-all.min.css");
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300italic,400,400italic,600");
 
+/* ===== TEXTO SOLO PARA SCREEN READERS - VERSIÓN CONFIABLE ===== */
+.sr-only {
+	border: 0 !important;
+	clip: rect(1px, 1px, 1px, 1px) !important;
+	-webkit-clip-path: inset(50%) !important;
+	clip-path: inset(50%) !important;
+	height: 1px !important;
+	margin: -1px !important;
+	overflow: hidden !important;
+	padding: 0 !important;
+	position: absolute !important;
+	width: 1px !important;
+	white-space: nowrap !important;
+}
 
+
+/* Focus */
+a:focus,
+button:focus,
+input:focus,
+[tabindex]:focus {
+	outline: 2px solid #1a5276 !important;
+	outline-offset: 2px !important;
+	background-color: rgba(26, 82, 118, 0.05) !important;
+	border-radius: 3px !important;
+}
+
+.button:focus,
+.btn-Derecha:focus {
+	outline: 2px solid #02003E !important;
+	outline-offset: 1px !important;
+	background-color: rgba(2, 0, 62, 0.08) !important;
+	box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.8) !important;
+}
+
+#btnAyuda:focus {
+	outline: 2px solid #128C7E !important;
+	outline-offset: 1px !important;
+	background-color: rgba(18, 140, 126, 0.05) !important;
+}
+
+nav a:focus {
+	outline: 2px solid #288488 !important;
+	outline-offset: 1px !important;
+	background-color: rgba(40, 132, 136, 0.05) !important;
+}
+
+#logoLink:focus,
+.estrellas-calificacion:focus {
+	outline: 1px solid #1a5276 !important;
+	outline-offset: 1px !important;
+	background-color: transparent !important;
+}
 
 /*
 	Telephasic by Pixelarity
 	pixelarity.com | hello@pixelarity.com
 	License: pixelarity.com/license
 */
+#nav {
+	font-size: 28px !;
+	font-family: Arial, Helvetica, sans-serif;
+
+}
+
 #LogoPrincipal {
 	width: min(550px, 55vw);
 	height: min(550px, 55vw);
@@ -2740,7 +2798,7 @@ estilos del login
 */
 #nav>ul>li>span,
 #nav>ul>li>a {
-	color: #fff;
+	color: #e8eaf1;
 	text-decoration: none;
 	outline: 0;
 	border: 0;
@@ -3447,7 +3505,7 @@ estilos del login
 		height: 50vh;
 		z-index: 10002;
 		box-shadow: inset 0px -2px 5px 0px rgba(0, 0, 0, 0.25);
-		font-size: 1em;
+		font-size: 2em;
 		background-color: #45474a;
 		background-size: 128px 128px, 100% 100%, 100% 100%;
 	}
