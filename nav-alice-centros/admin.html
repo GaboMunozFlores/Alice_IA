@@ -1,0 +1,249 @@
+<!DOCTYPE HTML>
+<html lang="es">
+<head>
+    <title>Admin Panel - Alice IA</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+
+    <style>
+        /* Estilos iguales a los anteriores... */
+        .admin-container { display: flex; gap: 20px; padding: 2em; background: #f4f4f4; min-height: 100vh; }
+        .admin-form-panel { flex: 1; background: white; padding: 2em; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .admin-list-panel { flex: 1; background: white; padding: 2em; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-height: 800px; overflow-y: auto; }
+        #mapPicker { height: 300px; width: 100%; border-radius: 5px; margin-bottom: 1em; border: 2px solid #ddd; z-index: 1; }
+        .form-group { margin-bottom: 1em; }
+        .form-group label { font-weight: bold; display: block; margin-bottom: 0.5em; color: #52575c; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        
+        /* CAMBIO: Inputs de coordenadas más visibles */
+        .coord-inputs { display: flex; gap: 10px; background: #eef2f5; padding: 10px; border-radius: 5px; }
+        .coord-inputs input { background: white; border: 1px solid #aaa; font-family: monospace; font-weight: bold; }
+
+        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; }
+        .item-info { display: flex; align-items: center; gap: 10px; }
+        .item-thumb { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; }
+        .btn-delete { background: #ff6b6b; color: white; padding: 5px 10px; border-radius: 4px; border: none; cursor: pointer; font-size: 0.8em; }
+        
+        @media (max-width: 768px) { .admin-container { flex-direction: column; } }
+    </style>
+</head>
+<body class="is-preload">
+
+    <div id="header-wrapper">
+        <div id="header" class="container">
+            <h1 id="logo"><a href="index.html">Panel de Administración</a></h1>
+            <nav id="nav">
+                <ul>
+                    <li><a href="index.html">Volver al Inicio</a></li>
+                    <li><a href="centros.html">Ver Mapa Público</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <div class="admin-container">
+        <div class="admin-form-panel">
+            <h3>➕ Agregar Nuevo Centro</h3>
+            <p style="font-size: 0.8em; color: #666;">Si el mapa no encuentra la calle, búscala en Google Maps, copia las coordenadas y pégalas abajo.</p>
+            
+            <form id="addCenterForm">
+                <div class="form-group">
+                    <label>Nombre del Consultorio/Centro</label>
+                    <input type="text" id="nombre" required placeholder="Ej. Clínica Renacer">
+                </div>
+
+                <div class="form-group">
+                    <label>📍 Ubicación</label>
+                    <div id="mapPicker"></div>
+                    
+                    <label style="font-size: 0.9em;">Coordenadas (Latitud / Longitud)</label>
+                    <div class="coord-inputs">
+                        <input type="text" id="lat" placeholder="Latitud (ej. 19.4326)" required>
+                        <input type="text" id="lng" placeholder="Longitud (ej. -99.1332)" required>
+                    </div>
+                    <button type="button" id="btnUpdateMap" style="margin-top:5px; font-size:0.8em; padding:5px 10px; background:#ddd; border:none; cursor:pointer;">📍 Actualizar pin desde coordenadas escritas</button>
+                </div>
+
+                <div class="form-group">
+                    <label>Dirección Escrita</label>
+                    <input type="text" id="direccion" placeholder="Calle, Número, Colonia...">
+                </div>
+
+                <div class="form-group">
+                    <label>Tipo de Atención</label>
+                    <select id="tipo">
+                        <option value="Presencial">Presencial</option>
+                        <option value="Online">Online</option>
+                        <option value="Híbrido">Híbrido</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Costo Aproximado</label>
+                    <select id="costo">
+                        <option value="Gratuito">Gratuito</option>
+                        <option value="Cuota de recuperación">Cuota de recuperación</option>
+                        <option value="Pago por sesión">Pago por sesión</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Horarios</label>
+                    <input type="text" id="horario" placeholder="Ej. Lun-Vie 9am - 6pm">
+                </div>
+
+                <div class="form-group">
+                    <label>Foto del lugar</label>
+                    <input type="file" id="foto" accept="image/*" required>
+                </div>
+
+                <button type="submit" class="button" id="btnGuardar">Guardar Consultorio</button>
+                <p id="statusMsg" style="margin-top:10px; font-weight:bold;"></p>
+            </form>
+        </div>
+
+        <div class="admin-list-panel">
+            <h3>📋 Centros Registrados</h3>
+            <div id="centersList">Cargando lista...</div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
+
+        // --- ¡¡¡PEGA AQUÍ TU CONFIGURACIÓN OTRA VEZ!!! ---
+        const firebaseConfig = {
+  apiKey: "AIzaSyCq2lQnID4SSkFIKh_ja6paB4aHuq4KU0M",
+  authDomain: "proyectercerparcial.firebaseapp.com",
+  projectId: "proyectercerparcial",
+  storageBucket: "proyectercerparcial.appspot.com",
+  messagingSenderId: "39792129165",
+  appId: "1:39792129165:web:631ce9e0c7fb657a135ec4"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        // Mapa
+        var map = L.map('mapPicker').setView([19.4326, -99.1332], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+
+        let currentMarker;
+
+        // Función para poner el pin
+        function setPin(lat, lng) {
+            if (currentMarker) map.removeLayer(currentMarker);
+            currentMarker = L.marker([lat, lng]).addTo(map);
+            map.setView([lat, lng], 16);
+            
+            // Actualizar inputs solo si no fueron los que activaron la función
+            if(document.activeElement.id !== 'lat' && document.activeElement.id !== 'lng') {
+                document.getElementById('lat').value = lat;
+                document.getElementById('lng').value = lng;
+            }
+        }
+
+        // 1. Click en el mapa
+        map.on('click', function(e) { 
+            document.getElementById('lat').value = e.latlng.lat;
+            document.getElementById('lng').value = e.latlng.lng;
+            setPin(e.latlng.lat, e.latlng.lng); 
+        });
+
+        // 2. Buscador del mapa
+        L.Control.geocoder({ defaultMarkGeocode: false, placeholder: "Buscar..." })
+        .on('markgeocode', function(e) { setPin(e.geocode.center.lat, e.geocode.center.lng); })
+        .addTo(map);
+
+        // 3. NUEVO: Botón para actualizar mapa desde inputs (Copiar y Pegar)
+        document.getElementById('btnUpdateMap').addEventListener('click', () => {
+            const lat = parseFloat(document.getElementById('lat').value);
+            const lng = parseFloat(document.getElementById('lng').value);
+            if(lat && lng) {
+                setPin(lat, lng);
+            } else {
+                alert("Pega primero las coordenadas de Google Maps.");
+            }
+        });
+
+        // Guardar
+        const form = document.getElementById('addCenterForm');
+        const btn = document.getElementById('btnGuardar');
+        const msg = document.getElementById('statusMsg');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if(!document.getElementById('lat').value) { alert("Necesitas coordenadas."); return; }
+
+            btn.disabled = true;
+            btn.innerText = "Subiendo...";
+            msg.innerText = "";
+
+            try {
+                const file = document.getElementById('foto').files[0];
+                const storageRef = ref(storage, 'centros/' + Date.now() + '_' + file.name);
+                const snapshot = await uploadBytes(storageRef, file);
+                const downloadURL = await getDownloadURL(snapshot.ref);
+
+                await addDoc(collection(db, "consultorios"), {
+                    nombre: document.getElementById('nombre').value,
+                    direccion: document.getElementById('direccion').value,
+                    tipo: document.getElementById('tipo').value,
+                    costo: document.getElementById('costo').value,
+                    horario: document.getElementById('horario').value,
+                    lat: parseFloat(document.getElementById('lat').value),
+                    lng: parseFloat(document.getElementById('lng').value),
+                    img: downloadURL,
+                    fecha: new Date()
+                });
+
+                msg.style.color = "green";
+                msg.innerText = "✅ Guardado";
+                form.reset();
+                if(currentMarker) map.removeLayer(currentMarker);
+                map.setView([19.4326, -99.1332], 13);
+
+            } catch (error) {
+                console.error(error);
+                msg.style.color = "red";
+                msg.innerText = "❌ Error: " + error.message;
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Guardar Consultorio";
+            }
+        });
+
+        // Lista
+        const listContainer = document.getElementById('centersList');
+        onSnapshot(collection(db, "consultorios"), (snapshot) => {
+            listContainer.innerHTML = "";
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                const item = document.createElement('div');
+                item.className = 'item-row';
+                item.innerHTML = `
+                    <div class="item-info">
+                        <img src="${data.img}" class="item-thumb">
+                        <div><strong>${data.nombre}</strong><br><small>${data.direccion}</small></div>
+                    </div>
+                    <button class="btn-delete" data-id="${docSnap.id}">Borrar</button>
+                `;
+                item.querySelector('.btn-delete').addEventListener('click', async () => {
+                    if(confirm("¿Borrar?")) await deleteDoc(doc(db, "consultorios", docSnap.id));
+                });
+                listContainer.appendChild(item);
+            });
+        });
+    </script>
+</body>
+</html>
