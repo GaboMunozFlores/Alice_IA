@@ -1,0 +1,37 @@
+body {
+  background: linear-gradient(180deg, #eaf6f9, #ffffff);
+  font-family: 'Poppins', sans-serif;
+}
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  width: 100%;
+  max-width: 400px;
+  background-color: #ffffff;
+}
+
+.logo {
+  width: 100px;
+  height: 100px;
+}
+
+.btn-login {
+  background-color: #6ec1e4;
+  border: none;
+}
+
+.btn-login:hover {
+  background-color: #4ea8d5;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6ec1e4;
+  color: #fff;
+  border-color: #6ec1e4;
+}
