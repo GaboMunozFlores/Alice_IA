@@ -1,12 +1,10 @@
 {
-  "hosting": {
-    "public": ".",
-    "ignore": [
-      "firebase.json",
-      "/.*",
-      "/node_modules/"
-    ],
-    "cleanUrls": true
-  }
+    "hosting": {
+        "public": "alice-i4",
+        "ignore": [
+            "firebase.json",
+            "**/.*",
+            "**/node_modules/**"
+        ]
+    }
 }
-

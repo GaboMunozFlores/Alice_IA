@@ -1,6 +1,6 @@
 import {onAuthStateChange} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"; 
 import { auth } from "./nav-alice-usuarios/js/auth_firebase.js";
-
+import './firebase.js'
 
 import { signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js"; 
 import './nav-alice-usuarios/js/auth_firebase.js';
