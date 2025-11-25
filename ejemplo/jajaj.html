@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Firebase Firestore</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1,
+        h2 {
+            color: #333;
+            text-align: center;
+        }
+
+        #item-form {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        #item-texto {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .items-lista ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 5px solid #007bff;
+            margin-bottom: 10px;
+        }
+
+        .item-texto {
+            margin: 0;
+            font-size: 16px;
+            color: #555;
+            flex-grow: 1;
+        }
+
+        .item-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+            margin-left: 10px;
+        }
+
+        .edit-btn {
+            color: #ffc107;
+        }
+
+        .delete-btn {
+            color: #d9534f;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>CRUD de Tareas</h1>
+        <form id="item-form">
+            <input type="text" id="item-texto" placeholder="Escribe una tarea..." required>
+            <button type="submit" id="submit-btn">Guardar</button>
+        </form>
+
+        <div class="items-lista">
+            <h2>Tareas</h2>
+            <ul id="items-ul">
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+        // 1. Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCYBxXKhQkz07VK5cZW7R-vnZ5ABJvpI8o",
+            authDomain: "alice-i4.firebaseapp.com",
+            projectId: "alice-i4",
+            storageBucket: "alice-i4.firebasestorage.app",
+            messagingSenderId: "421473638243",
+            appId: "1:421473638243:web:de39a5a29940442ef52556",
+            measurementId: "G-VV2VYX8SNH"
+        };
+
+        // 2. Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // 3. Referencias del DOM
+        const itemForm = document.getElementById('item-form');
+        const itemTextoInput = document.getElementById('item-texto');
+        const itemsUl = document.getElementById('items-ul');
+        const submitBtn = document.getElementById('submit-btn');
+
+        let editId = null;
+
+        // 4. Operación CREATE (Crear) y UPDATE (Actualizar)
+        itemForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const texto = itemTextoInput.value.trim();
+            if (texto) {
+                try {
+                    if (editId) {
+                        // UPDATE: Si hay un ID de edición, actualiza el documento
+                        const docRef = doc(db, "natt", editId);
+                        await updateDoc(docRef, { texto: texto });
+
+                        Swal.fire('Actualizado', 'El documento se ha actualizado correctamente.', 'success');
+                        editId = null;
+                        submitBtn.textContent = 'Guardar';
+                    } else {
+                        // CREATE: Si no hay ID de edición, crea uno nuevo
+                        await addDoc(collection(db, "natt"), {
+                            texto: texto,
+                            fecha: new Date()
+                        });
+                        Swal.fire('¡Guardado!', 'El documento se ha guardado correctamente.', 'success');
+                    }
+                    itemTextoInput.value = ''; // Limpiar el campo
+                } catch (error) {
+                    console.error("Error al procesar el documento: ", error);
+                    Swal.fire('Error', 'Hubo un problema al procesar el documento.', 'error');
+                }
+            }
+        });
+
+        // 5. Operación READ (Leer) y DELETE (Eliminar)
+        const q = query(collection(db, "natt"), orderBy("fecha", "desc"));
+        onSnapshot(q, (snapshot) => {
+            itemsUl.innerHTML = '';
+            snapshot.forEach((documento) => {
+                const data = documento.data();
+                const li = document.createElement('li');
+                li.classList.add('item-row');
+                li.innerHTML = `
+                    <p class="item-texto">${data.texto}</p>
+                    <div class="item-actions">
+                        <button class="edit-btn" data-id="${documento.id}">✏</button>
+                        <button class="delete-btn" data-id="${documento.id}">❌</button>
+                    </div>
+                `;
+                itemsUl.appendChild(li);
+            });
+
+            // Agrega los event listeners para los botones de editar y eliminar
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.target.dataset.id;
+                    const texto = e.target.closest('.item-row').querySelector('.item-texto').textContent;
+
+                    editId = id;
+                    itemTextoInput.value = texto;
+                    submitBtn.textContent = 'Actualizar';
+                    itemTextoInput.focus();
+                });
+            });
+
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    const id = e.target.dataset.id;
+                    try {
+                        await deleteDoc(doc(db, "natt", id));
+                        Swal.fire('¡Eliminado!', 'El documento se ha eliminado correctamente.', 'success');
+                    } catch (error) {
+                        console.error("Error al eliminar el documento: ", error);
+                        Swal.fire('Error', 'Hubo un problema al eliminar el documento.', 'error');
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+//chale

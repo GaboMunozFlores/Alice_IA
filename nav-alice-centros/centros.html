@@ -1,0 +1,337 @@
+<!DOCTYPE HTML>
+<html lang="es">
+<head>
+    <title>Centros de Ayuda - Alice IA</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+    <link rel="stylesheet" href="../assets/css/main.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        /* --- CORRECCIÓN DEFINITIVA DEL NAV --- */
+        
+        /* 1. Hacemos que el nav ocupe espacio real y no flote */
+        #nav {
+            position: relative !important; 
+            height: auto !important;
+            top: auto !important;
+            left: auto !important;
+            line-height: normal !important;
+            padding-bottom: 10px; /* Un poco de aire abajo */
+        }
+
+        /* 2. Ajustamos la caja azul para que se adapte al contenido */
+        #header-wrapper {
+            background-color: #80B5D1 !important; 
+            padding: 1.5em 0 !important; /* Padding uniforme arriba y abajo */
+            height: auto !important;
+        }
+        
+        #header {
+            margin-bottom: 0;
+            height: auto !important;
+        }
+
+        /* 3. Alineación vertical de los elementos del menú */
+        #nav > ul {
+            display: flex;
+            align-items: center; /* Centra verticalmente texto y botones */
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px; /* Espacio entre elementos si se juntan mucho */
+        }
+        
+        #nav > ul > li {
+            display: inline-block;
+            margin: 0 0.5em;
+        }
+
+        /* --- FOOTER MINIMALISTA --- */
+        #footer-wrapper {
+            background-color: #f5f7fa !important;
+            padding: 2em 0 !important;
+            border-top: 1px solid rgba(0,0,0,0.05) !important; /* Línea súper sutil */
+            text-align: center;
+        }
+
+        #copyright {
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            color: #aaa;
+            font-size: 0.85em;
+            font-weight: 300;
+        }
+
+        /* --- ESTILOS GENERALES --- */
+        .main-layout {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            min-height: 60vh;
+        }
+
+        /* Barra de Búsqueda */
+        .filter-bar {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            text-align: center;
+            border: 1px solid #eee;
+            margin-top: 20px;
+        }
+
+        .search-input {
+            width: 80%;
+            max-width: 500px;
+            padding: 12px 20px;
+            border: 2px solid #eee;
+            border-radius: 50px;
+            font-size: 1em;
+            outline: none;
+            margin-bottom: 15px;
+        }
+        .search-input:focus { border-color: #80B5D1; }
+
+        /* Filtros */
+        .filter-chips {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            padding: 8px 20px;
+            background: #f4f6f8;
+            border-radius: 20px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid #ddd;
+        }
+        .filter-chip:hover { background: #e2e6ea; }
+        .filter-chip.active {
+            background: #80B5D1;
+            color: white;
+            border-color: #80B5D1;
+        }
+
+        /* Tarjetas */
+        #consultorios-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .center-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+            border: 1px solid #f0f0f0;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+        .center-card:hover { transform: translateY(-5px); border-color: #80B5D1; }
+
+        .card-image { height: 160px; width: 100%; object-fit: cover; }
+        .card-content { padding: 15px; flex-grow: 1; }
+        .card-title { font-weight: bold; color: #2c3e50; margin-bottom: 5px; font-size: 1.1em; }
+        .card-details { color: #666; font-size: 0.9em; margin-bottom: 10px; }
+        
+        .tags { display: flex; gap: 5px; margin-top: auto; }
+        .tag { padding: 3px 8px; border-radius: 4px; font-size: 0.75em; font-weight: 600; }
+        .tag-tipo { background: #e3f2fd; color: #1976d2; }
+        .tag-costo { background: #e8f5e9; color: #388e3c; }
+
+        /* Mapa */
+        .map-wrapper {
+            border: 4px solid white;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        #map { height: 350px; width: 100%; }
+
+        .section-title { 
+            color: #52575c; 
+            text-align: center; 
+            margin: 30px 0 15px 0; 
+            font-weight: 300;
+        }
+    </style>
+</head>
+<body class="is-preload">
+    <div id="page-wrapper">
+
+        <div id="header-wrapper">
+            <div id="header" class="container">
+                <nav id="nav">
+                    <ul>
+                        <li><a href="../index.html">Inicio</a></li>
+                        <li><a href="Ayuda.html">Ayuda inmediata</a></li>
+                        <li class="break"><a href="#" style="color:white; font-weight:bold;">Centros de Ayuda</a></li>
+                        <li><a href="../left-sidebar.html">Alice</a></li>
+                        <li><a href="login.html" class="button">Inicia sesión</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <div class="main-layout">
+            
+            <div class="filter-bar">
+                <input type="text" id="searchInput" class="search-input" placeholder="🔍 Busca por zona (ej. Roma, Centro) o problema...">
+                <div class="filter-chips">
+                    <span class="filter-chip active" onclick="filtrar('todos', this)">Todos</span>
+                    <span class="filter-chip" onclick="filtrar('Presencial', this)">📍 Presencial</span>
+                    <span class="filter-chip" onclick="filtrar('Online', this)">💻 Online</span>
+                    <span class="filter-chip" onclick="filtrar('Gratuito', this)">💰 Gratuito</span>
+                </div>
+            </div>
+
+            <h2 class="section-title">Centros Disponibles</h2>
+            <div id="consultorios-list">
+                <p style="text-align:center;">Cargando...</p>
+            </div>
+
+            <h2 class="section-title">Ubicación</h2>
+            <div class="map-wrapper">
+                <div id="map"></div>
+            </div>
+
+        </div>
+
+        <div id="footer-wrapper">
+            <div id="copyright" class="container">
+                &copy; Tactical solutions. Todos los derechos reservados.
+            </div>
+        </div>
+
+    </div>
+
+<script src="../assets/js/jquery.min.js"></script>
+<script src="../assets/js/jquery.dropotron.min.js"></script>
+<script src="../assets/js/browser.min.js"></script>
+<script src="../assets/js/breakpoints.min.js"></script>
+<script src="../assets/js/util.js"></script>
+<script src="../assets/js/main.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+    // 1. PEGAR TU CONFIGURACIÓN OTRA VEZ AQUÍ
+    const firebaseConfig = {
+  apiKey: "AIzaSyCq2lQnID4SSkFIKh_ja6paB4aHuq4KU0M",
+  authDomain: "proyectercerparcial.firebaseapp.com",
+  projectId: "proyectercerparcial",
+  storageBucket: "proyectercerparcial.appspot.com",
+  messagingSenderId: "39792129165",
+  appId: "1:39792129165:web:631ce9e0c7fb657a135ec4"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Variables globales para usar en el filtrado
+    let centros = []; 
+    var map = L.map('map').setView([19.4326, -99.1332], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+    let markers = [];
+    const listaContainer = document.getElementById('consultorios-list');
+
+    // 2. Función principal: Cargar desde Firebase
+    async function cargarCentrosDesdeFirebase() {
+        listaContainer.innerHTML = '<p style="text-align:center;">Cargando datos de Alice...</p>';
+        
+        try {
+            const querySnapshot = await getDocs(collection(db, "consultorios"));
+            
+            centros = []; // Limpiamos array
+            querySnapshot.forEach((doc) => {
+                // Juntamos el ID con los datos
+                centros.push({ id: doc.id, ...doc.data() });
+            });
+
+            if(centros.length === 0) {
+                listaContainer.innerHTML = '<p style="text-align:center;">Aún no hay centros registrados.</p>';
+            } else {
+                renderizarCentros(centros);
+            }
+
+        } catch (error) {
+            console.error("Error cargando:", error);
+            listaContainer.innerHTML = '<p style="text-align:center; color:red;">Error al cargar datos. Revisa tu conexión.</p>';
+        }
+    }
+
+    // 3. Renderizado (Igual que antes pero usando datos reales)
+    window.renderizarCentros = function(datos) {
+        listaContainer.innerHTML = "";
+        markers.forEach(m => map.removeLayer(m));
+        markers = [];
+
+        datos.forEach(centro => {
+            const card = document.createElement('div');
+            card.className = 'center-card';
+            card.onclick = () => verEnMapa(centro.lat, centro.lng);
+            
+            card.innerHTML = `
+                <img src="${centro.img}" class="card-image" onerror="this.src='../images/placeholder.jpg'">
+                <div class="card-content">
+                    <div class="card-title">${centro.nombre}</div>
+                    <div class="card-details">📍 ${centro.direccion}<br>🕒 ${centro.horario}</div>
+                    <div class="tags">
+                        <span class="tag tag-tipo">${centro.tipo}</span>
+                        <span class="tag tag-costo">${centro.costo}</span>
+                    </div>
+                </div>
+            `;
+            listaContainer.appendChild(card);
+
+            if(centro.lat && centro.lng) {
+                const marker = L.marker([centro.lat, centro.lng]).addTo(map)
+                    .bindPopup(`<b>${centro.nombre}</b><br>${centro.direccion}`);
+                markers.push(marker);
+            }
+        });
+    };
+
+    // 4. Funciones de Utilidad (Globales)
+    window.verEnMapa = function(lat, lng) {
+        document.getElementById('map').scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => { map.setView([lat, lng], 16); }, 500);
+    };
+
+    window.filtrar = function(criterio, btn) {
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        
+        if(criterio === 'todos') renderizarCentros(centros);
+        else renderizarCentros(centros.filter(c => c.tipo === criterio || c.costo === criterio));
+    };
+
+    // Evento buscador
+    document.getElementById('searchInput').addEventListener('keyup', (e) => {
+        const txt = e.target.value.toLowerCase();
+        renderizarCentros(centros.filter(c => 
+            c.nombre.toLowerCase().includes(txt) || 
+            c.direccion.toLowerCase().includes(txt)
+        ));
+    });
+
+    // INICIAR
+    cargarCentrosDesdeFirebase();
+
+</script>
+</body>
+</html>
