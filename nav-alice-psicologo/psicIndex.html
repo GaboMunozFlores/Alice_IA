@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psicólogos Disponibles - Alice IA</title>
+    <link rel="stylesheet" href="../assets/css/main.css">
+<style>
+    /* ESTILOS FORZADOS PARA PSICINDEX - VERSION NUCLEAR */
+    #nav.psic-index-nav {
+        all: initial !important;
+        display: block !important;
+        background: #80B5D1 !important;
+        padding: 15px 0 !important;
+        width: 100% !important;
+    }
+    
+    #nav.psic-index-nav ul {
+        all: initial !important;
+        display: flex !important;
+        justify-content: center !important;
+        gap: 30px !important;
+        list-style: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    #nav.psic-index-nav ul li {
+        all: initial !important;
+        display: block !important;
+    }
+    
+    #nav.psic-index-nav ul li a {
+        all: initial !important;
+        display: block !important;
+        color: white !important;
+        text-decoration: none !important;
+        padding: 8px 16px !important;
+        font-family: Arial, sans-serif !important;
+        font-size: 16px !important;
+    }
+    
+    /* OCULTAR COMPLETAMENTE LOS ÚLTIMOS 2 ITEMS */
+    #nav.psic-index-nav ul li:nth-last-child(1),
+    #nav.psic-index-nav ul li:nth-last-child(2) {
+        display: none !important;
+    }
+</style>
+</head>
+<body>
+    <!-- Header Existente -->
+    <div id="header-wrapper">
+        <div id="header" class="container">
+            <!-- Nav Simplificado -->
+      <nav id="nav" class="psic-index-nav">
+   <ul>
+        <li><a href="../index.html">Inicio</a></li>
+        <li>
+            <a href="nav-alice-psicologo/psicIndex.html">Ayuda inmediata</a>
+            <ul>
+                <li>
+                    <a href="https://api.whatsapp.com/send?phone=525635164983&text=tengo%20una%20crisis%20y%20necesito%20asistencia" 
+                       target="_blank" 
+                       class="whatsapp-link">
+                        <img src="images/Whatsapp.png" alt="" class="whatsapp-icon">
+                        Ayuda por WhatsApp
+                    </a>
+                </li>
+                 <!--
+                <li><a href="#">Numero de Ayuda</a></li>
+                <li><a href="#">Numero de Ayuda</a></li>-->
+            </ul>
+        </li>
+        <li><a href="Chatbot/chatbot.php">Alice</a></li>
+        <li><a href="nav-alice-centros/centros.html">Centros de Ayuda</a></li>
+        <li><a href="nav-alice-usuarios/login.html" class="btn-Derecha">Inicia sesión</a></li>
+        <li><a href="nav-alice-usuarios/signin.html" class="btn-Derecha">Registrate</a></li>
+    </ul>
+</nav>
+        </div>
+    </div>
+
+    <!-- Contenedor principal del listado de psicólogos -->
+    <main class="main-container">
+        <div class="container">
+            <!-- Estado de carga -->
+            <div id="estado-carga" class="loading">
+                <div class="spinner"></div>
+                <p>Cargando psicólogos disponibles...</p>
+            </div>
+
+            <!-- Mensaje de error -->
+            <div id="estado-error" class="error-message hidden">
+                <p>No se pudieron cargar los psicólogos. Intenta más tarde.</p>
+            </div>
+
+            <!-- Lista de psicólogos -->
+            <section id="seccion-psicologos" class="psychologists-section hidden">
+                <h2 style="text-align: center; color: #288488; font-family: monospace; margin-bottom: 30px;">
+                    Nuestros Psicólogos Especializados
+                </h2>
+                <p style="text-align: center; margin-bottom: 40px; color: #666;">
+                    Encuentra el profesional que mejor se adapte a tus necesidades
+                </p>
+                <div id="contenedor-psicologos" class="psychologists-grid">
+                    <!-- Las tarjetas se generarán aquí dinámicamente -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2024 Alice IA - Plataforma de Apoyo Psicológico</p>
+        </div>
+    </footer>
+
+    <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const configuracionFirebase = {
+        apiKey: "AIzaSyARZlEs_zFZ_F_Q-kTeuCiVyF_by6KtL5M",
+        authDomain: "alice-iapsic.firebaseapp.com",
+        projectId: "alice-iapsic",
+        storageBucket: "alice-iapsic.firebasestorage.app",
+        messagingSenderId: "1045384574456",
+        appId: "1:1045384574456:web:af0a149776d8fa7eed520d",
+        measurementId: "G-W4E4HE01YS"
+    };
+
+    // Inicializar Firebase
+    const app = initializeApp(configuracionFirebase);
+    const db = getFirestore(app);
+
+    // Función para cargar psicólogos en tiempo real
+    function cargarPsicologosTiempoReal() {
+        const estadoCarga = document.getElementById('estado-carga');
+        const estadoError = document.getElementById('estado-error');
+        const seccionPsicologos = document.getElementById('seccion-psicologos');
+        const contenedorPsicologos = document.getElementById('contenedor-psicologos');
+
+        try {
+            console.log("Escuchando cambios en tiempo real...");
+            
+            // Escuchar cambios en tiempo real
+            const suscripcion = onSnapshot(collection(db, "psicologos"), 
+                (instantanea) => {
+                    contenedorPsicologos.innerHTML = '';
+                    
+                    if (instantanea.empty) {
+                        estadoError.classList.remove('hidden');
+                        estadoError.innerHTML = '<p>No hay psicólogos disponibles en este momento.</p>';
+                        seccionPsicologos.classList.add('hidden');
+                    } else {
+                        instantanea.forEach((documento) => {
+                            const psicologo = documento.data();
+                            console.log("Psicólogo cargado:", psicologo);
+                            const tarjeta = crearTarjetaPsicologo(psicologo);
+                            contenedorPsicologos.appendChild(tarjeta);
+                        });
+                        
+                        seccionPsicologos.classList.remove('hidden');
+                        estadoError.classList.add('hidden');
+                    }
+                    
+                    estadoCarga.classList.add('hidden');
+                    console.log("Psicólogos actualizados correctamente");
+                },
+                (error) => {
+                    console.error("Error en tiempo real:", error);
+                    estadoCarga.classList.add('hidden');
+                    estadoError.classList.remove('hidden');
+                    estadoError.innerHTML = `<p>Error al cargar psicólogos: ${error.message}</p>`;
+                }
+            );
+
+        } catch (error) {
+            console.error("Error iniciando escucha en tiempo real:", error);
+            estadoCarga.classList.add('hidden');
+            estadoError.classList.remove('hidden');
+        }
+    }
+
+    function crearTarjetaPsicologo(psicologo) {
+    const tarjeta = document.createElement('div');
+    tarjeta.className = 'psychologist-card';
+    tarjeta.tabIndex = 0;
+    tarjeta.setAttribute('role', 'article');
+    tarjeta.setAttribute('aria-label', `Psicólogo: ${psicologo.nombre}, Especialidad: ${psicologo.especialidad}`);
+    
+    tarjeta.innerHTML = `
+        <div class="card-image">
+            <img src="${psicologo.foto}" 
+                 alt="Foto de ${psicologo.nombre}">
+        </div>
+        <div class="card-content">
+            <h3>${psicologo.nombre}</h3>
+            <p class="specialty">${psicologo.especialidad}</p>
+            <p class="availability">
+                <span aria-hidden="true">🕐 </span>
+                ${psicologo.disponibilidad}
+            </p>
+            <p class="email">
+                <span aria-hidden="true">📧 </span>
+                ${psicologo.email}
+            </p>
+            <!-- Aqui conectas las citaaaas -->
+            <button class="btn-cita" data-psicologo-id="${psicologo.id || ''}" data-psicologo-nombre="${psicologo.nombre}">
+                Agendar Cita
+            </button>
+        </div>
+    `;
+    
+    return tarjeta;
+}
+
+    // Carga de los psic en tiempo real
+    document.addEventListener('DOMContentLoaded', cargarPsicologosTiempoReal);
+</script>
+</body>
+</html>
