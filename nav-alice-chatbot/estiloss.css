@@ -530,3 +530,22 @@ a:hover {
   transform: scale(1.05);
   box-shadow: 0 5px 10px rgba(255, 215, 0, 0.6);
 }
+.sidebar-btn {
+  display: block;
+  width: 90%;
+  margin: 10px auto;
+  padding: 10px 14px;
+  background-color: #e8f5e9;
+  border: none;
+  border-radius: 8px;
+  color: #2e7d32;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s;
+  text-align: left;
+}
+
+.sidebar-btn:hover {
+  background-color: #c8e6c9;
+  transform: scale(1.03);
+}

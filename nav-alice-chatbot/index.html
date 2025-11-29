@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Alice IA</title>
+  <link rel="stylesheet" href="estiloss.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    /* --- TUS ESTILOS ORIGINALES (Los mantuve igual) --- */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .stars span {
+      font-size: 28px;
+      cursor: pointer;
+      color: #ccc;
+      transition: color 0.2s;
+    }
+
+    .stars span.selected {
+      color: gold;
+    }
+
+    textarea {
+      width: 100%;
+      height: 80px;
+      margin: 10px 0;
+      border-radius: 10px;
+      padding: 8px;
+    }
+
+    .modal-buttons button {
+      margin: 5px;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    #enviarOpinionBtn {
+      background-color: #6bcf9d;
+      color: white;
+    }
+
+    #cancelarOpinionBtn {
+      background-color: #ccc;
+    }
+
+    #opinionesContainer {
+      width: 100%;
+      max-width: 700px;
+      margin: 30px auto;
+      padding: 10px;
+    }
+
+    .opinion-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 10px;
+      margin: 10px 0;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="d-flex vh-100">
+    <div class="sidebar d-flex flex-column justify-content-between p-3">
+      <div class="top-section d-flex flex-column align-items-center">
+        <div class="d-flex align-items-center user-info mb-4">
+          <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="User" class="user-icon me-2">
+          <span id="userEmail" class="fw-semibold">Cargando...</span>
+        </div>
+        <button id="opinionBtn" class="btn btn-primary w-100 btn-lg">Danos tu opinión</button>
+        <button id="verGraficaBtn" class="sidebar-btn">📊 Ver mi evolución</button>
+      </div>
+      <button id="logoutBtn" class="btn btn-danger w-100 mt-3">Cerrar sesión</button>
+    </div>
+
+    <div class="chat-area flex-grow-1 d-flex flex-column justify-content-end align-items-center">
+      <div class="text-center mb-3">
+        <img src="logo-alice.png" alt="Logo Chat" class="logo">
+        <h4 class="mt-2">Bienvenido a Alice IA!</h4>
+        <p>¿Cómo te sientes hoy?🌷</p>
+      </div>
+      <div id="chatBox" class="chat-box"></div>
+      <div class="input-group mb-3" style="max-width:700px;">
+        <input type="text" id="userMessage" class="form-control" placeholder="Escribe aquí...">
+        <button class="btn btn-primary" id="sendBtn">Enviar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="graficaContainer" style="display:none; padding:20px; background:#fff; border-radius:12px; margin:15px;">
+    <canvas id="graficaEmociones" width="400" height="200"></canvas>
+  </div>
+  <audio id="sendSound" src="sounds/send.mp3"></audio>
+  <audio id="receiveSound" src="sounds/receive.mp3"></audio>
+
+  <div id="opinionModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <h2>💬 Danos tu opinión</h2>
+      <p>Tu experiencia con Alice nos ayuda a mejorar 🌷</p>
+      <div class="stars">
+        <span data-value="1">★</span><span data-value="2">★</span><span data-value="3">★</span><span
+          data-value="4">★</span><span data-value="5">★</span>
+      </div>
+      <textarea id="opinionText" placeholder="Escribe tu comentario aquí..." maxlength="300"></textarea>
+      <div class="modal-buttons">
+        <button id="enviarOpinionBtn">Enviar</button>
+        <button id="cancelarOpinionBtn">Cancelar</button>
+      </div>
+    </div>
+  </div>
+  <div id="opinionesContainer">
+    <h3>💭 Opiniones recientes</h3>
+  </div>
+
+  <script src="chatbot.js"></script>
+  <script type="module" src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script type="module">
+    // Importamos las herramientas desde tu archivo central auth_firebase.js
+    // ASEGÚRATE QUE LA RUTA ./js/auth_firebase.js SEA CORRECTA
+    import { auth, db } from "../nav-alice-usuarios/js/auth_firebase.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+    import { collection, addDoc, getDocs, orderBy, query, limit } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+    // 1. VERIFICAR SESIÓN (SEGURIDAD)
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("Usuario logueado:", user.email);
+        document.getElementById("userEmail").textContent = user.email;
+      } else {
+        // Si no hay usuario, mandar al login
+        console.log("No hay usuario, redirigiendo...");
+        window.location.href = "../nav-alice-usuarios/login.html";
+      }
+    });
+
+    // 2. CERRAR SESIÓN
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", async () => {
+        try {
+          await signOut(auth);
+          window.location.href = "../nav-alice-usuarios/login.html";
+        } catch (error) {
+          console.error("Error al salir:", error);
+        }
+      });
+    }
+
+  </script>
+</body>
+
+</html>
