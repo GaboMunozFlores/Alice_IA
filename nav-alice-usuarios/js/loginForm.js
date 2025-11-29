@@ -34,16 +34,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 const credentials = await signInWithEmailAndPassword(firebaseAuth, email, password);
                 console.log("Credenciales:", credentials);
 
-                displaySuccessAlert("¡Bienvenido!", "Inicio de sesión exitoso.", "../nav-alice-chatbot/index.php");
+                displaySuccessAlert("¡Bienvenido!", "Inicio de sesión exitoso.", "../nav-alice-chatbot/index.html");
 
             } catch (error) {
                 console.error("Error de Login:", error);
 
                 // Manejo de errores de inicio de sesión
-                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                if (error.code === 'auth/user-not-found') {
                     displayErrorAlert("Credenciales Inválidas", "Correo electrónico o contraseña incorrectos.");
                 } else if (error.code === 'auth/invalid-email') {
                     displayErrorAlert("Email Inválido", "El formato del correo electrónico es incorrecto.");
+                } else if (error.code === 'auth/wrong-password') {
+                    displayErrorAlert("Contraseña Inválida", "La contraseña proporcionada no es válida.");
+                } else if (error.code === 'auth/user-disabled') {
+                    displayErrorAlert("Usuario Deshabilitado", "Esta cuenta ha sido deshabilitada. Contacta al soporte.");
+                } else if (error.code === 'auth/too-many-requests') {
+                    displayErrorAlert("Demasiados Intentos", "Hemos bloqueado todas las solicitudes de este dispositivo debido a actividad inusual. Intente más tarde.");
                 } else {
                     displayErrorAlert("Error Desconocido", "Ocurrió un error al intentar iniciar sesión. Intente más tarde.");
                 }

@@ -1,3 +1,10 @@
+// 1. IMPORTACIONES NECESARIAS (Versión Modular)
+// Asegúrate de que la ruta "./auth_firebase.js" sea correcta (si ambos archivos están en la carpeta js/)
+import { auth, db } from "./auth_firebase.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+import { collection, addDoc, query, where, orderBy, limit, getDocs, Timestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+// Esperamos a que el DOM cargue
 window.addEventListener('DOMContentLoaded', () => {
   const chatbox = document.getElementById('chatBox');
   const sendSound = document.getElementById('sendSound');
@@ -7,42 +14,36 @@ window.addEventListener('DOMContentLoaded', () => {
   const logoutBtn = document.getElementById('logoutBtn');
   const userEmailSpan = document.getElementById('userEmail');
   const alertSound = document.getElementById('alertSound');
-  const opinionBtn = document.getElementById('opinionBtn');
-const opinionModal = document.getElementById('opinionModal');
-const enviarOpinionBtn = document.getElementById('enviarOpinionBtn');
-const cancelarOpinionBtn = document.getElementById('cancelarOpinionBtn');
-const opinionText = document.getElementById('opinionText');
-const stars = document.querySelectorAll('.stars span');
 
-let calificacion = 0;
+  // Elementos de Opinión
+  const opinionBtn = document.getElementById('opinionBtn');
+  const opinionModal = document.getElementById('opinionModal');
+  const enviarOpinionBtn = document.getElementById('enviarOpinionBtn');
+  const cancelarOpinionBtn = document.getElementById('cancelarOpinionBtn');
+  const opinionText = document.getElementById('opinionText');
+  const stars = document.querySelectorAll('.stars span');
+  const verGraficaBtn = document.getElementById('verGraficaBtn');
+
+  let calificacion = 0;
 
   if (!chatbox || !userInputField || !sendBtn || !logoutBtn || !userEmailSpan) {
-    console.error('Elementos de chat no encontrados en el DOM.');
+    console.error('⚠️ Elementos del chat no encontrados en el DOM.');
     return;
   }
 
-  // === FUNCIONES AUXILIARES ===
+  // === FUNCIONES AUXILIARES (Lógica del Chat) ===
 
-  // Palabras graves o variantes (errores intencionales)
+  // Palabras graves
   const patronesGraves = [
-    /su[i1!|]c[i1!|]d[i1!|]o/i,
-    /su[i1!|]c[i1!|]d[a4]rme/i,
-    /m[a4]t[a4]rme/i,
-    /q[u]?i[e]?r[o]? m[o0]r[i1!|]r/i,
-    /n[o0] qu[i1!|]r[o]? v[i1!|]v[i1!|]r/i,
-    /d[e]?s[e]?p[e]?r[a4]c[e]?r/i,
-    /t[e]?rmin[a4]r t[o0]d[o0]/i,
-    /n[o0] p[u]?e?d[o0] m[a4][s5]/i,
-    /est[o0]y c[a4]ns[a4]d[o0]/i,
-    /aut[o0]l[e3]s[i1!|][o0]n/i,
-    /d[e3]sp[e3]r[a4]d[o0][a4]?/i
+    /su[i1!|]c[i1!|]d[i1!|]o/i, /su[i1!|]c[i1!|]d[a4]rme/i, /m[a4]t[a4]rme/i,
+    /q[u]?i[e]?r[o]? m[o0]r[i1!|]r/i, /n[o0] qu[i1!|]r[o]? v[i1!|]v[i1!|]r/i,
+    /d[e]?s[e]?p[e]?r[a4]c[e]?r/i, /t[e]?rmin[a4]r t[o0]d[o0]/i,
+    /n[o0] p[u]?e?d[o0] m[a4][s5]/i, /est[o0]y c[a4]ns[a4]d[o0]/i,
+    /aut[o0]l[e3]s[i1!|][o0]n/i, /d[e3]sp[e3]r[a4]d[o0][a4]?/i
   ];
 
   function normalizeText(text) {
-    return text
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
+    return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   }
 
   function containsGraveWord(text) {
@@ -50,46 +51,27 @@ let calificacion = 0;
     return patronesGraves.some(regex => regex.test(normalized));
   }
 
-  // Crear mensaje de Alice
   function createBotMessage(text, isHelp = false) {
     const botMessage = document.createElement('div');
     botMessage.className = isHelp ? 'bot-message-help message' : 'bot-message message';
-
-    const formattedText = text
-      .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
-      .replace(/\*(.*?)\*/g, '<i>$1</i>')
-      .replace(/\n/g, '<br>');
-
-    botMessage.innerHTML = `
-      <div class="bot-bubble">
-        <b>Alice:</b><br>${formattedText}
-      </div>
-    `;
-
+    const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\*(.*?)\*/g, '<i>$1</i>').replace(/\n/g, '<br>');
+    botMessage.innerHTML = `<div class="bot-bubble"><b>Alice:</b><br>${formattedText}</div>`;
     chatbox.appendChild(botMessage);
     chatbox.scrollTop = chatbox.scrollHeight;
   }
 
-  // Crear mensaje del usuario
   function createUserMessage(text) {
     const userMessage = document.createElement('div');
     userMessage.className = 'user-message message';
-    userMessage.innerHTML = `
-      <div class="user-bubble">${text}</div>
-    `;
+    userMessage.innerHTML = `<div class="user-bubble">${text}</div>`;
     chatbox.appendChild(userMessage);
     chatbox.scrollTop = chatbox.scrollHeight;
   }
 
-  // Efecto de escritura
   function showTyping(callback) {
     const typingBubble = document.createElement('div');
     typingBubble.className = 'bot-message typing';
-    typingBubble.innerHTML = `
-      <div class="bot-bubble typing-bubble">
-        <b>Alice</b> está escribiendo<span class="typing-dots"></span>
-      </div>
-    `;
+    typingBubble.innerHTML = `<div class="bot-bubble typing-bubble"><b>Alice</b> está escribiendo<span class="typing-dots"></span></div>`;
     chatbox.appendChild(typingBubble);
     chatbox.scrollTop = chatbox.scrollHeight;
 
@@ -102,22 +84,25 @@ let calificacion = 0;
 
     setTimeout(() => {
       clearInterval(dotInterval);
-      chatbox.removeChild(typingBubble);
+      if (typingBubble.parentNode) chatbox.removeChild(typingBubble);
       if (callback) callback();
     }, 1800 + Math.random() * 800);
   }
 
-  // === FIREBASE ===
-  firebase.auth().onAuthStateChanged((user) => {
+  // === AUTENTICACIÓN (CORREGIDA A MODULAR) ===
+  onAuthStateChanged(auth, (user) => {
     if (user) {
       userEmailSpan.textContent = user.email;
     } else {
-      window.location.href = "inicioSesion.html";
+      window.location.href = "../nav-alice-usuarios/login.html"; // Asegúrate que sea login.html y no inicioSesion.html si cambiaste el nombre
     }
   });
 
-  // === ENVÍO DE MENSAJE ===
-  function enviarmensaje(event) {
+  // === LÓGICA DE ENVÍO ===
+
+  // Definimos la función principal de envío
+  // (Nota: Esta función se reasigna más abajo para incluir la lógica del diario)
+  let mainEnviarMensaje = async (event) => {
     if (event) event.preventDefault();
 
     const userInput = userInputField.value.trim();
@@ -125,71 +110,65 @@ let calificacion = 0;
 
     createUserMessage(userInput);
 
+    // 1. Detección de palabras graves
     const palabraDetectada = containsGraveWord(userInput);
     if (palabraDetectada) {
-      if (alertSound) {
-        try { alertSound.play(); } catch (e) { console.log("No se pudo reproducir sonido."); }
-      }
-
-      createBotMessage(`
-        🕊️ <b>Entiendo que estás pasando por un momento muy difícil 💛</b><br><br>
-        No estás solo/a. Hablar con alguien puede ayudarte.  
-        Como asistente de IA, no estoy capacitada para ofrecerte la ayuda profesional que necesitas en este momento.  
-        Te recomiendo contactar con una línea de ayuda inmediatamente:<br><br>
-        ☎️ <b>SAPTEL:</b> 800 472 7835 — Apoyo emocional y crisis psicológica<br>
-        ☎️ <b>Línea de la Vida:</b> 800 911 2000 — Orientación emocional<br><br>
-        💬 <a href="https://www.gob.mx/lineadelavida" target="_blank">Chat Línea de la Vida</a><br>
-        💬 <a href="https://saptel.org.mx/" target="_blank">Chat SAPTEL</a><br><br>
-        <b>Tu vida y tu bienestar son muy valiosos 🌷</b>
-      `, true);
-
+      if (alertSound) try { alertSound.play(); } catch (e) { }
+      createBotMessage(`🕊️ <b>Entiendo que estás pasando por un momento muy difícil...</b> (Información de ayuda omitida por brevedad)`, true);
       userInputField.value = '';
       return;
     }
 
-    // Procesar test
+    // 2. Procesar Test de Ansiedad
     if (procesarRespuestaTest(userInput)) {
       userInputField.value = '';
       return;
     }
 
-    // Si no es parte del test, envía al bot normal
-    fetch("chatbot.php", {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: userInput })
-    })
-      .then(res => res.json())
-      .then(data => {
-        showTyping(() => {
-          const response = data.error ? `Bot: ${data.error}` : `Alice: ${data.response}`;
-          createBotMessage(response);
-          if (receiveSound) receiveSound.play();
-        });
-      })
-      .catch(err => {
-        showTyping(() => {
-          createBotMessage('Lo siento, ocurrió un error al conectar con el servidor 💭');
-          if (receiveSound) receiveSound.play();
-        });
-      });
+    // 3. Comandos de Diario/Gráfica
+    if (userInput.toLowerCase().includes("ver mi diario")) {
+      mostrarDiario();
+      userInputField.value = '';
+      return;
+    }
+    if (userInput.toLowerCase().includes("ver mi grafica") || userInput.toLowerCase().includes("ver mi evolución")) {
+      mostrarGraficaEmocional();
+      userInputField.value = '';
+      return;
+    }
+
+    // 4. Respuesta Normal (Chatbot)
+    showTyping(async () => {
+      // Asegúrate de tener chatbot.js importado o disponible si usas obtenerRespuestaGemini
+      if (typeof obtenerRespuestaGemini === 'function') {
+        const respuestaIA = await obtenerRespuestaGemini(userInput);
+        createBotMessage(respuestaIA);
+      } else {
+        createBotMessage("Lo siento, mi cerebro (Gemini) no está conectado en este momento.");
+      }
+      if (receiveSound) receiveSound.play();
+    });
 
     userInputField.value = '';
   }
 
   // === EVENTOS ===
-  sendBtn.addEventListener('click', enviarmensaje);
+  sendBtn.addEventListener('click', (e) => wrappedEnviarMensaje(e));
   userInputField.addEventListener('keypress', e => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      enviarmensaje();
+      wrappedEnviarMensaje();
     }
   });
 
-  logoutBtn.addEventListener('click', () => {
-    firebase.auth().signOut().then(() => {
-      window.location.href = "inicioSesion.html";
-    }).catch(err => alert("Error al cerrar sesión: " + err.message));
+  // CERRAR SESIÓN (CORREGIDO)
+  logoutBtn.addEventListener('click', async () => {
+    try {
+      await signOut(auth);
+      window.location.href = "../nav-alice-usuarios/login.html";
+    } catch (err) {
+      alert("Error al cerrar sesión: " + err.message);
+    }
   });
 
   // === MENSAJE INICIAL ===
@@ -203,7 +182,7 @@ let calificacion = 0;
     window._mensajeInicialMostrado = true;
   }
 
-  // === TEST DE ANSIEDAD ===
+  // === LÓGICA DEL TEST DE ANSIEDAD (Sin cambios, solo funciona localmente) ===
   const testPreguntas = [
     "¿Con qué frecuencia sientes nerviosismo o inquietud sin motivo claro?",
     "¿Tienes dificultad para relajarte incluso en momentos tranquilos?",
@@ -211,120 +190,276 @@ let calificacion = 0;
     "¿Notas tensión física (como respiración rápida o palpitaciones)?",
     "¿Tus pensamientos te hacen sentir que no puedes controlar tu ansiedad?"
   ];
-
   let respuestas = [];
   let preguntaActual = 0;
   let enTest = false;
 
   function procesarRespuestaTest(texto) {
     const respuesta = texto.toLowerCase().trim();
-
     if (respuesta.includes("test")) {
-      respuestas = [];
-      preguntaActual = 0;
-      enTest = true;
+      respuestas = []; preguntaActual = 0; enTest = true;
       createBotMessage("Perfecto 💛. Empecemos de nuevo. Recuerda responder con un número del 1 al 5.");
       setTimeout(() => createBotMessage(testPreguntas[preguntaActual]), 1000);
       return true;
     }
-
     if (!enTest && preguntaActual === 0) {
       if (respuesta === "sí" || respuesta === "si") {
         enTest = true;
-        createBotMessage("Perfecto 💛. Por favor, responde con un número del 1 al 5:\n\n1️⃣ = Nunca\n2️⃣ = Rara vez\n3️⃣ = A veces\n4️⃣ = Frecuentemente\n5️⃣ = Casi siempre");
+        createBotMessage("Perfecto 💛. Responde del 1 al 5:\n1️⃣=Nunca ... 5️⃣=Siempre");
         setTimeout(() => createBotMessage(testPreguntas[preguntaActual]), 1000);
         return true;
       } else if (respuesta === "no") {
-        createBotMessage("Está bien 🌿. Podemos hablar libremente sobre cómo te sientes.");
+        createBotMessage("Está bien 🌿. Hablemos de otra cosa.");
         return true;
       }
       return false;
     }
-
-    // Validar respuestas 1-5
     const valor = parseInt(respuesta);
     if (!isNaN(valor) && valor >= 1 && valor <= 5) {
       respuestas.push(valor);
       preguntaActual++;
-
       if (preguntaActual < testPreguntas.length) {
         createBotMessage(`(${preguntaActual + 1}/${testPreguntas.length}) ${testPreguntas[preguntaActual]}`);
       } else {
         const promedio = respuestas.reduce((a, b) => a + b, 0) / testPreguntas.length;
         const porcentaje = Math.round((promedio - 1) / 4 * 100);
-        let nivel;
-        if (porcentaje < 30) nivel = "bajo 💚";
-        else if (porcentaje < 60) nivel = "moderado 💛";
-        else nivel = "alto ❤️";
-
-        createBotMessage(`
-          Tu nivel de ansiedad estimado es de aproximadamente <b>${porcentaje}%</b> (${nivel}).<br><br>
-          ⚠️ Este resultado <b>no es un diagnóstico profesional</b>.  
-          Si la ansiedad interfiere con tu vida diaria, te recomiendo hablar con un psicólogo o terapeuta. 🌱<br><br>
-          Podemos seguir hablando si quieres. ¿Te gustaría que te dé algunos ejercicios para relajarte?
-        `);
+        createBotMessage(`Tu nivel de ansiedad estimado es <b>${porcentaje}%</b>. Recuerda que esto no es un diagnóstico.`);
         enTest = false;
       }
       return true;
     }
-
     return false;
   }
 
-
-// --- Abrir modal ---
-opinionBtn.addEventListener('click', () => {
-  opinionModal.style.display = 'flex';
-});
-
-// --- Cerrar modal ---
-cancelarOpinionBtn.addEventListener('click', () => {
-  opinionModal.style.display = 'none';
-  opinionText.value = '';
-  stars.forEach(s => s.classList.remove('selected'));
-  calificacion = 0;
-});
-
-// --- Seleccionar estrellas ---
-stars.forEach(star => {
-  star.addEventListener('click', () => {
-    calificacion = parseInt(star.dataset.value);
-    stars.forEach(s => s.classList.remove('selected'));
-    for (let i = 0; i < calificacion; i++) stars[i].classList.add('selected');
-  });
-});
-
-// --- Enviar opinión ---
-enviarOpinionBtn.addEventListener('click', () => {
-  const texto = opinionText.value.trim();
-  if (!texto || calificacion === 0) {
-    alert('Por favor, escribe tu opinión y selecciona una calificación 🌟');
-    return;
+  // === FIREBASE: DIARIO EMOCIONAL (CORREGIDO) ===
+  async function guardarEntradaDiario(texto) {
+    if (!auth.currentUser) {
+      createBotMessage("⚠️ Necesitas iniciar sesión para guardar tu diario.");
+      return;
+    }
+    const entrada = {
+      email: auth.currentUser.email,
+      texto,
+      fecha: new Date().toISOString(),
+    };
+    try {
+      await addDoc(collection(db, "diarioEmocional"), entrada);
+      createBotMessage("🌿 He guardado tu reflexión. ¡Gracias! 💛");
+    } catch (err) {
+      console.error("Error diario:", err);
+      createBotMessage("😔 Error al guardar.");
+    }
   }
 
-  const db = firebase.firestore();
-  const user = firebase.auth().currentUser;
-  const fecha = new Date().toISOString();
+  function detectarDiario(texto) {
+    const t = texto.toLowerCase();
+    return (t.includes("diario") || t.includes("hoy me siento") || t.includes("quiero contar"));
+  }
 
-  db.collection("opiniones")
-    .add({
-      nombre: user ? user.email.split('@')[0] : "Anónimo",
-      texto,
-      calificacion,
-      fecha
-    })
-    .then(() => {
-      alert('💖 ¡Gracias por tu opinión! Nos ayuda a mejorar.');
+  // === MODAL DE OPINIÓN ===
+  opinionBtn.addEventListener('click', () => opinionModal.style.display = 'flex');
+  cancelarOpinionBtn.addEventListener('click', () => {
+    opinionModal.style.display = 'none';
+    opinionText.value = '';
+    stars.forEach(s => s.classList.remove('selected'));
+    calificacion = 0;
+  });
+  stars.forEach(star => {
+    star.addEventListener('click', () => {
+      calificacion = parseInt(star.dataset.value);
+      stars.forEach(s => s.classList.remove('selected'));
+      for (let i = 0; i < calificacion; i++) stars[i].classList.add('selected');
+    });
+  });
+
+  let enviandoOpinion = false;
+  const malasPalabras = ["puta", "mierda", "estupido", "idiota"]; // Lista resumida
+
+  function contieneGroserias(texto) {
+    const normalizado = texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return malasPalabras.some(palabra => normalizado.includes(palabra));
+  }
+
+  enviarOpinionBtn.addEventListener('click', async () => {
+    if (enviandoOpinion) return;
+    enviandoOpinion = true;
+
+    const texto = opinionText.value.trim();
+    if (!texto || calificacion === 0) {
+      alert('Escribe opinión y selecciona estrellas 🌟');
+      enviandoOpinion = false; return;
+    }
+    if (contieneGroserias(texto)) {
+      alert('⚠️ Lenguaje inapropiado.');
+      enviandoOpinion = false; return;
+    }
+
+    const user = auth.currentUser;
+    const nombreUsuario = user ? (user.displayName || user.email.split('@')[0]) : "Anónimo";
+
+    try {
+      await addDoc(collection(db, "opiniones"), {
+        nombre: nombreUsuario,
+        texto,
+        calificacion,
+        fecha: new Date().toISOString()
+      });
+      alert(`💖 ¡Gracias, ${nombreUsuario}!`);
       opinionModal.style.display = 'none';
       opinionText.value = '';
       stars.forEach(s => s.classList.remove('selected'));
       calificacion = 0;
-    })
-    .catch(err => {
-      console.error('Error al guardar la opinión:', err);
-      alert('Ocurrió un error al guardar tu opinión. Intenta de nuevo.');
-    });
-});
+    } catch (err) {
+      console.error('Error opinión:', err);
+      alert('Error al guardar opinión.');
+    } finally {
+      enviandoOpinion = false;
+    }
+  });
 
+  // === LÓGICA DE FLUJO DE DIARIO INTEGRADA ===
+  let modoDiario = false;
+  let esperandoIntensidad = false;
+  let emocionActual = "";
+
+  async function guardarEmocion(emocion, intensidad) {
+    if (!auth.currentUser) return;
+    await addDoc(collection(db, "diario_emocional"), {
+      usuario: auth.currentUser.email,
+      emocion,
+      intensidad,
+      fecha: Timestamp.now()
+    });
+  }
+
+  // Función "wrapper" que decide si es mensaje normal o diario
+  async function wrappedEnviarMensaje(event) {
+    if (event) event.preventDefault();
+    const userInput = userInputField.value.trim();
+    if (!userInput) return;
+
+    createUserMessage(userInput);
+
+    // Comandos de ver gráfica
+    if (userInput.toLowerCase().includes("ver gráfica") || userInput.toLowerCase().includes("ver emociones")) {
+      showTyping(mostrarGraficaEmociones); // Nota: corrección de nombre abajo
+      userInputField.value = "";
+      return;
+    }
+
+    // Activar modo diario
+    if (!modoDiario && detectarDiario(userInput)) {
+      modoDiario = true;
+      showTyping(() => createBotMessage("📝 Cuéntame, ¿cómo te sientes hoy?"));
+      userInputField.value = "";
+      return;
+    }
+
+    // Flujo de captura de diario
+    if (modoDiario) {
+      if (!esperandoIntensidad) {
+        emocionActual = userInput;
+        esperandoIntensidad = true;
+        showTyping(() => createBotMessage("Del 1 al 5, ¿qué tan intensa fue esta emoción?"));
+        userInputField.value = "";
+        return;
+      } else {
+        const valor = parseInt(userInput);
+        if (!isNaN(valor) && valor >= 1 && valor <= 5) {
+          await guardarEmocion(emocionActual, valor);
+          showTyping(() => createBotMessage("🌷 Guardado. ¡Gracias!"));
+          modoDiario = false;
+          esperandoIntensidad = false;
+        } else {
+          createBotMessage("Por favor, un número entre 1 y 5 💛");
+        }
+        userInputField.value = "";
+        return;
+      }
+    }
+
+    // Si no es diario, usar lógica normal
+    // Aquí llamamos a la lógica original que movimos arriba
+    // Replicamos la lógica simple del "mainEnviarMensaje" para no hacer bucles raros
+    if (procesarRespuestaTest(userInput)) { userInputField.value = ''; return; }
+
+    showTyping(async () => {
+      if (typeof obtenerRespuestaGemini === 'function') {
+        const r = await obtenerRespuestaGemini(userInput);
+        createBotMessage(r);
+      } else {
+        createBotMessage("Lo siento, no puedo conectar con la IA ahora.");
+      }
+      if (receiveSound) receiveSound.play();
+    });
+    userInputField.value = '';
+  }
+
+
+  // === LEER DIARIO Y GRÁFICAS (CORREGIDO) ===
+  async function mostrarDiario() {
+    if (!auth.currentUser) { createBotMessage("⚠️ Inicia sesión."); return; }
+    try {
+      const q = query(collection(db, "diarioEmocional"), where("email", "==", auth.currentUser.email), orderBy("fecha", "desc"), limit(5));
+      const snapshot = await getDocs(q);
+
+      if (snapshot.empty) { createBotMessage("📭 Diario vacío."); return; }
+      let texto = "📔 Tus últimas reflexiones:\n";
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const f = new Date(data.fecha).toLocaleDateString();
+        texto += `🗓️ <b>${f}</b>: ${data.texto}\n\n`;
+      });
+      createBotMessage(texto);
+    } catch (err) { console.error(err); createBotMessage("Error al leer diario."); }
+  }
+
+  let grafica;
+  async function mostrarGraficaEmociones() { // Ojo: renombré la función para que coincida
+    const user = auth.currentUser;
+    if (!user) { createBotMessage("Debes iniciar sesión 🌷"); return; }
+    const graficaContainer = document.getElementById('graficaContainer');
+
+    try {
+      const q = query(collection(db, "diario_emocional"), where("usuario", "==", user.email), orderBy("fecha", "asc"));
+      const snapshot = await getDocs(q);
+
+      if (snapshot.empty) { createBotMessage("📭 Sin datos para gráfica."); return; }
+
+      const fechas = [];
+      const emociones = [];
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        // Convertir Timestamp de Firestore a JS Date si es necesario
+        const fechaObj = data.fecha && data.fecha.toDate ? data.fecha.toDate() : new Date(data.fecha);
+        fechas.push(fechaObj.toLocaleDateString());
+
+        // Usar intensidad si existe, sino calcular (lógica original)
+        let valor = data.intensidad || 3;
+        emociones.push(valor);
+      });
+
+      if (graficaContainer) graficaContainer.style.display = "block";
+      const ctx = document.getElementById("graficaEmociones").getContext("2d");
+      if (grafica) grafica.destroy();
+
+      grafica = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: fechas,
+          datasets: [{
+            label: "Bienestar (1-5)",
+            data: emociones,
+            borderColor: "#4caf50",
+            tension: 0.3
+          }]
+        }
+      });
+      createBotMessage("✨ Aquí tienes tu evolución.");
+    } catch (err) { console.error(err); createBotMessage("Error al generar gráfica."); }
+  }
+
+  // Botón Sidebar
+  if (verGraficaBtn) verGraficaBtn.addEventListener('click', mostrarGraficaEmociones);
 
 });

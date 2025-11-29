@@ -3,7 +3,6 @@ import { GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, ge
 // import { getAnalytics } from 'https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js';
 import { firebaseConfig } from "../../firebase.js"; // Se asume que firebase.js solo exporta la configuración
 
-
 // Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -14,21 +13,22 @@ export { auth, displayErrorAlert, displaySuccessAlert };
 // --- Funciones de Alerta ---
 function displayErrorAlert(title, text) {
     Swal.fire({
-        icon: 'error',
         title: title,
         text: text,
+        icon: 'error',
         confirmButtonColor: '#3085d6'
+        
     });
 }
 
 
 function displaySuccessAlert(title, text, redirectUrl) {
     Swal.fire({
-        icon: 'success',
         title: title,
         text: text,
+        icon: 'success',
         showConfirmButton: false,
-        timer: 1500 // Ocultar después de 1.5 segundos
+        timer: 2000 // Ocultar después de 2 segundos
     }).then(() => {
         window.location.href = redirectUrl;
     });
