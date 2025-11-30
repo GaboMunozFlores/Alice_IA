@@ -7,9 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css">
 
 <style>
-/* ===============================
-   NAV PERSONALIZADO (SIN ROMPER EL SITIO)
-   =============================== */
+
 #nav.psic-index-nav {
     background: #80B5D1 !important;
     padding: 15px 0 !important;
@@ -63,6 +61,110 @@
     font-size: 14px !important;
     white-space: nowrap !important;
     padding: 5px !important;
+}
+
+/* Estilos para las tarjetas de psicólogos */
+.psychologists-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.psychologist-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.psychologist-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-content {
+    padding: 20px;
+}
+
+.card-content h3 {
+    color: #288488;
+    margin-bottom: 10px;
+    font-family: Arial, sans-serif;
+}
+
+.specialty {
+    color: #666;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.availability, .email {
+    color: #555;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-cita {
+    display: inline-block;
+    background: #288488;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 10px;
+    transition: background 0.3s ease;
+}
+
+.btn-cita:hover {
+    background: #1f6d70;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+}
+
+.spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #288488;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 2s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error-message {
+    background: #ffebee;
+    color: #c62828;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.hidden {
+    display: none;
 }
 </style>
 
@@ -145,74 +247,100 @@
 <!-- FIREBASE APP -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-const configuracionFirebase = {
-    apiKey: "AIzaSyARZlEs_zFZ_F_Q-kTeuCiVyF_by6KtL5M",
-    authDomain: "alice-iapsic.firebaseapp.com",
-    projectId: "alice-iapsic",
-    storageBucket: "alice-iapsic.firebasestorage.app",
-    messagingSenderId: "1045384574456",
-    appId: "1:1045384574456:web:af0a149776d8fa7eed520d",
-    measurementId: "G-W4E4HE01YS"
+const firebaseConfig = {
+    apiKey: "AIzaSyCq2lQnID4SSkFIKh_ja6paB4aHuq4KU0M",
+    authDomain: "proyectercerparcial.firebaseapp.com",
+    databaseURL: "https://proyectercerparcial-default-rtdb.firebaseio.com",
+    projectId: "proyectercerparcial",
+    storageBucket: "proyectercerparcial.appspot.com",
+    messagingSenderId: "39792129165",
+    appId: "1:39792129165:web:631ce9e0c7fb657a135ec4"
 };
 
-const app = initializeApp(configuracionFirebase);
+// SOLUCIÓN 1: Configuración correcta de Firebase
+const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 /* ==========================
-   CARGA EN TIEMPO REAL
+   CARGA DE PSICÓLOGOS
    ========================== */
-function cargarPsicologosTiempoReal() {
+async function cargarPsicologos() {
     const estadoCarga = document.getElementById('estado-carga');
     const estadoError = document.getElementById('estado-error');
     const seccionPsicologos = document.getElementById('seccion-psicologos');
     const contenedorPsicologos = document.getElementById('contenedor-psicologos');
 
+    console.log("🔍 Iniciando carga de psicólogos...");
+
     try {
-        onSnapshot(
-            collection(db, "psicologos"),
-            (instantanea) => {
-                contenedorPsicologos.innerHTML = '';
-
-                if (instantanea.empty) {
-                    estadoError.classList.remove('hidden');
-                    estadoError.innerHTML = '<p>No hay psicólogos disponibles en este momento.</p>';
-                    seccionPsicologos.classList.add('hidden');
-                } else {
-                    instantanea.forEach((documento) => {
-
-                        const psicologo = {
-                            ...documento.data(),
-                            id: documento.id
-                        };
-
-                        const tarjeta = crearTarjetaPsicologo(psicologo);
-                        contenedorPsicologos.appendChild(tarjeta);
-                    });
-
-                    seccionPsicologos.classList.remove('hidden');
-                    estadoError.classList.add('hidden');
-                }
-
-                estadoCarga.classList.add('hidden');
-            },
-
-            (error) => {
-                estadoCarga.classList.add('hidden');
-                estadoError.classList.remove('hidden');
-                estadoError.innerHTML = `<p>Error: ${error.message}</p>`;
-            }
+        // SOLUCIÓN 2: Consulta que filtra solo psicólogos aprobados
+        const q = query(
+            collection(db, "psicologos"), 
+            where("estado", "==", "aprobado")
         );
+        
+        const querySnapshot = await getDocs(q);
+        console.log("📊 Datos recibidos:", querySnapshot.size, "psicólogos encontrados");
 
-    } catch (e) {
+        contenedorPsicologos.innerHTML = '';
+
+        if (querySnapshot.empty) {
+            console.log("❌ No se encontraron psicólogos aprobados");
+            estadoCarga.classList.add('hidden');
+            estadoError.classList.remove('hidden');
+            estadoError.innerHTML = '<p>No hay psicólogos disponibles en este momento.</p>';
+            seccionPsicologos.classList.add('hidden');
+            return;
+        }
+
+        let psicologosCargados = 0;
+        
+        querySnapshot.forEach((documento) => {
+            console.log("👨‍⚕️ Procesando psicólogo:", documento.id, documento.data());
+            
+            const datos = documento.data();
+            const psicologo = {
+                id: documento.id,
+                nombre: datos.nombre || 'Nombre no disponible',
+                especialidad: datos.especialidad || 'Especialidad no especificada',
+                disponibilidad: datos.disponibilidad || 'Disponibilidad no especificada',
+                email: datos.email || 'Email no disponible',
+                // SOLUCIÓN 3: Corregir URL de foto y agregar imagen por defecto
+                foto: datos.foto ? datos.foto.replace(/\n/g, '').trim() : '../assets/images/default-avatar.png'
+            };
+
+            // SOLUCIÓN 4: Si la URL de la foto está incompleta, corregirla
+            if (psicologo.foto.includes('photo-1559839734-2b71ea197ec2') && !psicologo.foto.includes('?')) {
+                psicologo.foto = 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&fit=crop';
+            }
+
+            const tarjeta = crearTarjetaPsicologo(psicologo);
+            contenedorPsicologos.appendChild(tarjeta);
+            psicologosCargados++;
+        });
+
+        console.log("✅ Psicólogos cargados exitosamente:", psicologosCargados);
+
+        estadoCarga.classList.add('hidden');
+        seccionPsicologos.classList.remove('hidden');
+        estadoError.classList.add('hidden');
+
+    } catch (error) {
+        console.error("❌ Error al cargar psicólogos:", error);
         estadoCarga.classList.add('hidden');
         estadoError.classList.remove('hidden');
+        estadoError.innerHTML = `
+            <p><strong>Error al cargar los psicólogos:</strong> ${error.message}</p>
+            <p>Por favor, verifica tu conexión a internet e intenta nuevamente.</p>
+            <small>Detalles técnicos: ${error.code || 'Error de conexión'}</small>
+        `;
     }
 }
 
 /* ==========================
-   TARJETAS
+   CREAR TARJETA DE PSICÓLOGO
    ========================== */
 function crearTarjetaPsicologo(psicologo) {
     const tarjeta = document.createElement('div');
@@ -220,7 +348,9 @@ function crearTarjetaPsicologo(psicologo) {
 
     tarjeta.innerHTML = `
         <div class="card-image">
-            <img src="${psicologo.foto}" alt="Foto de ${psicologo.nombre}">
+            <img src="${psicologo.foto}" 
+                 alt="Foto de ${psicologo.nombre}"
+                 onerror="this.src='../assets/images/default-avatar.png'">
         </div>
 
         <div class="card-content">
@@ -247,7 +377,11 @@ function crearTarjetaPsicologo(psicologo) {
     return tarjeta;
 }
 
-document.addEventListener('DOMContentLoaded', cargarPsicologosTiempoReal);
+// SOLUCIÓN 5: Cargar psicólogos cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("🚀 DOM cargado, iniciando carga de psicólogos...");
+    cargarPsicologos();
+});
 </script>
 
 </body>

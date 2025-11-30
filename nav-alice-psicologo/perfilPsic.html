@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - Psicólogo | Alice IA</title>
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <style>
+        /* ESTILOS FORZADOS PARA NAV - IGUAL QUE PSICINDEX */
+        #nav.psic-index-nav {
+            all: initial !important;
+            display: block !important;
+            background: #80B5D1 !important;
+            padding: 15px 0 !important;
+            width: 100% !important;
+        }
+        
+        #nav.psic-index-nav ul {
+            all: initial !important;
+            display: flex !important;
+            justify-content: center !important;
+            gap: 30px !important;
+            list-style: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        
+        #nav.psic-index-nav ul li {
+            all: initial !important;
+            display: block !important;
+        }
+        
+        #nav.psic-index-nav ul li a {
+            all: initial !important;
+            display: block !important;
+            color: white !important;
+            text-decoration: none !important;
+            padding: 8px 16px !important;
+            font-family: Arial, sans-serif !important;
+            font-size: 16px !important;
+        }
+        
+        /* OCULTAR LOGIN/REGISTRO */
+        #nav.psic-index-nav ul li:nth-last-child(1),
+        #nav.psic-index-nav ul li:nth-last-child(2) {
+            display: none !important;
+        }
+
+        /* ESTILOS PARA MODALES */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-contenido {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .cerrar-modal {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .cerrar-modal:hover {
+            color: red;
+        }
+
+        .form-grupo {
+            margin-bottom: 15px;
+        }
+
+        .form-grupo label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-grupo input,
+        .form-grupo textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .botones-accion {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-editar, .btn-eliminar {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-editar {
+            background-color: #80B5D1;
+            color: white;
+        }
+
+        .btn-editar:hover {
+            background-color: #6a9bb8;
+        }
+
+        .btn-eliminar {
+            background-color: #ff4444;
+            color: white;
+        }
+
+        .btn-eliminar:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div id="header-wrapper">
+        <div id="header" class="container">
+            <nav id="nav" class="psic-index-nav">
+                <ul>
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li>
+                        <a href="psicIndex.html">Ayuda inmediata</a>
+                        <ul>
+                            <li>
+                                <a href="tel:+525521288236" class="phone-link">
+                                    <span class="phone-icon">📞</span>
+                                    Línea de Ayuda: 55 2128 8236
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://api.whatsapp.com/send?phone=525635164983&text=tengo%20una%20crisis%20y%20necesito%20asistencia" 
+                                   target="_blank" 
+                                   class="whatsapp-link">
+                                    <img src="../images/Whatsapp.png" alt="" class="whatsapp-icon">
+                                    Ayuda por WhatsApp
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a href="../Chatbot/chatbot.php">Alice</a></li>
+                    <li><a href="../nav-alice-centros/centros.html">Centros de Ayuda</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <main class="panel-container">
+        <!-- Hero Section -->
+        <section class="hero-perfil">
+            <h1>Mi Panel de Control</h1>
+            <p>Gestiona tu perfil y consulta tus citas programadas</p>
+        </section>
+
+        <!-- Grid de 2 Columnas -->
+        <div class="grid-perfil">
+            <!-- Columna Izquierda - Mis Datos -->
+            <section class="seccion-perfil">
+                <h2 class="seccion-titulo">📋 Mis Datos</h2>
+                
+                <div class="info-perfil">
+                    <div class="info-item">
+                        <span class="info-label">Nombre completo:</span>
+                        <span class="info-valor" id="info-nombre">Cargando...</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Especialidad:</span>
+                        <span class="info-valor" id="info-especialidad">Cargando...</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Email:</span>
+                        <span class="info-valor" id="info-email">Cargando...</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Disponibilidad:</span>
+                        <span class="info-valor" id="info-disponibilidad">Cargando...</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">Foto de perfil:</span>
+                        <div class="info-valor">
+                            <img id="info-foto" src="" alt="Foto de perfil" style="max-width: 150px; border-radius: 8px; display: none;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="botones-accion">
+                    <button class="btn-editar" onclick="abrirModalEditar()">✏️ Editar Perfil</button>
+                    <button class="btn-eliminar" onclick="abrirModalEliminar()">🗑️ Eliminar Cuenta</button>
+                </div>
+            </section>
+
+            <!-- Columna Derecha - Mis Citas -->
+            <section class="seccion-perfil">
+                <h2 class="seccion-titulo">📅 Mis Citas</h2>
+                
+                <div class="lista-citas" id="lista-citas">
+                    <!-- Las citas se cargarán dinámicamente -->
+                </div>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn-editar" onclick="abrirModalDisponibilidad()">🕐 Gestionar Disponibilidad</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modal Editar Perfil -->
+    <div id="modal-editar" class="modal">
+        <div class="modal-contenido">
+            <span class="cerrar-modal" onclick="cerrarModalEditar()">&times;</span>
+            <h2>Editar Mi Perfil</h2>
+            
+            <form id="form-editar">
+                <div class="form-grupo">
+                    <label for="edit-nombre">Nombre completo:</label>
+                    <input type="text" id="edit-nombre" required>
+                </div>
+                
+                <div class="form-grupo">
+                    <label for="edit-especialidad">Especialidad:</label>
+                    <input type="text" id="edit-especialidad" required>
+                </div>
+                
+                <div class="form-grupo">
+                    <label for="edit-email">Email:</label>
+                    <input type="email" id="edit-email" required>
+                </div>
+                
+                <div class="form-grupo">
+                    <label for="edit-disponibilidad">Disponibilidad:</label>
+                    <textarea id="edit-disponibilidad" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-grupo">
+                    <label for="edit-foto">URL de foto de perfil:</label>
+                    <input type="url" id="edit-foto">
+                </div>
+                
+                <div class="botones-accion">
+                    <button type="button" class="btn-editar" onclick="guardarCambios()">💾 Guardar Cambios</button>
+                    <button type="button" class="btn-eliminar" onclick="cerrarModalEditar()">❌ Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Eliminar Cuenta -->
+    <div id="modal-eliminar" class="modal">
+        <div class="modal-contenido">
+            <span class="cerrar-modal" onclick="cerrarModalEliminar()">&times;</span>
+            <h2>⚠️ Confirmar Eliminación</h2>
+            <p>¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.</p>
+            <p><strong>Todos tus datos y citas se perderán permanentemente.</strong></p>
+            
+            <div class="botones-accion">
+                <button class="btn-eliminar" onclick="eliminarCuenta()">🗑️ Sí, eliminar cuenta</button>
+                <button class="btn-editar" onclick="cerrarModalEliminar()">↩️ Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2024 Alice IA - Plataforma de Apoyo Psicológico</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+
+    <script>
+       const firebaseConfig = {
+        apiKey: "AIzaSyCq2lQnID4SSkFIKh_ja6paB4aHuq4KU0M",
+         authDomain: "proyectercerparcial.firebaseapp.com",
+  databaseURL: "https://proyectercerparcial-default-rtdb.firebaseio.com",
+  projectId: "proyectercerparcial",
+  storageBucket: "proyectercerparcial.appspot.com",
+  messagingSenderId: "39792129165",
+         appId: "1:39792129165:web:631ce9e0c7fb657a135ec4"
+    };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // ESPERAR A QUE EL DOM ESTÉ CARGADO
+        document.addEventListener('DOMContentLoaded', function() {
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    console.log("✅ Usuario logueado:", user.email);
+                    
+                    // BUSCAR EN LA BASE proyectotercerparcial
+                    db.collection("psicologos")
+                      .where("email", "==", user.email)
+                      .get()
+                      .then((querySnapshot) => {
+                          if (!querySnapshot.empty) {
+                              const doc = querySnapshot.docs[0];
+                              const datos = doc.data();
+                              console.log("✅ Datos encontrados en proyectotercerparcial:", datos);
+                              
+                              // CORRECCIÓN: Usar los IDs correctos del HTML
+                              document.getElementById('info-nombre').textContent = datos.nombre || 'No especificado';
+                              document.getElementById('info-especialidad').textContent = datos.especialidad || 'No especificado';
+                              document.getElementById('info-email').textContent = datos.email || 'No especificado';
+                              document.getElementById('info-disponibilidad').textContent = datos.disponibilidad || 'No especificada';
+                              
+                              // CORRECCIÓN: Manejar correctamente la foto
+                              if (datos.foto) {
+                                  // Corregir URL si está incompleta
+                                  let fotoUrl = datos.foto.replace(/\n/g, '').trim();
+                                  if (fotoUrl.includes('photo-1559839734-2b71ea197ec2') && !fotoUrl.includes('?')) {
+                                      fotoUrl = 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&fit=crop';
+                                  }
+                                  document.getElementById('info-foto').src = fotoUrl;
+                                  document.getElementById('info-foto').style.display = 'block';
+                              }
+                              
+                          } else {
+                              console.log("❌ No se encontraron datos en proyectotercerparcial para:", user.email);
+                              document.getElementById('info-nombre').textContent = 'No encontrado';
+                              document.getElementById('info-especialidad').textContent = 'No encontrado';
+                              document.getElementById('info-email').textContent = 'No encontrado';
+                              document.getElementById('info-disponibilidad').textContent = 'No encontrado';
+                          }
+                      })
+                      .catch((error) => {
+                          console.error("❌ Error buscando en proyectotercerparcial:", error);
+                          document.getElementById('info-nombre').textContent = 'Error al cargar';
+                          document.getElementById('info-especialidad').textContent = 'Error al cargar';
+                          document.getElementById('info-email').textContent = 'Error al cargar';
+                          document.getElementById('info-disponibilidad').textContent = 'Error al cargar';
+                      });
+                } else {
+                    console.log("❌ No hay usuario - redirigiendo al login");
+                    window.location.href = '../psicologo_/login.html';
+                }
+            });
+        });
+
+        function abrirModalEditar() {
+            alert('Editar perfil - en desarrollo');
+        }
+
+        function abrirModalEliminar() {
+            if (confirm('¿Seguro que quieres eliminar tu cuenta?')) {
+                alert('Cuenta eliminada (en desarrollo)');
+            }
+        }
+
+        function abrirModalDisponibilidad() {
+            alert('Gestionar disponibilidad - en desarrollo');
+        }
+
+        function cerrarModalEditar() {
+            document.getElementById('modal-editar').style.display = 'none';
+        }
+
+        function cerrarModalEliminar() {
+            document.getElementById('modal-eliminar').style.display = 'none';
+        }
+
+        function guardarCambios() {
+            alert('Guardar cambios - en desarrollo');
+        }
+
+        function eliminarCuenta() {
+            alert('Eliminar cuenta - en desarrollo');
+        }
+
+        // Cerrar modales al hacer clic fuera
+        window.onclick = function(event) {
+            const modalEditar = document.getElementById('modal-editar');
+            const modalEliminar = document.getElementById('modal-eliminar');
+            
+            if (event.target === modalEditar) {
+                cerrarModalEditar();
+            }
+            if (event.target === modalEliminar) {
+                cerrarModalEliminar();
+            }
+        }
+    </script>
+</body>
+</html>
