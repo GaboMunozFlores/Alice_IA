@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro de Psicólogo</title>
 
- 
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
@@ -19,48 +18,28 @@
     <h2>Registro de Psicólogo</h2>
 
     <input id="nombre" type="text" placeholder="Nombre completo">
+    <span id="errorNombre" class="mensaje-error">Este campo es obligatorio.</span>
 
     <input id="email" type="email" placeholder="Correo electrónico">
+    <span id="errorEmail" class="mensaje-error">Introduce un correo válido.</span>
 
-    
     <div class="password-container">
       <input id="password" type="password" placeholder="Contraseña">
       <span id="togglePassword" class="eye-icon">👁️</span>
     </div>
 
-    
     <ul id="passwordRules">
-      <li id="ruleLength">⚫ Mínimo 8 caracteres</li>
-      <li id="ruleUpper">⚫ Una letra mayúscula</li>
-      <li id="ruleNumber">⚫ Un número</li>
-      <li id="ruleSpecial">⚫ Un carácter especial</li>
+      <li id="ruleLength" class="invalid">⚫ Mínimo 8 caracteres</li>
+      <li id="ruleUpper" class="invalid">⚫ Una letra mayúscula</li>
+      <li id="ruleNumber" class="invalid">⚫ Un número</li>
+      <li id="ruleSpecial" class="invalid">⚫ Un carácter especial</li>
     </ul>
 
-    </ul> <div style="margin: 15px 0; background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #ddd;">
-        
-        <label style="display:block; margin-bottom:8px; font-weight: bold; color: #333;">
-            Número de Cédula Profesional:
-        </label>
-        
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <input id="numCedula" type="text" placeholder="Ej. 12345678" maxlength="8" 
-                   style="flex: 1; min-width: 150px; padding: 10px; font-size: 16px; height: auto;">
-            
-            <button id="btnVerificarCedula" type="button" 
-                    style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; white-space: nowrap;">
-                Verificar
-            </button>
-        </div>
+    <span id="errorPassword" class="mensaje-error">La contraseña no cumple los requisitos.</span>
 
-        <small id="resultadoCedula" style="display: block; margin-top: 8px; min-height: 20px; font-weight: bold;"></small>
-    </div>
+    <input id="numCedula" type="text" placeholder="Número de cédula (solo escribir)">
+    <span id="errorCedula" class="mensaje-error">Introduce una cédula válida de 7 a 8 dígitos.</span>
 
-    <label class="file-label">
-      📄 Subir cédula profesional (PDF o imagen)
-      <input type="file" id="archivoCedula" accept=".pdf,.png,.jpg,.jpeg">
-    </label>
-
-    
     <select id="especialidad">
       <option value="">Selecciona tu especialidad</option>
       <option value="Psicología Clínica">Psicología Clínica</option>
@@ -71,6 +50,7 @@
       <option value="Neuropsicología">Neuropsicología</option>
       <option value="Psicología Familiar y de Pareja">Psicología Familiar y de Pareja</option>
     </select>
+    <span id="errorEspecialidad" class="mensaje-error">Selecciona una especialidad.</span>
 
     <textarea id="experiencia" placeholder="Experiencia profesional (opcional)"></textarea>
 
@@ -80,6 +60,7 @@
       <option value="Online">Online</option>
       <option value="Mixta">Mixta</option>
     </select>
+    <span id="errorModalidad" class="mensaje-error">Selecciona una modalidad.</span>
 
     <p id="mensajeError" class="mensaje-error"></p>
     <p id="mensajeExito" class="mensaje-exito">✅ Registro exitoso, redirigiendo...</p>

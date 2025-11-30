@@ -8,82 +8,76 @@ const firebaseConfig = {
     messagingSenderId: "39792129165",
     appId: "1:39792129165:web:631ce9e0c7fb657a135ec4"
 };
+
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 const storage = firebase.storage();
 
-// --- 2. VARIABLES Y SELECTORES ---
-const btnVerificar = document.getElementById('btnVerificarCedula');
-const inputCedula = document.getElementById('numCedula');
-const resultadoCedula = document.getElementById('resultadoCedula');
-// OJO: Usamos btnRegistrar, no btnLogin, porque esto es la página de registro
-const btnRegistrar = document.getElementById('registrarBtn'); 
-const nombreInput = document.getElementById('nombre');
+// --- 2. SELECTORES ---
+const btnRegistrar = document.getElementById("registrarBtn");
+const nombreInput = document.getElementById("nombre");
+const inputCedula = document.getElementById("numCedula");
+const passwordInput = document.getElementById("password");
 
-// Estado de validación
-let cedulaValidada = false; 
+// Reglas de contraseña
+const ruleLength = document.getElementById("ruleLength");
+const ruleUpper = document.getElementById("ruleUpper");
+const ruleNumber = document.getElementById("ruleNumber");
+const ruleSpecial = document.getElementById("ruleSpecial");
 
-// --- 3. LÓGICA DE VALIDACIÓN DE CÉDULA ---
-btnVerificar.addEventListener('click', async () => {
-    const cedula = inputCedula.value.trim();
-    if (cedula.length < 7) {
-        alert("La cédula debe tener al menos 7 dígitos.");
-        return;
-    }
+// --- 3. VALIDACIÓN DE CONTRASEÑA EN VIVO ---
+passwordInput.addEventListener("input", () => {
+    const value = passwordInput.value;
 
-    resultadoCedula.textContent = "⌛ Buscando en la SEP...";
-    resultadoCedula.style.color = "blue";
-    btnVerificar.disabled = true;
+    // Longitud
+    if (value.length >= 8) ruleLength.classList.replace("invalid", "valid");
+    else ruleLength.classList.replace("valid", "invalid");
 
-    try {
-        // Conexión con TU servidor local (backend Node.js)
-        const response = await fetch(`http://localhost:3000/api/validar/${cedula}`);
-        const data = await response.json();
+    // Mayúscula
+    if (/[A-Z]/.test(value)) ruleUpper.classList.replace("invalid", "valid");
+    else ruleUpper.classList.replace("valid", "invalid");
 
-        if (data.encontrado) {
-            // Nota: aquí asumimos que si encontrado=true, es válido (por tu modo simulación)
-            resultadoCedula.innerHTML = `✅ Cédula verificada con éxito.<br><small>${data.datos.carrera}</small>`;
-            resultadoCedula.style.color = "green";
-            
-            // Si la API trae nombre (y no está vacío), lo ponemos. Si no, respetamos el tuyo.
-            if (data.datos.nombre && data.datos.nombre !== "") {
-                nombreInput.value = data.datos.nombre;
-            }
-            
-            cedulaValidada = true; 
-        } else {
-            resultadoCedula.textContent = "❌ Cédula no encontrada.";
-            resultadoCedula.style.color = "red";
-            cedulaValidada = false;
-        }
+    // Número
+    if (/\d/.test(value)) ruleNumber.classList.replace("invalid", "valid");
+    else ruleNumber.classList.replace("valid", "invalid");
 
-    } catch (error) {
-        console.error(error);
-        resultadoCedula.textContent = "❌ Error de conexión.";
-        resultadoCedula.style.color = "red";
-    } finally {
-        btnVerificar.disabled = false;
-    }
+    // Carácter especial
+    if (/[^A-Za-z0-9]/.test(value)) ruleSpecial.classList.replace("invalid", "valid");
+    else ruleSpecial.classList.replace("valid", "invalid");
 });
 
-// --- 4. LÓGICA DE REGISTRO EN FIREBASE ---
-// Corregido: Usamos 'btnRegistrar' y agregamos 'async'
-btnRegistrar.addEventListener('click', async (e) => { 
+// --- 4. REGISTRO SIN VERIFICACIÓN DE CÉDULA ---
+btnRegistrar.addEventListener('click', async (e) => {
     e.preventDefault();
 
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+    const email = document.getElementById('email').value.trim();
+    const password = passwordInput.value.trim();
     const especialidad = document.getElementById('especialidad').value;
+    const modalidad = document.getElementById('modalidad').value;
+    const experiencia = document.getElementById('experiencia').value;
     const archivoInput = document.getElementById('archivoCedula');
+    const cedula = inputCedula.value.trim();
 
-    // Validaciones
-    if (!cedulaValidada) {
-        alert("⚠️ Por favor, verifica la cédula profesional (botón gris) antes de continuar.");
+    // --- VALIDACIONES ---
+    if (!nombreInput.value.trim() ||
+        !email ||
+        !password ||
+        !cedula ||
+        !especialidad ||
+        !modalidad) {
+        alert("⚠️ Completa todos los campos obligatorios.");
         return;
     }
-    if (!email || !password || !especialidad) {
-        alert("Por favor completa todos los campos.");
+
+    // Validación de contraseña antes de enviar
+    if (
+        ruleLength.classList.contains("invalid") ||
+        ruleUpper.classList.contains("invalid") ||
+        ruleNumber.classList.contains("invalid") ||
+        ruleSpecial.classList.contains("invalid")
+    ) {
+        alert("⚠️ La contraseña no cumple con los requisitos.");
         return;
     }
 
@@ -91,52 +85,40 @@ btnRegistrar.addEventListener('click', async (e) => {
         btnRegistrar.textContent = "Registrando...";
         btnRegistrar.disabled = true;
 
-        // A. Crear usuario en Auth (Sign Up)
+        // A. Crear usuario en Firebase Auth
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
         const user = userCredential.user;
 
-        // B. Subir archivo (si seleccionó uno)
-        let archivoUrl = "";
-        if (archivoInput.files.length > 0) {
-            const file = archivoInput.files[0];
-            const storageRef = storage.ref(`cedulas/${user.uid}/${file.name}`);
-            await storageRef.put(file);
-            archivoUrl = await storageRef.getDownloadURL();
-        }
+       
 
-        // C. Guardar datos en Firestore con estado PENDIENTE
+        // C. Guardar en Firestore
         await db.collection('psicologos').doc(user.uid).set({
-            nombre: nombreInput.value,
+            nombre: nombreInput.value.trim(),
             email: email,
-            cedula: inputCedula.value,
+            cedula: cedula,
             especialidad: especialidad,
-            modalidad: document.getElementById('modalidad').value,
-            experiencia: document.getElementById('experiencia').value,
-            documentoUrl: archivoUrl,
-            
-            // AQUÍ ESTÁ LA MAGIA PARA DAR DE ALTA/BAJA:
-            estado: "pendiente", // El usuario nace "pendiente"
-            
-            validadoSEP: true,
+            modalidad: modalidad,
+            experiencia: experiencia,
+            estado: "pendiente",
+            validadoSEP: false,
             fechaRegistro: new Date()
         });
 
-        // D. Éxito y Redirección al Login (porque está pendiente)
-        alert("✅ Registro exitoso.\n\nTu cuenta está en revisión (estado: Pendiente). Podrás entrar cuando un administrador te apruebe.");
-        window.location.href = "login.html"; // Mándalo al login para que pruebe entrar
+        alert("✅ Registro exitoso. Tu cuenta será revisada por un administrador.");
+        window.location.href = "login.html";
 
     } catch (error) {
         console.error(error);
-        document.getElementById('mensajeError').textContent = "Error: " + error.message;
+        document.getElementById("mensajeError").textContent = "Error: " + error.message;
+        document.getElementById("mensajeError").style.display = "block";
         btnRegistrar.textContent = "Registrar Psicólogo";
         btnRegistrar.disabled = false;
     }
 });
 
-// --- 5. EXTRAS (Mostrar contraseña) ---
-document.getElementById('togglePassword').addEventListener('click', function() {
-    const passwordInput = document.getElementById('password');
-    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-    passwordInput.setAttribute('type', type);
-    this.textContent = type === 'password' ? '👁️' : '🙈';
+// --- 5. MOSTRAR / OCULTAR CONTRASEÑA ---
+document.getElementById("togglePassword").addEventListener("click", function () {
+    const type = passwordInput.type === "password" ? "text" : "password";
+    passwordInput.type = type;
+    this.textContent = type === "password" ? "👁️" : "🙈";
 });
