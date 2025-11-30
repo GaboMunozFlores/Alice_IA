@@ -1,0 +1,330 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Alice IA - Agendar Cita</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../assets/css/main.css" />
+
+    <style>
+        /* ------------------- HEADER ------------------- */
+        #header-wrapper {
+            background: linear-gradient(135deg, #6daad0, #4c8cab);
+            padding-top: 3.5em !important;
+            padding-bottom: 3.5em !important;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            border-radius: 0 0 18px 18px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        #nav-minimal {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #nav-minimal h1 {
+            margin: 0;
+            font-size: 2.5em;
+            color: white;
+            font-weight: bold;
+            letter-spacing: 1.2px;
+            font-family: "Segoe UI", sans-serif;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+        }
+
+        /* ---------------- TITULOS PRINCIPALES ----------------- */
+        #main-content h1 {
+            font-size: 2em;
+            font-weight: 700;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        #main-content h5 {
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        #psicologo-title span {
+            color: #1e898c;
+            font-weight: bold;
+            font-family: "Segoe UI";
+        }
+
+        /* ---------------- TARJETA ---------------- */
+        .dashboard-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 2.8em 3em;
+            margin-top: 1em;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+            border: none;
+            transition: transform 0.2s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .dashboard-card header h3 {
+            font-size: 1.6em;
+            font-weight: 600;
+            font-family: "Segoe UI";
+            color: #3e5b65;
+        }
+
+        /* ----------------- INPUTS ----------------- */
+        input,
+        select,
+        textarea {
+            border-radius: 12px !important;
+            border: 1px solid #d0d8e4 !important;
+            background: #f8fbff !important;
+            padding: 0.8em !important;
+            transition: 0.2s;
+            font-family: "Segoe UI";
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #6daad0 !important;
+            box-shadow: 0 0 8px rgba(118, 177, 206, 0.4);
+            background: #ffffff !important;
+        }
+
+        /* ---------------- BOTONES ---------------- */
+        /* ---------------- BOTON confirmar---------------- */
+        .button.primary {
+            background: #4391ad !important;
+            border-radius: 10px;
+            font-size: 1em;
+            padding: 0.9em 1.5em;
+            transition: 0.2s;
+            color: white !important;
+            font-weight: bold;
+        }
+
+        .button.primary:hover {
+            background: #014c68 !important;
+            transform: translateY(-2px);
+        }
+
+        /* ---------------- BOTON volver---------------- */
+        .button.alt {
+            background: #87bccc !important;
+            border-radius: 10px;
+            font-size: 1em;
+            padding: 0.9em 1.5em;
+            color: white !important;
+            transition: 0.2s;
+            font-weight: bold;
+        }
+
+        .button.alt:hover {
+            background: #025b88 !important;
+            transform: translateY(-2px);
+        }
+
+        /* Ajustes extra */
+        label {
+            font-weight: 600;
+            color: #000d11;
+            font-family: "Segoe UI";
+        }
+    </style>
+</head>
+
+<body class="homepage is-preload">
+    <div id="page-wrapper">
+
+        <div id="header-wrapper">
+            <div id="header" class="container">
+                <nav id="nav-minimal">
+                    <h1>Agendar Cita</h1>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main-content" class="container" style="padding-top: 5em; padding-bottom: 5em;">
+
+            <h1 style="font-family:'Segoe UI'; text-align: center; margin-bottom: 0.2em;">
+                Agendar Cita con <span id="psicologo-title">...</span>
+            </h1>
+            <h5 style="text-align: center; margin-bottom: 3em;">
+                Por favor, selecciona tu fecha y hora preferida.
+            </h5>
+
+            <div class="row gtr-uniform">
+                <section class="col-12">
+                    <div class="dashboard-card">
+                        <header class="major">
+                            <h3><i class="icon solid fa-calendar-check"></i> Detalles de la Sesión</h3>
+                        </header>
+
+                        <form id="appointment-form" method="post" action="#">
+                            <div class="row gtr-uniform">
+
+                                <div class="col-6 col-12-xsmall">
+                                    <label for="fecha">Fecha Deseada:</label>
+                                    <input type="date" id="fecha" name="fecha" required>
+                                </div>
+
+                                <div class="col-6 col-12-xsmall">
+                                    <label for="hora">Hora Disponible:</label>
+                                    <select id="hora" name="hora" required>
+                                        <option value="">-- Selecciona Hora --</option>
+                                        <option value="09:00">9:00 AM</option>
+                                        <option value="10:00">10:00 AM</option>
+                                        <option value="11:00">11:00 AM</option>
+                                        <option value="12:00">12:00 PM</option>
+                                        <option value="13:00">1:00 PM</option>
+                                        <option value="14:00">2:00 PM</option>
+                                        <option value="15:00">3:00 PM</option>
+                                        <option value="16:00">4:00 PM</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="nombre_paciente">Tu Nombre Completo:</label>
+                                    <input type="text" id="nombre_paciente" name="nombre_paciente" placeholder="Nombre"
+                                        required>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="motivo">Motivo breve de la cita (opcional):</label>
+                                    <textarea id="motivo" name="motivo" rows="4"
+                                        placeholder="Ej: Estrés laboral, ansiedad, problemas de pareja."></textarea>
+                                </div>
+
+                                <div class="col-12">
+                                    <ul class="actions">
+                                        <li><input type="submit" value="Confirmar Agendamiento" class="button primary">
+                                        </li>
+                                        <li><a href="../nav-alice-psicologo/psicIndex.html"
+                                                class="button alt">Volver</a></li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </form>
+
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <div id="footer-wrapper">
+            <div id="copyright" class="container">
+                <ul class="menu">
+                    <li>&copy; Tactical solutions.</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="../assets/js/jquery.min.js"></script>
+    <script src="../assets/js/jquery.dropotron.min.js"></script>
+    <script src="../assets/js/browser.min.js"></script>
+    <script src="../assets/js/breakpoints.min.js"></script>
+    <script src="../assets/js/util.js"></script>
+    <script src="../main.js" type="module"></script>
+    <script src="../assets/js/main.js"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyARZlEs_zFZ_F_Q-kTeuCiVyF_by6KtL5M",
+            authDomain: "alice-iapsic.firebaseapp.com",
+            projectId: "alice-iapsic",
+            storageBucket: "alice-iapsic.firebasestorage.app",
+            messagingSenderId: "1045384574456",
+            appId: "1:1045384574456:web:af0a149776d8fa7eed520d",
+            measurementId: "G-W4E4HE01YS"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let psicologoIdGlobal = null;
+        const PSICOLOGOS_COLLECTION = "psicologos";
+        const CITAS_COLLECTION = "citas_pendientes";
+
+        async function getPsychologistName(id) {
+            if (!id) return "Psicólogo No Válido";
+            try {
+                const docRef = doc(db, PSICOLOGOS_COLLECTION, id);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    return docSnap.data().nombre || "Nombre Desconocido";
+                } else {
+                    return "Psicólogo no encontrado";
+                }
+            } catch (error) {
+                return "Error de carga";
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const psicologoId = urlParams.get('psicologo_id');
+            psicologoIdGlobal = psicologoId;
+            const titleElement = document.getElementById('psicologo-title');
+            const form = document.getElementById('appointment-form');
+
+            if (psicologoId) {
+                const nombreReal = await getPsychologistName(psicologoId);
+                titleElement.innerHTML = `<span>${nombreReal}</span>`;
+            } else {
+                titleElement.innerHTML = `<span>Psicólogo No Seleccionado</span>`;
+            }
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                if (!psicologoIdGlobal) {
+                    alert('Error: No se ha seleccionado un psicólogo válido.');
+                    return;
+                }
+
+                const fecha = document.getElementById('fecha').value;
+                const hora = document.getElementById('hora').value;
+                const nombrePaciente = document.getElementById('nombre_paciente').value;
+                const motivo = document.getElementById('motivo').value;
+
+                if (!fecha || !hora || !nombrePaciente) {
+                    alert('Por favor, completa todos los campos requeridos.');
+                    return;
+                }
+
+                const nuevaCita = {
+                    psicologoId: psicologoIdGlobal,
+                    fecha: fecha,
+                    hora: hora,
+                    paciente: nombrePaciente,
+                    motivo: motivo,
+                    estado: 'Pendiente',
+                    timestampAgendamiento: new Date()
+                };
+
+                try {
+                    const docRef = await addDoc(collection(db, CITAS_COLLECTION), nuevaCita);
+                    alert(`✅ Cita agendada con éxito! Su cita con el ID: ${docRef.id} ha sido enviada para confirmación.`);
+                    form.reset();
+                } catch (e) {
+                    alert("❌ Hubo un error al intentar agendar la cita. Por favor, inténtalo de nuevo.");
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>
