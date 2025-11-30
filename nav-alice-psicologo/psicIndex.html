@@ -259,13 +259,9 @@ const firebaseConfig = {
     appId: "1:39792129165:web:631ce9e0c7fb657a135ec4"
 };
 
-// SOLUCIÓN 1: Configuración correcta de Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* ==========================
-   CARGA DE PSICÓLOGOS
-   ========================== */
 async function cargarPsicologos() {
     const estadoCarga = document.getElementById('estado-carga');
     const estadoError = document.getElementById('estado-error');
@@ -275,7 +271,6 @@ async function cargarPsicologos() {
     console.log("🔍 Iniciando carga de psicólogos...");
 
     try {
-        // SOLUCIÓN 2: Consulta que filtra solo psicólogos aprobados
         const q = query(
             collection(db, "psicologos"), 
             where("estado", "==", "aprobado")
@@ -307,11 +302,9 @@ async function cargarPsicologos() {
                 especialidad: datos.especialidad || 'Especialidad no especificada',
                 disponibilidad: datos.disponibilidad || 'Disponibilidad no especificada',
                 email: datos.email || 'Email no disponible',
-                // SOLUCIÓN 3: Corregir URL de foto y agregar imagen por defecto
                 foto: datos.foto ? datos.foto.replace(/\n/g, '').trim() : '../assets/images/default-avatar.png'
             };
 
-            // SOLUCIÓN 4: Si la URL de la foto está incompleta, corregirla
             if (psicologo.foto.includes('photo-1559839734-2b71ea197ec2') && !psicologo.foto.includes('?')) {
                 psicologo.foto = 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&fit=crop';
             }
@@ -339,9 +332,6 @@ async function cargarPsicologos() {
     }
 }
 
-/* ==========================
-   CREAR TARJETA DE PSICÓLOGO
-   ========================== */
 function crearTarjetaPsicologo(psicologo) {
     const tarjeta = document.createElement('div');
     tarjeta.className = 'psychologist-card';
@@ -377,7 +367,6 @@ function crearTarjetaPsicologo(psicologo) {
     return tarjeta;
 }
 
-// SOLUCIÓN 5: Cargar psicólogos cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
     console.log("🚀 DOM cargado, iniciando carga de psicólogos...");
     cargarPsicologos();

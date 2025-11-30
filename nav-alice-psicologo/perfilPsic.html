@@ -128,6 +128,58 @@
         .btn-eliminar:hover {
             background-color: #cc0000;
         }
+
+        /* ESTILOS PARA CITAS */
+        .cita-item {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .cita-paciente {
+            font-weight: bold;
+            color: #288488;
+            margin-bottom: 5px;
+        }
+
+        .cita-detalles {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .cita-estado {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .estado-pendiente {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .estado-confirmada {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .sin-citas {
+            text-align: center;
+            color: #666;
+            padding: 20px;
+            font-style: italic;
+        }
+
+        .loading-citas {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -217,7 +269,7 @@
                 <h2 class="seccion-titulo">📅 Mis Citas</h2>
                 
                 <div class="lista-citas" id="lista-citas">
-                    <!-- Las citas se cargarán dinámicamente -->
+                    <div class="loading-citas">Cargando citas...</div>
                 </div>
 
                 <div style="text-align: center; margin-top: 20px;">
@@ -282,6 +334,24 @@
         </div>
     </div>
 
+    <!-- Modal Disponibilidad -->
+    <div id="modal-disponibilidad" class="modal">
+        <div class="modal-contenido">
+            <span class="cerrar-modal" onclick="cerrarModalDisponibilidad()">&times;</span>
+            <h2>🕐 Gestionar Disponibilidad</h2>
+            
+            <div class="form-grupo">
+                <label for="edit-disponibilidad-modal">Tu disponibilidad actual:</label>
+                <textarea id="edit-disponibilidad-modal" rows="4" placeholder="Ej: Lunes a Viernes 9:00-18:00, Sábados 10:00-14:00"></textarea>
+            </div>
+            
+            <div class="botones-accion">
+                <button type="button" class="btn-editar" onclick="guardarDisponibilidad()">💾 Actualizar Disponibilidad</button>
+                <button type="button" class="btn-eliminar" onclick="cerrarModalDisponibilidad()">❌ Cancelar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="main-footer">
         <div class="container">
@@ -309,54 +379,16 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        // Variables globales
+        let psicologoIdGlobal = null;
+        let psicologoDocRef = null;
+
         // ESPERAR A QUE EL DOM ESTÉ CARGADO
         document.addEventListener('DOMContentLoaded', function() {
             auth.onAuthStateChanged((user) => {
                 if (user) {
                     console.log("✅ Usuario logueado:", user.email);
-                    
-                    // BUSCAR EN LA BASE proyectotercerparcial
-                    db.collection("psicologos")
-                      .where("email", "==", user.email)
-                      .get()
-                      .then((querySnapshot) => {
-                          if (!querySnapshot.empty) {
-                              const doc = querySnapshot.docs[0];
-                              const datos = doc.data();
-                              console.log("✅ Datos encontrados en proyectotercerparcial:", datos);
-                              
-                              // CORRECCIÓN: Usar los IDs correctos del HTML
-                              document.getElementById('info-nombre').textContent = datos.nombre || 'No especificado';
-                              document.getElementById('info-especialidad').textContent = datos.especialidad || 'No especificado';
-                              document.getElementById('info-email').textContent = datos.email || 'No especificado';
-                              document.getElementById('info-disponibilidad').textContent = datos.disponibilidad || 'No especificada';
-                              
-                              // CORRECCIÓN: Manejar correctamente la foto
-                              if (datos.foto) {
-                                  // Corregir URL si está incompleta
-                                  let fotoUrl = datos.foto.replace(/\n/g, '').trim();
-                                  if (fotoUrl.includes('photo-1559839734-2b71ea197ec2') && !fotoUrl.includes('?')) {
-                                      fotoUrl = 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&fit=crop';
-                                  }
-                                  document.getElementById('info-foto').src = fotoUrl;
-                                  document.getElementById('info-foto').style.display = 'block';
-                              }
-                              
-                          } else {
-                              console.log("❌ No se encontraron datos en proyectotercerparcial para:", user.email);
-                              document.getElementById('info-nombre').textContent = 'No encontrado';
-                              document.getElementById('info-especialidad').textContent = 'No encontrado';
-                              document.getElementById('info-email').textContent = 'No encontrado';
-                              document.getElementById('info-disponibilidad').textContent = 'No encontrado';
-                          }
-                      })
-                      .catch((error) => {
-                          console.error("❌ Error buscando en proyectotercerparcial:", error);
-                          document.getElementById('info-nombre').textContent = 'Error al cargar';
-                          document.getElementById('info-especialidad').textContent = 'Error al cargar';
-                          document.getElementById('info-email').textContent = 'Error al cargar';
-                          document.getElementById('info-disponibilidad').textContent = 'Error al cargar';
-                      });
+                    cargarDatosPsicologo(user.email);
                 } else {
                     console.log("❌ No hay usuario - redirigiendo al login");
                     window.location.href = '../psicologo_/login.html';
@@ -364,47 +396,239 @@
             });
         });
 
+        // CARGAR DATOS DEL PSICÓLOGO
+
+        function cargarDatosPsicologo(email) {
+    db.collection("psicologos")
+      .where("email", "==", email)
+      .get()
+      .then((querySnapshot) => {
+          if (!querySnapshot.empty) {
+              const doc = querySnapshot.docs[0];
+              
+              // DEBUG DETALLADO
+              console.log("=== DEBUG DETALLADO ===");
+              console.log("📄 Documento completo:", doc);
+              console.log("🆔 doc.id:", doc.id);
+              console.log("🔍 doc.data():", doc.data());
+              console.log("📧 Email en datos:", doc.data().email);
+              console.log("👤 Nombre en datos:", doc.data().nombre);
+              
+              //psicologoIdGlobal = "4weWQf2WnveX3xRn2pnY";
+              psicologoIdGlobal = doc.id; 
+              console.log("✅ psicologoIdGlobal asignado:", psicologoIdGlobal);
+              console.log("=== FIN DEBUG ===");
+              
+              psicologoDocRef = doc.ref;
+              const datos = doc.data();
+              console.log("✅ Datos encontrados:", datos);
+              
+              document.getElementById('info-nombre').textContent = datos.nombre || 'No especificado';
+              document.getElementById('info-especialidad').textContent = datos.especialidad || 'No especificado';
+              document.getElementById('info-email').textContent = datos.email || 'No especificado';
+              document.getElementById('info-disponibilidad').textContent = datos.disponibilidad || 'No especificada';
+              
+              if (datos.foto) {
+                  let fotoUrl = datos.foto.replace(/\n/g, '').trim();
+                  if (fotoUrl.includes('photo-1559839734-2b71ea197ec2') && !fotoUrl.includes('?')) {
+                      fotoUrl = 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&fit=crop';
+                  }
+                  document.getElementById('info-foto').src = fotoUrl;
+                  document.getElementById('info-foto').style.display = 'block';
+              }
+              
+              // Cargar citas después de tener el ID
+              cargarCitasPsicologo();
+              
+          } else {
+              console.log("❌ No se encontraron datos para:", email);
+              mostrarErrorDatos();
+          }
+      })
+      .catch((error) => {
+          console.error("❌ Error buscando psicólogo:", error);
+          mostrarErrorDatos();
+      });
+}
+    
+        function mostrarErrorDatos() {
+            document.getElementById('info-nombre').textContent = 'Error al cargar';
+            document.getElementById('info-especialidad').textContent = 'Error al cargar';
+            document.getElementById('info-email').textContent = 'Error al cargar';
+            document.getElementById('info-disponibilidad').textContent = 'Error al cargar';
+        }
+
+        function cargarCitasPsicologo() {
+    console.log("🔍 Buscando citas...");
+    console.log("psicologoIdGlobal:", psicologoIdGlobal);
+    console.log("Tipo de psicologoIdGlobal:", typeof psicologoIdGlobal);
+    
+    if (!psicologoIdGlobal) {
+        console.log("❌ No hay psicologoIdGlobal");
+        return;
+    }
+
+    db.collection("citas_pendientes")
+      .where("psicologoId", "==", psicologoIdGlobal)
+      .get()
+      .then((querySnapshot) => {
+          console.log("📊 Citas encontradas:", querySnapshot.size);
+          console.log("Documentos:", querySnapshot.docs);
+          
+          const listaCitas = document.getElementById('lista-citas');
+          
+          if (querySnapshot.empty) {
+              console.log("❌ No se encontraron citas - Query vacía");
+              listaCitas.innerHTML = '<div class="sin-citas">No tienes citas pendientes</div>';
+              return;
+          }
+
+          let htmlCitas = '';
+          querySnapshot.forEach((doc) => {
+              console.log("Cita encontrada:", doc.id, doc.data());
+              const cita = doc.data();
+              htmlCitas += crearHTMLCita(cita, doc.id);
+          });
+
+          listaCitas.innerHTML = htmlCitas;
+      })
+      .catch((error) => {
+          console.error("Error completo cargando citas:", error);
+      });
+}
+        
+        function crearHTMLCita(cita, citaId) {
+            const fechaFormateada = new Date(cita.fecha).toLocaleDateString('es-ES');
+            return `
+                <div class="cita-item">
+                    <div class="cita-paciente">👤 ${cita.paciente}</div>
+                    <div class="cita-detalles">
+                        <strong>Fecha:</strong> ${fechaFormateada}<br>
+                        <strong>Hora:</strong> ${cita.hora}<br>
+                        ${cita.motivo ? `<strong>Motivo:</strong> ${cita.motivo}` : ''}
+                    </div>
+                    <span class="cita-estado estado-pendiente">${cita.estado || 'Pendiente'}</span>
+                </div>
+            `;
+        }
+
         function abrirModalEditar() {
-            alert('Editar perfil - en desarrollo');
-        }
-
-        function abrirModalEliminar() {
-            if (confirm('¿Seguro que quieres eliminar tu cuenta?')) {
-                alert('Cuenta eliminada (en desarrollo)');
+            if (!psicologoDocRef) {
+                alert('Error: No se pueden cargar los datos del perfil');
+                return;
             }
-        }
 
-        function abrirModalDisponibilidad() {
-            alert('Gestionar disponibilidad - en desarrollo');
+            // Cargar datos actuales en el modal
+            psicologoDocRef.get().then((doc) => {
+                if (doc.exists) {
+                    const datos = doc.data();
+                    document.getElementById('edit-nombre').value = datos.nombre || '';
+                    document.getElementById('edit-especialidad').value = datos.especialidad || '';
+                    document.getElementById('edit-email').value = datos.email || '';
+                    document.getElementById('edit-disponibilidad').value = datos.disponibilidad || '';
+                    document.getElementById('edit-foto').value = datos.foto || '';
+                    
+                    document.getElementById('modal-editar').style.display = 'block';
+                }
+            });
         }
 
         function cerrarModalEditar() {
             document.getElementById('modal-editar').style.display = 'none';
         }
 
+        function guardarCambios() {
+            const nuevosDatos = {
+                nombre: document.getElementById('edit-nombre').value,
+                especialidad: document.getElementById('edit-especialidad').value,
+                email: document.getElementById('edit-email').value,
+                disponibilidad: document.getElementById('edit-disponibilidad').value,
+                foto: document.getElementById('edit-foto').value
+            };
+
+            psicologoDocRef.update(nuevosDatos)
+                .then(() => {
+                    alert('✅ Perfil actualizado correctamente');
+                    cerrarModalEditar();
+                    location.reload();
+                })
+                .catch((error) => {
+                    console.error("Error actualizando perfil:", error);
+                    alert('❌ Error al actualizar el perfil');
+                });
+        }
+
+        function abrirModalEliminar() {
+            document.getElementById('modal-eliminar').style.display = 'block';
+        }
+
         function cerrarModalEliminar() {
             document.getElementById('modal-eliminar').style.display = 'none';
         }
 
-        function guardarCambios() {
-            alert('Guardar cambios - en desarrollo');
-        }
-
         function eliminarCuenta() {
-            alert('Eliminar cuenta - en desarrollo');
+            if (!psicologoDocRef) {
+                alert('Error: No se puede eliminar la cuenta');
+                return;
+            }
+
+            psicologoDocRef.delete()
+                .then(() => {
+                    alert('✅ Cuenta eliminada correctamente');
+                    auth.signOut().then(() => {
+                        window.location.href = '../index.html';
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error eliminando cuenta:", error);
+                    alert('❌ Error al eliminar la cuenta');
+                });
         }
 
-        // Cerrar modales al hacer clic fuera
+        function abrirModalDisponibilidad() {
+            if (!psicologoDocRef) {
+                alert('Error: No se pueden cargar los datos');
+                return;
+            }
+
+            psicologoDocRef.get().then((doc) => {
+                if (doc.exists) {
+                    const datos = doc.data();
+                    document.getElementById('edit-disponibilidad-modal').value = datos.disponibilidad || '';
+                    document.getElementById('modal-disponibilidad').style.display = 'block';
+                }
+            });
+        }
+
+        function cerrarModalDisponibilidad() {
+            document.getElementById('modal-disponibilidad').style.display = 'none';
+        }
+
+        function guardarDisponibilidad() {
+            const nuevaDisponibilidad = document.getElementById('edit-disponibilidad-modal').value;
+
+            psicologoDocRef.update({
+                disponibilidad: nuevaDisponibilidad
+            })
+            .then(() => {
+                alert('✅ Disponibilidad actualizada correctamente');
+                cerrarModalDisponibilidad();
+                location.reload();
+            })
+            .catch((error) => {
+                console.error("Error actualizando disponibilidad:", error);
+                alert('❌ Error al actualizar la disponibilidad');
+            });
+        }
+
         window.onclick = function(event) {
-            const modalEditar = document.getElementById('modal-editar');
-            const modalEliminar = document.getElementById('modal-eliminar');
-            
-            if (event.target === modalEditar) {
-                cerrarModalEditar();
-            }
-            if (event.target === modalEliminar) {
-                cerrarModalEliminar();
-            }
+            const modales = ['modal-editar', 'modal-eliminar', 'modal-disponibilidad'];
+            modales.forEach(modalId => {
+                const modal = document.getElementById(modalId);
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
         }
     </script>
 </body>

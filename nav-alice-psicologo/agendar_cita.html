@@ -240,14 +240,15 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+        // CONFIGURACIÓN ACTUALIZADA - proyectotercerparcial
         const firebaseConfig = {
-            apiKey: "AIzaSyARZlEs_zFZ_F_Q-kTeuCiVyF_by6KtL5M",
-            authDomain: "alice-iapsic.firebaseapp.com",
-            projectId: "alice-iapsic",
-            storageBucket: "alice-iapsic.firebasestorage.app",
-            messagingSenderId: "1045384574456",
-            appId: "1:1045384574456:web:af0a149776d8fa7eed520d",
-            measurementId: "G-W4E4HE01YS"
+            apiKey: "AIzaSyCq2lQnID4SSkFIKh_ja6paB4aHuq4KU0M",
+            authDomain: "proyectercerparcial.firebaseapp.com",
+            databaseURL: "https://proyectercerparcial-default-rtdb.firebaseio.com",
+            projectId: "proyectercerparcial",
+            storageBucket: "proyectercerparcial.appspot.com",
+            messagingSenderId: "39792129165",
+            appId: "1:39792129165:web:631ce9e0c7fb657a135ec4"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -268,6 +269,7 @@
                     return "Psicólogo no encontrado";
                 }
             } catch (error) {
+                console.error("Error cargando psicólogo:", error);
                 return "Error de carga";
             }
         }
@@ -318,7 +320,8 @@
                     const docRef = await addDoc(collection(db, CITAS_COLLECTION), nuevaCita);
                     alert(`✅ Cita agendada con éxito! Su cita con el ID: ${docRef.id} ha sido enviada para confirmación.`);
                     form.reset();
-                } catch (e) {
+                } catch (error) {
+                    console.error("Error agendando cita:", error);
                     alert("❌ Hubo un error al intentar agendar la cita. Por favor, inténtalo de nuevo.");
                 }
             });
