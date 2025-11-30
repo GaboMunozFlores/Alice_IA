@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Contraseña</title>
+    <link rel="stylesheet" href="recuperar_contraseña.css">
+</head>
+<body>
+
+<div class="reset-container">
+    <h2>Recuperar contraseña</h2>
+
+    <p>Ingresa tu correo y te enviaremos un enlace para restablecer tu contraseña.</p>
+
+    <input type="email" id="emailReset" placeholder="Correo electrónico">
+
+    <button id="btnReset">Enviar enlace</button>
+
+    <p class="mensaje-exito" id="mensajeExito">✔ Enlace enviado, revisa tu correo.</p>
+    <p class="mensaje-error" id="mensajeError"></p>
+<br><br><br>
+    <a href="login.html">Volver al inicio de sesión</a>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="recuperar_contraseña.js"></script>
+
+</body>
+</html>

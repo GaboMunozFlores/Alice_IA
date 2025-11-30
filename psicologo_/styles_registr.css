@@ -1,3 +1,4 @@
+/* ======= ESTILO GLOBAL ======= */
 body {
   font-family: Arial, sans-serif;
   background: #e8e8e8;
@@ -5,26 +6,45 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  margin: 0;
 }
 
-.form-container {
+/* ======= CONTENEDORES PRINCIPALES ======= */
+.form-container,
+.login-container {
   background: white;
   padding: 25px;
   width: 350px;
   border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
+/* Títulos */
+.form-container h2,
+.login-container h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+/* ======= CAMPOS DE TEXTO Y SELECTS ======= */
 input, textarea, select, button {
   width: 100%;
   padding: 10px;
   border: 1px solid #999;
   border-radius: 6px;
+  font-size: 15px;
   box-sizing: border-box;
 }
 
+/* Evita que textarea sea muy pequeño */
+textarea {
+  min-height: 70px;
+}
+
+/* ======= MOSTRAR/OCULTAR CONTRASEÑA ======= */
 .password-container {
   position: relative;
 }
@@ -32,15 +52,18 @@ input, textarea, select, button {
 .eye-icon {
   position: absolute;
   right: 10px;
-  top: 10px;
+  top: 50%;
+  transform: translateY(-50%);
   cursor: pointer;
+  font-size: 18px;
+  opacity: 0.75;
 }
 
+/* ======= VALIDACIÓN DE CONTRASEÑA ======= */
 #passwordRules {
   font-size: 13px;
-  padding-left: 18px;
   margin-top: -5px;
-  margin-bottom: 0;
+  padding-left: 15px;
 }
 
 #passwordRules li {
@@ -48,13 +71,16 @@ input, textarea, select, button {
 }
 
 .valid {
-  color: rgb(0, 150, 0);
+  color: green;
+  font-weight: bold;
 }
 
 .invalid {
-  color: rgb(170, 0, 0);
+  color: red;
+  font-weight: bold;
 }
 
+/* ======= BOTONES ======= */
 button {
   background: #4CAF50;
   color: white;
@@ -62,12 +88,14 @@ button {
   font-weight: bold;
   cursor: pointer;
   border-radius: 7px;
+  font-size: 16px;
 }
 
 button:hover {
   background: #45a049;
 }
 
+/* ======= MENSAJES ======= */
 .mensaje-error {
   color: red;
   font-size: 12px;
@@ -78,4 +106,21 @@ button:hover {
   color: green;
   font-size: 12px;
   display: none;
+}
+
+/* ======= ENLACES (LOGIN) ======= */
+.links {
+  font-size: 14px;
+  text-align: center;
+  margin-top: 5px;
+}
+
+.links a {
+  color: #5b1fc6;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.links a:hover {
+  text-decoration: underline;
 }
