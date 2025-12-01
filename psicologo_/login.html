@@ -36,33 +36,41 @@
     </p>
   </div>
 
-  <script>
+ <script>
+    // 1. CONFIGURACIÓN
     const firebaseConfig = {
         apiKey: "AIzaSyCq2lQnID4SSkFIKh_ja6paB4aHuq4KU0M",
-         authDomain: "proyectercerparcial.firebaseapp.com",
-  databaseURL: "https://proyectercerparcial-default-rtdb.firebaseio.com",
-  projectId: "proyectercerparcial",
-  storageBucket: "proyectercerparcial.appspot.com",
-  messagingSenderId: "39792129165",
-         appId: "1:39792129165:web:631ce9e0c7fb657a135ec4"
+        authDomain: "proyectercerparcial.firebaseapp.com",
+        databaseURL: "https://proyectercerparcial-default-rtdb.firebaseio.com",
+        projectId: "proyectercerparcial",
+        storageBucket: "proyectercerparcial.appspot.com",
+        messagingSenderId: "39792129165",
+        appId: "1:39792129165:web:631ce9e0c7fb657a135ec4"
     };
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
+    // 2. ELEMENTOS DEL DOM
+    const emailInput = document.getElementById('emailLogin');
+    const passwordInput = document.getElementById('passwordLogin');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginError = document.getElementById('loginError');
+    const loginExito = document.getElementById('loginExito');
+
+    // 3. MOSTRAR/OCULTAR CONTRASEÑA
     document.getElementById('togglePasswordLogin').addEventListener('click', function() {
-        const passwordInput = document.getElementById('passwordLogin');
         const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
         passwordInput.setAttribute('type', type);
     });
 
-    document.getElementById('loginBtn').addEventListener('click', function() {
-        const email = document.getElementById('emailLogin').value;
-        const password = document.getElementById('passwordLogin').value;
-        const loginError = document.getElementById('loginError');
-        const loginExito = document.getElementById('loginExito');
+    // 4. LÓGICA DE LOGIN CON VALIDACIÓN DE ESTADO
+    loginBtn.addEventListener('click', function() {
+        const email = emailInput.value;
+        const password = passwordInput.value;
 
+        // Limpiar mensajes
         loginError.style.display = 'none';
         loginExito.style.display = 'none';
 
@@ -72,52 +80,85 @@
             return;
         }
 
-        const loginBtn = document.getElementById('loginBtn');
-        loginBtn.textContent = 'Iniciando sesión...';
+        // Bloquear botón
+        loginBtn.textContent = 'Verificando...';
         loginBtn.disabled = true;
 
+        // PASO A: Autenticar (Email/Pass correctos)
         auth.signInWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                loginExito.style.display = 'block';
-                
-                setTimeout(() => {
-                    window.location.href = '../nav-alice-psicologo/perfilPsic.html';
-                }, 1000);
+            .then(async (userCredential) => {
+                const user = userCredential.user;
+
+                // PASO B: Consultar Base de Datos para ver el estado
+                // NOTA: Asegúrate que tu colección se llame 'psicologos' (minúscula o mayúscula según tu BD)
+                const doc = await db.collection('psicologos').doc(user.uid).get();
+
+                if (!doc.exists) {
+                    throw new Error("NO_REGISTRO");
+                }
+
+                const datos = doc.data();
+                const estado = datos.estado; // puede ser 'aprobado', 'pendiente', etc.
+
+                console.log("Estado del usuario:", estado); // Para depurar
+
+                // PASO C: Validar Estado
+                if (estado === 'aprobado') {
+                    // ✅ APROBADO
+                    loginExito.textContent = '✅ Acceso autorizado. Redirigiendo...';
+                    loginExito.style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = '../nav-alice-psicologo/perfilPsic.html';
+                    }, 1500);
+                } else if (estado === 'pendiente') {
+                    // ⏳ PENDIENTE
+                    throw new Error("PENDIENTE");
+                } else {
+                    // 🚫 CUALQUIER OTRA COSA (rechazado, baja, etc)
+                    throw new Error("NO_AUTORIZADO");
+                }
             })
             .catch((error) => {
-                let errorMessage = 'Error al iniciar sesión';
+                // Si entró al catch, significa que la contraseña estaba mal 
+                // O que nosotros lanzamos un error (PENDIENTE/NO_AUTORIZADO)
                 
-                switch (error.code) {
-                    case 'auth/user-not-found':
-                        errorMessage = 'Usuario no encontrado';
-                        break;
-                    case 'auth/wrong-password':
-                        errorMessage = 'Contraseña incorrecta';
-                        break;
-                    case 'auth/invalid-email':
-                        errorMessage = 'Email inválido';
-                        break;
-                    case 'auth/too-many-requests':
-                        errorMessage = 'Demasiados intentos. Intenta más tarde';
-                        break;
-                    default:
-                        errorMessage = error.message;
+                // Si el usuario llegó a loguearse pero no estaba aprobado, cerramos su sesión
+                if (auth.currentUser) {
+                    auth.signOut();
+                }
+
+                let msg = 'Error al iniciar sesión';
+                
+                if (error.message === 'PENDIENTE') {
+                    msg = '⏳ Tu cuenta está en revisión. Espera a ser aprobado.';
+                } else if (error.message === 'NO_AUTORIZADO') {
+                    msg = '🚫 Tu cuenta no tiene permisos para acceder o ha sido dada de baja.';
+                } else if (error.message === 'NO_REGISTRO') {
+                    msg = '⚠️ No se encontraron datos de perfil para este usuario.';
+                } else {
+                    // Errores estándar de Firebase
+                    switch (error.code) {
+                        case 'auth/user-not-found': msg = 'Usuario no encontrado'; break;
+                        case 'auth/wrong-password': msg = 'Contraseña incorrecta'; break;
+                        case 'auth/invalid-email': msg = 'Email inválido'; break;
+                        case 'auth/too-many-requests': msg = 'Demasiados intentos'; break;
+                        default: msg = error.message;
+                    }
                 }
                 
-                loginError.textContent = errorMessage;
+                loginError.textContent = msg;
                 loginError.style.display = 'block';
-            })
-            .finally(() => {
+                
+                // Restaurar botón
                 loginBtn.textContent = 'Entrar';
                 loginBtn.disabled = false;
             });
     });
 
-    document.getElementById('passwordLogin').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            document.getElementById('loginBtn').click();
-        }
+    // Enter para enviar
+    passwordInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') loginBtn.click();
     });
-  </script>
+</script>
 </body>
 </html>
