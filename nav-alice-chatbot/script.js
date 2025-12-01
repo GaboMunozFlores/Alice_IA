@@ -1,6 +1,6 @@
 // 1. IMPORTACIONES NECESARIAS (Versión Modular)
 // Asegúrate de que la ruta "./auth_firebase.js" sea correcta (si ambos archivos están en la carpeta js/)
-import { auth, db } from "./auth_firebase.js";
+import { auth, db } from "../nav-alice-usuarios/js/auth_firebase.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 import { collection, addDoc, query, where, orderBy, limit, getDocs, Timestamp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
@@ -57,6 +57,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\*(.*?)\*/g, '<i>$1</i>').replace(/\n/g, '<br>');
     botMessage.innerHTML = `<div class="bot-bubble"><b>Alice:</b><br>${formattedText}</div>`;
     chatbox.appendChild(botMessage);
+    leerTexto(text);
     chatbox.scrollTop = chatbox.scrollHeight;
   }
 
@@ -68,26 +69,57 @@ window.addEventListener('DOMContentLoaded', () => {
     chatbox.scrollTop = chatbox.scrollHeight;
   }
 
-  function showTyping(callback) {
-    const typingBubble = document.createElement('div');
-    typingBubble.className = 'bot-message typing';
-    typingBubble.innerHTML = `<div class="bot-bubble typing-bubble"><b>Alice</b> está escribiendo<span class="typing-dots"></span></div>`;
-    chatbox.appendChild(typingBubble);
-    chatbox.scrollTop = chatbox.scrollHeight;
+// Modifica tu función showTyping para deshabilitar el input
+// Busca la función showTyping existente y reemplázala COMPLETAMENTE por esta:
+function showTyping(callback) {
+  // 1. Deshabilitar controles (Mejora de usabilidad)
+  const userInputField = document.getElementById('userMessage');
+  const sendBtn = document.getElementById('sendBtn');
+  const chatbox = document.getElementById('chatBox'); // Asegúrate de tener esta referencia
 
-    let count = 0;
-    const dots = typingBubble.querySelector('.typing-dots');
-    const dotInterval = setInterval(() => {
-      count = (count + 1) % 4;
-      dots.textContent = '.'.repeat(count);
-    }, 400);
-
-    setTimeout(() => {
-      clearInterval(dotInterval);
-      if (typingBubble.parentNode) chatbox.removeChild(typingBubble);
-      if (callback) callback();
-    }, 1800 + Math.random() * 800);
+  if (userInputField) userInputField.disabled = true;
+  if (sendBtn) {
+      sendBtn.disabled = true;
+      sendBtn.textContent = "...";
   }
+
+  // 2. Crear burbuja de "escribiendo"
+  const typingBubble = document.createElement('div');
+  typingBubble.className = 'bot-message typing';
+  typingBubble.innerHTML = `<div class="bot-bubble typing-bubble"><b>Alice</b> está escribiendo<span class="typing-dots"></span></div>`;
+  if (chatbox) {
+      chatbox.appendChild(typingBubble);
+      chatbox.scrollTop = chatbox.scrollHeight;
+  }
+
+  // 3. Animación de puntos (Aquí definimos dotInterval)
+  let count = 0;
+  const dots = typingBubble.querySelector('.typing-dots');
+  
+  // ESTA ES LA VARIABLE QUE FALTABA:
+  const dotInterval = setInterval(() => {
+    count = (count + 1) % 4;
+    if (dots) dots.textContent = '.'.repeat(count);
+  }, 400);
+
+  // 4. Finalizar animación y ejecutar callback
+  setTimeout(() => {
+    clearInterval(dotInterval); // Ahora sí existe
+    if (typingBubble.parentNode) typingBubble.parentNode.removeChild(typingBubble);
+    
+    // Reactivar controles
+    if (userInputField) {
+        userInputField.disabled = false;
+        userInputField.focus();
+    }
+    if (sendBtn) {
+        sendBtn.disabled = false;
+        sendBtn.textContent = "Enviar";
+    }
+    
+    if (callback) callback();
+  }, 1800 + Math.random() * 800);
+}
 
   // === AUTENTICACIÓN (CORREGIDA A MODULAR) ===
   onAuthStateChanged(auth, (user) => {
@@ -264,13 +296,52 @@ window.addEventListener('DOMContentLoaded', () => {
     stars.forEach(s => s.classList.remove('selected'));
     calificacion = 0;
   });
-  stars.forEach(star => {
-    star.addEventListener('click', () => {
-      calificacion = parseInt(star.dataset.value);
-      stars.forEach(s => s.classList.remove('selected'));
-      for (let i = 0; i < calificacion; i++) stars[i].classList.add('selected');
+/// === BUSCA ESTA PARTE EN TU SCRIPT.JS Y REEMPLÁZALA ===
+
+stars.forEach((star, index) => { // Agregamos 'index' aquí para saber la posición
+    
+    // Función común para seleccionar
+    const selectStar = () => {
+        calificacion = parseInt(star.dataset.value);
+        stars.forEach(s => {
+            s.classList.remove('selected');
+            s.setAttribute('aria-checked', 'false');
+        });
+        // Lógica visual
+        for (let i = 0; i < calificacion; i++) {
+            stars[i].classList.add('selected');
+            stars[i].setAttribute('aria-checked', 'true');
+        }
+    };
+
+    // 1. Evento Mouse (Clic)
+    star.addEventListener('click', selectStar);
+    
+    // 2. Evento Teclado (Accesibilidad Completa)
+    star.addEventListener('keydown', (e) => {
+        // Seleccionar con Enter o Espacio
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            selectStar();
+        }
+        
+        // Moverse con Flechas (Derecha -> Siguiente, Izquierda <- Anterior)
+        else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            // Si no es la última estrella, mueve el foco a la siguiente
+            if (index < stars.length - 1) {
+                stars[index + 1].focus();
+            }
+        } 
+        else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            // Si no es la primera estrella, mueve el foco a la anterior
+            if (index > 0) {
+                stars[index - 1].focus();
+            }
+        }
     });
-  });
+});
 
   let enviandoOpinion = false;
   const malasPalabras = ["puta", "mierda", "estupido", "idiota"]; // Lista resumida
@@ -285,13 +356,27 @@ window.addEventListener('DOMContentLoaded', () => {
     enviandoOpinion = true;
 
     const texto = opinionText.value.trim();
-    if (!texto || calificacion === 0) {
-      alert('Escribe opinión y selecciona estrellas 🌟');
-      enviandoOpinion = false; return;
+if (!texto || calificacion === 0) {
+      // Borraste el alert() y pones esto:
+      Swal.fire({
+          title: 'Faltan datos',
+          text: 'Por favor escribe una opinión y selecciona las estrellas 🌟',
+          icon: 'warning',
+          confirmButtonColor: '#6bcf9d'
+      });
+      enviandoOpinion = false; 
+      return;
     }
+
     if (contieneGroserias(texto)) {
-      alert('⚠️ Lenguaje inapropiado.');
-      enviandoOpinion = false; return;
+      Swal.fire({
+          title: 'Lenguaje no permitido',
+          text: '⚠️ Por favor mantén un lenguaje respetuoso.',
+          icon: 'error',
+          confirmButtonColor: '#d33'
+      });
+      enviandoOpinion = false; 
+      return;
     }
 
     const user = auth.currentUser;
@@ -304,14 +389,30 @@ window.addEventListener('DOMContentLoaded', () => {
         calificacion,
         fecha: new Date().toISOString()
       });
-      alert(`💖 ¡Gracias, ${nombreUsuario}!`);
+Swal.fire({
+          title: '¡Gracias!',
+          text: `💖 Tu opinión ha sido guardada, ${nombreUsuario}.`,
+          icon: 'success',
+          timer: 2000,
+          showConfirmButton: false
+      });
+
       opinionModal.style.display = 'none';
       opinionText.value = '';
-      stars.forEach(s => s.classList.remove('selected'));
+      stars.forEach(s => {
+          s.classList.remove('selected');
+          s.setAttribute('aria-checked', 'false'); // Si ya agregaste la accesibilidad
+      });
       calificacion = 0;
+      
     } catch (err) {
       console.error('Error opinión:', err);
-      alert('Error al guardar opinión.');
+      // Sugerencia: Cambia también el alert de error
+      Swal.fire({
+          title: 'Error',
+          text: 'No se pudo guardar tu opinión.',
+          icon: 'error'
+      });
     } finally {
       enviandoOpinion = false;
     }
@@ -463,3 +564,100 @@ window.addEventListener('DOMContentLoaded', () => {
   if (verGraficaBtn) verGraficaBtn.addEventListener('click', mostrarGraficaEmociones);
 
 });
+// === LÓGICA DEL WIDGET DE ACCESIBILIDAD ===
+
+// 1. Abrir/Cerrar Menú
+const toggleBtn = document.getElementById('toggle-access-btn');
+const menu = document.getElementById('access-menu');
+
+if(toggleBtn && menu) {
+    toggleBtn.addEventListener('click', () => {
+        const isHidden = menu.style.display === 'none';
+        menu.style.display = isHidden ? 'flex' : 'none';
+        // Accesibilidad: cambiar el aria-expanded
+        toggleBtn.setAttribute('aria-expanded', isHidden);
+    });
+}
+
+// 2. Zoom de Texto
+let currentZoom = 1;
+window.cambiarTexto = (direction) => {
+    currentZoom += direction * 0.1;
+    if (currentZoom < 0.8) currentZoom = 0.8; // Mínimo
+    if (currentZoom > 1.5) currentZoom = 1.5; // Máximo
+    document.body.style.fontSize = `${currentZoom}em`;
+};
+
+// 3. Alto Contraste
+window.toggleAltoContraste = () => {
+    document.body.classList.toggle('high-contrast');
+};
+
+// 4. Reset
+window.resetAccesibilidad = () => {
+    currentZoom = 1;
+    document.body.style.fontSize = '1em';
+    document.body.classList.remove('high-contrast');
+};
+// === AL FINAL DE SCRIPT.JS ===
+
+// 1. Configuración del Reconocimiento de Voz
+const micBtn = document.getElementById('micBtn');
+const userInput = document.getElementById('userMessage');
+
+// Verificamos si el navegador soporta voz
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (SpeechRecognition && micBtn) {
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'es-ES'; // Idioma español
+    recognition.continuous = false; // Se detiene al dejar de hablar
+
+    micBtn.addEventListener('click', () => {
+        if (micBtn.classList.contains('escuchando')) {
+            recognition.stop();
+        } else {
+            recognition.start();
+        }
+    });
+
+    recognition.onstart = () => {
+        micBtn.classList.add('escuchando');
+        micBtn.innerHTML = '🛑'; // Icono de Stop
+        micBtn.setAttribute('aria-label', 'Detener dictado');
+        userInput.placeholder = "Escuchando...";
+    };
+
+    recognition.onend = () => {
+        micBtn.classList.remove('escuchando');
+        micBtn.innerHTML = '🎤';
+        micBtn.setAttribute('aria-label', 'Activar dictado por voz');
+        userInput.placeholder = "Escribe aquí...";
+        userInput.focus(); // Devolver el foco al input
+    };
+
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        userInput.value = transcript;
+        // Opcional: Enviar automáticamente al terminar de hablar
+        // document.getElementById('sendBtn').click(); 
+    };
+} else {
+    // Si el navegador es muy viejo y no soporta voz
+    if(micBtn) micBtn.style.display = 'none';
+}
+
+// 2. (OPCIONAL) Que Alice hable en voz alta
+function leerTexto(texto) {
+    // Cancelar si ya está hablando
+    window.speechSynthesis.cancel();
+
+    // Limpiar el texto de emojis y etiquetas HTML para que no las lea raro
+    const textoLimpio = texto.replace(/<[^>]*>?/gm, ''); 
+    
+    const utter = new SpeechSynthesisUtterance(textoLimpio);
+    utter.lang = 'es-ES';
+    utter.rate = 1; // Velocidad normal
+    window.speechSynthesis.speak(utter);
+}
+

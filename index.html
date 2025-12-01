@@ -1,122 +1,254 @@
 <!DOCTYPE HTML>
-<html lang="en">
+<html lang="es">
 
 <head>
+
     <title>Alice IA</title>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="assets/css/main.css" />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        /* --- AJUSTE DE TAMAÑO DE LETRA (MENÚ) --- */
+        #nav ul li a {
+            font-size: 1rem !important; /* Tamaño de letra normal y elegante */
+            padding: 0.5em 1em !important; /* Espacio entre botones más sutil */
+            font-weight: 500 !important;
+        }
+
+        /* --- AJUSTE DE TÍTULOS (HERO) --- */
+        #hero h2 {
+            font-size: 2.5em !important; /* Título principal menos exagerado */
+            margin-bottom: 0.5em;
+        }
+        #hero p {
+            font-size: 1.2em !important; /* Subtítulo legible */
+        }
+
+        /* --- IMAGEN DEL LOGO --- */
+        #LogoPrincipal {
+            width: 140px !important;
+            height: 140px !important;
+            object-fit: cover !important;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: inline-block;
+        }
+
+        /* --- BOTÓN FLOTANTE ACCESIBILIDAD (MEJORADO) --- */
+        .accessibility-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 10000;
+        }
+
+        .access-float-btn {
+            width: 55px;
+            height: 55px;
+            background: #288488;
+            border-radius: 50%;
+            /* Sin borde grueso para que se vea más limpio */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            border: none;
+            transition: transform 0.3s ease, background 0.3s;
+        }
+
+        .access-float-btn:hover {
+            transform: scale(1.1);
+            background: #1e6b6e;
+        }
+
+        /* Menú desplegable */
+        .access-menu {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            background: white;
+            padding: 10px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            width: 160px;
+            text-align: left;
+        }
+
+        .access-menu button {
+            background: #f4f4f4;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #333;
+            font-size: 13px;
+            font-weight: bold;
+            transition: background 0.2s;
+            text-align: left;
+        }
+
+        .access-menu button:hover {
+            background: #e0e0e0;
+            color: #288488;
+        }
+
+        /* --- ALTO CONTRASTE --- */
+        body.high-contrast, 
+        body.high-contrast #header-wrapper, 
+        body.high-contrast #footer-wrapper,
+        body.high-contrast .testimonios-section {
+            background: #000 !important;
+            background-image: none !important;
+            color: #FFF !important;
+        }
+        body.high-contrast h2, body.high-contrast h3, body.high-contrast strong, body.high-contrast i {
+            color: #FFFF00 !important;
+        }
+        body.high-contrast a {
+            color: #00FF00 !important;
+            text-decoration: underline;
+        }
+    </style>
 </head>
 
 <body class="homepage is-preload">
     <div id="page-wrapper">
 
-        <!-- Header -->
         <div id="header-wrapper">
             <div id="header" class="container">
 
-                <!-- Nav -->
-
                 <nav id="nav">
-    <ul>
-        <li><a href="index.html">Inicio</a></li>
-        <li>
-            <a href="nav-alice-psicologo/psicIndex.html">Ayuda inmediata</a>
-            <ul>
-                <li>
-                    <a href="https://api.whatsapp.com/send?phone=525635164983&text=tengo%20una%20crisis%20y%20necesito%20asistencia" 
-                       target="_blank" 
-                       class="whatsapp-link">
-                        <img src="images/Whatsapp.png" alt="" class="whatsapp-icon">
-                        Ayuda por WhatsApp
-                    </a>
-                </li>
-                 <li>
-                    <a href="tel:+525521288236" class="phone-link">
-                        <span class="phone-icon">📞</span>
-                        Línea de Ayuda: 55 2128 8236
-                    </a>
-                </li>
-                 <li>
-                    <a href="tel:+525564214951" class="phone-link">
-                        <span class="phone-icon">📞</span>
-                        Línea de Ayuda G: 55 2128 8236
-                    </a>
-                </li>
-                 <li>
-                    <a href="tel:+525524814754" class="phone-link">
-                        <span class="phone-icon">📞</span>
-                        Línea de Ayuda CH: 55 2128 8236
-                    </a>
-                </li>
-               
-                <li><a href="nav-alice-psicologo/login_psicologo.html">Numero de Ayuda</a></li>
-                  <!--
-                <li><a href="#">Numero de Ayuda</a></li>-->
-            </ul>
-        </li><!--
-        <li><a href="Chatbot/chatbot.php">Alice</a></li>-->
-        <li><a href="nav-alice-centros/centros.html">Centros de Ayuda</a></li>
-        <li><a href="nav-alice-usuarios/selecciondeinicio.html" class="btn-Derecha">Inicia sesión</a></li>
-        <li><a href="nav-alice-usuarios/seleccionregis.html" class="btn-Derecha">Registrate</a></li>
-    </ul>
-</nav>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li>
+                            <a href="#">Ayuda inmediata</a>
+                            <ul>
+                                <li>
+                                    <a href="https://api.whatsapp.com/send?phone=525635164983&text=tengo%20una%20crisis" target="_blank">
+                                        📲 Ayuda por WhatsApp
+                                    </a>
+                                </li>
+                                <li><a href="tel:+525521288236">📞 Línea de Ayuda</a></li>
+                                <li><a href="nav-alice-psicologo/login_psicologo.html">🔐 Acceso Psicólogos</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="nav-alice-centros/centros.html">Centros de Ayuda</a></li>
+                        <li class="break"><a href="nav-alice-usuarios/selecciondeinicio.html">Inicia sesión</a></li>
+                        <li><a href="nav-alice-usuarios/seleccionregis.html">Regístrate</a></li>
+                    </ul>
+                </nav>
+
             </div>
 
-            <!-- Logo Principal -->
-            <a href="/singnin.html" style="display: block; text-align: center;">
-                <img src="images/LogoAliceIA.jpg" alt="Logo Alice IA" id="LogoPrincipal">
-                <span class="sr-only">Alice IA - Ir al chat principal</span>
-            </a>
+            <div style="text-align: center; margin-top: 15px; position: relative; z-index: 10;">
+                <a href="index.html" style="text-decoration: none;">
+                    <img src="images/LogoAliceIA.jpg" alt="Logo Alice IA" id="LogoPrincipal">
+                </a>
+            </div>
 
-            <!-- Hero Section -->
-              <section id="hero" class="container">
+            <section id="hero" class="container">
+                <header>
+                    <h2 style="font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.6);">
+                        Nunca estás solo con Alice
+                    </h2>
+                    <p style="text-shadow: 1px 1px 2px rgba(0,0,0,0.6);">
+                        Tu espacio seguro de apoyo emocional 24/7, anónimo y gratuito.
+                    </p>
+                </header>
                 <ul class="actions">
-                    <li><a style="color: #02003E; font-family: monospace;" href="Chatbot/chatbot.php" button>Comenzar
-                            chat</a></li> <!--  aqui va el fakin chat -->
+                    <li><a href="nav-alice-usuarios/login.html" class="button">Hablar con Alice</a></li>
                 </ul>
             </section>
-            <br>
-            <h2 style="color: #288488; font-family:monospace; text-align: center;">Conoce mas sobre Alice IA </h2>
-            <h4 style="text-align: center;">Unete a nosotros, más de 500 personas han encontrado consuelo y claridad
-                hablando con Alice</h4>
         </div>
-          <!-- Tarjetas de los comentarios(estatico)-->
-        <div class="testimonios-section">
-            <div class="carrusel-container">
-                <div class="carrusel-testimonios" id="carruselTestimonios">
-                </div>
-                <div class="carrusel-indicadores" id="indicadores">
+
+        <div class="wrapper">
+            <div class="container">
+                <div class="row">
+                    <div class="col-4 col-12-medium">
+                        <section style="text-align: center; padding: 20px;">
+                            <i class="icon solid fa-heart" style="font-size: 3.5em; color: #288488; margin-bottom: 15px; display:block;"></i>
+                            <h3 style="color: #288488; font-weight:bold;">Apoyo Empático</h3>
+                            <p>Alice escucha sin juzgar, validando tus emociones en cada mensaje.</p>
+                        </section>
+                    </div>
+                    <div class="col-4 col-12-medium">
+                        <section style="text-align: center; padding: 20px;">
+                            <i class="icon solid fa-user-secret" style="font-size: 3.5em; color: #288488; margin-bottom: 15px; display:block;"></i>
+                            <h3 style="color: #288488; font-weight:bold;">100% Anónimo</h3>
+                            <p>Tu privacidad es prioridad. Desahógate en un espacio seguro.</p>
+                        </section>
+                    </div>
+                    <div class="col-4 col-12-medium">
+                        <section style="text-align: center; padding: 20px;">
+                            <i class="icon solid fa-clock" style="font-size: 3.5em; color: #288488; margin-bottom: 15px; display:block;"></i>
+                            <h3 style="color: #288488; font-weight:bold;">Disponible 24/7</h3>
+                            <p>La ansiedad no tiene horario. Estamos aquí para ti siempre.</p>
+                        </section>
+                    </div>
                 </div>
             </div>
         </div>
-        
-<div id="footer-wrapper">
+
+        <div id="main-wrapper">
+            <div class="container">
+                <div id="content">
+                    <section>
+                        <header class="major">
+                            <h2 style="color: #288488;">Opiniones Reales</h2>
+                        </header>
+                        
+                        <div class="testimonios-section" style="background: #f9f9f9; padding: 30px; border-radius: 15px; text-align: center;">
+                            <div class="carrusel-container" style="overflow: hidden; position: relative;">
+                                <div class="carrusel-testimonios" id="carruselTestimonios" style="display: flex; transition: transform 0.5s ease-in-out;">
+                                    </div>
+                            </div>
+                            <div class="carrusel-indicadores" id="indicadores" style="margin-top: 20px;"></div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+        <div id="footer-wrapper">
             <div id="footer" class="container">
                 <header class="major">
-                    <h2>Visitanos en nuestras redes sociales</h2>
+                    <h2>Síguenos en redes sociales</h2>
                 </header>
                 <div class="row">
                     <section class="col-6 col-12-narrower">
-                        <img src="images/LogoAliceIA.jpg" class="imagen-izquierda">
+                        <div style="text-align: center;">
+                             <img src="images/LogoAliceIA.jpg" alt="Logo Alice IA" style="width: 100px; height: 100px; border-radius: 50%; border: 3px solid white; object-fit: cover;">
+                        </div>
                     </section>
                     <section class="col-6 col-12-narrower">
                         <div class="row gtr-0">
+<ul class="divided icons col-6 col-12-mobile">
+    <li class="icon brands fa-tiktok">
+        <a href="https://www.tiktok.com/@alice.ia.emocional?_r=1&_t=ZS-91qlUtJJLX6">
+            <span class="extra">tiktok.com/@</span>aliceia
+        </a>
+    </li>
+    <li class="icon brands fa-facebook-f">
+        <a href="https://www.facebook.com/profile.php?id=61584510660747&sfnsn=wa">
+            <span class="extra">facebook.com/</span>aliceia
+        </a>
+    </li>
+</ul>
                             <ul class="divided icons col-6 col-12-mobile">
-                                <li class="icon brands fa-twitter"><a href="#"><span
-                                            class="extra">twitter.com/</span>untitled</a></li>
-                                <li class="icon brands fa-facebook-f"><a href="#"><span
-                                            class="extra">facebook.com/</span>untitled</a></li>
-                                <li class="icon brands fa-dribbble"><a href="#"><span
-                                            class="extra">dribbble.com/</span>untitled</a></li>
-                            </ul>
-                            <ul class="divided icons col-6 col-12-mobile">
-                                <li class="icon brands fa-instagram"><a href="#"><span
-                                            class="extra">instagram.com/</span>untitled</a></li>
-                                <li class="icon brands fa-youtube"><a href="#"><span
-                                            class="extra">youtube.com/</span>untitled</a></li>
-                                <li class="icon brands fa-pinterest"><a href="#"><span
-                                            class="extra">pinterest.com/</span>untitled</a></li>
+                                <li class="icon brands fa-instagram"><a href="https://www.instagram.com/alice.ia.emocional/?igsh=MXR3OWVvNHY3MDhyMA%3D%3D#"><span class="extra">instagram.com/</span>aliceia</a></li>
+                                <li class="icon brands fa-youtube"><a href="https://www.youtube.com/@alice.ia.emocional?si=6U8MFMR_IEfHs8qv"><span class="extra">youtube.com/</span>aliceia</a></li>
                             </ul>
                         </div>
                     </section>
@@ -124,13 +256,25 @@
             </div>
             <div id="copyright" class="container">
                 <ul class="menu">
-                    <li>&copy; Tactical solutions.</li>
+                    <li>&copy; Alice IA. Todos los derechos reservados.</li>
                 </ul>
             </div>
         </div>
+
     </div>
 
-    <!-- Scripts -->
+    <div id="accessibility-widget" class="accessibility-widget">
+        <div id="access-menu" class="access-menu">
+            <button onclick="cambiarTexto(1)">🔍 Aumentar Texto</button>
+            <button onclick="cambiarTexto(-1)">🔎 Disminuir Texto</button>
+            <button onclick="toggleAltoContraste()">🌗 Alto Contraste</button>
+            <button onclick="resetAccesibilidad()">↺ Restablecer</button>
+        </div>
+        <button id="toggle-access-btn" class="access-float-btn" aria-label="Menú de accesibilidad">
+            <i class="icon solid fa-universal-access"></i>
+        </button>
+    </div>
+
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/jquery.dropotron.min.js"></script>
     <script src="assets/js/browser.min.js"></script>
@@ -138,76 +282,114 @@
     <script src="assets/js/util.js"></script>
     <script src="assets/js/main.js"></script>
 
-    <!-- JavaScript se mantiene igual -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const testimonios = [
-                {
-                    nombre: "Kimberly ",
-                    texto: "\"Alice está ahí cuando tengo problemas y me ayuda a ver las cosas desde una nueva perspectiva. Es casi como charlar con un amigo sabio que siempre te cubre las espaldas\".",
-                    estrellas: "★★★★★"
-                },
-                {
-                    nombre: "Olivia ",
-                    texto: "\"Me encanta no tener que pedir cita ni esperar. Puedo hablar las cosas en tiempo real, y eso ha sido mucho más útil que esperar a una sesión.\"",
-                    estrellas: "★★★★★"
-                },
-                {
-                    nombre: "Julio",
-                    texto: "\"Al principio era escéptico, pero Alice realmente me escucha 24/7 siempre que lo necesito. Es como tener un terapeuta en el bolsillo\".",
-                    estrellas: "★★★★★"
-                }
-            ];
+    <script type="module">
+        import { db } from "./nav-alice-usuarios/js/auth_firebase.js"; 
+        import { collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
+        // ACCESIBILIDAD
+        window.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('toggle-access-btn');
+            const menu = document.getElementById('access-menu');
+
+            if(toggleBtn && menu) {
+                toggleBtn.addEventListener('click', () => {
+                    const isHidden = menu.style.display === 'none' || menu.style.display === '';
+                    menu.style.display = isHidden ? 'flex' : 'none';
+                    toggleBtn.setAttribute('aria-expanded', !isHidden);
+                });
+            }
+        });
+
+        let currentZoom = 1;
+        window.cambiarTexto = (direction) => {
+            currentZoom += direction * 0.1;
+            if (currentZoom < 0.8) currentZoom = 0.8;
+            if (currentZoom > 1.5) currentZoom = 1.5;
+            document.body.style.fontSize = `${currentZoom}em`;
+        };
+
+        window.toggleAltoContraste = () => {
+            document.body.classList.toggle('high-contrast');
+        };
+
+        window.resetAccesibilidad = () => {
+            currentZoom = 1;
+            document.body.style.fontSize = ''; 
+            document.body.classList.remove('high-contrast');
+        };
+
+        // CARRUSEL
+        document.addEventListener('DOMContentLoaded', async function () {
             const carrusel = document.getElementById('carruselTestimonios');
             const indicadoresContainer = document.getElementById('indicadores');
-            let indiceActual = 0;
-            let intervalo;
+            let testimonios = [];
 
-            // Generar tarjetas de testimonios
+            try {
+                const q = query(collection(db, "opiniones"), orderBy("fecha", "desc"), limit(5));
+                const snapshot = await getDocs(q);
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const estrellasVisuales = "★".repeat(data.calificacion || 5); 
+                    testimonios.push({
+                        nombre: data.nombre || "Anónimo",
+                        texto: `"${data.texto}"`,
+                        estrellas: estrellasVisuales
+                    });
+                });
+            } catch (error) {
+                console.error("Error cargando opiniones:", error);
+            }
+
+            if (testimonios.length === 0) {
+                testimonios = [
+                    { nombre: "Alice IA", texto: "\"Las opiniones de los usuarios aparecerán aquí.\"", estrellas: "★★★★★" }
+                ];
+            }
+
+            carrusel.innerHTML = '';
+            indicadoresContainer.innerHTML = '';
+
             testimonios.forEach((testimonio, index) => {
                 const tarjeta = document.createElement('div');
-                tarjeta.className = `tarjeta-testimonio ${index === 0 ? 'activa' : ''}`;
+                tarjeta.style.minWidth = "100%";
+                tarjeta.style.padding = "20px";
+                tarjeta.style.boxSizing = "border-box";
+                
                 tarjeta.innerHTML = `
-                    <div class="estrellas">${testimonio.estrellas}</div>
-                    <h3>${testimonio.nombre}</h3>
-                    <p>${testimonio.texto}</p>
+                    <div style="color:#f1c40f; font-size: 1.5em; margin-bottom: 10px;">${testimonio.estrellas}</div>
+                    <h3 style="color: #288488; font-weight: bold; margin-bottom: 5px;">${testimonio.nombre}</h3>
+                    <p style="font-style: italic; color: #555;">${testimonio.texto}</p>
                 `;
                 carrusel.appendChild(tarjeta);
 
-                // Generar indicadores
                 const indicador = document.createElement('span');
-                indicador.className = `indicador ${index === 0 ? 'activo' : ''}`;
-                indicador.dataset.index = index;
+                indicador.style.display = "inline-block";
+                indicador.style.width = "12px";
+                indicador.style.height = "12px";
+                indicador.style.borderRadius = "50%";
+                indicador.style.background = index === 0 ? "#288488" : "#ccc";
+                indicador.style.margin = "0 5px";
+                indicador.style.cursor = "pointer";
+                
                 indicador.addEventListener('click', () => cambiarTestimonio(index));
                 indicadoresContainer.appendChild(indicador);
             });
 
+            let indiceActual = 0;
             function cambiarTestimonio(nuevoIndice) {
                 indiceActual = nuevoIndice;
                 carrusel.style.transform = `translateX(-${indiceActual * 100}%)`;
-                document.querySelectorAll('.indicador').forEach((ind, index) => {
-                    ind.classList.toggle('activo', index === indiceActual);
+                Array.from(indicadoresContainer.children).forEach((ind, idx) => {
+                    ind.style.background = idx === indiceActual ? "#288488" : "#ccc";
                 });
             }
 
-            function iniciarCarruselAutomatico() {
-                intervalo = setInterval(() => {
-                    const siguienteIndice = (indiceActual + 1) % testimonios.length;
-                    cambiarTestimonio(siguienteIndice);
-                }, 2000);
-            }
-
-            carrusel.addEventListener('mouseenter', () => clearInterval(intervalo));
-            carrusel.addEventListener('mouseleave', iniciarCarruselAutomatico);
-            iniciarCarruselAutomatico();
+            setInterval(() => {
+                const siguiente = (indiceActual + 1) % testimonios.length;
+                cambiarTestimonio(siguiente);
+            }, 6000);
         });
-
-        const logo = document.getElementById("LogoPrincipal");
-        function handleLogoClick() {
-            window.location.href = "../nav-alice-usuarios/login.html";
-        }
-        logo.addEventListener("click", handleLogoClick);
     </script>
 </body>
 </html>

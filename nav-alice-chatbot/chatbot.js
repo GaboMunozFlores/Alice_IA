@@ -2,7 +2,7 @@
 let historialConversacion = JSON.parse(localStorage.getItem("historialAlice")) || [];
 
 async function obtenerRespuestaGemini(mensajeUsuario) {
-  const API_KEY = "AIzaSyBcoTlwPS3y1EKmZ4e3AbPcJV4_7_BPlOI";
+  const API_KEY = "AIzaSyAFgtoQSjJUpxZXpdDncgnB71fPS7_za5M";
   const MODEL = "gemini-2.0-flash";
 
   // Añadimos el nuevo mensaje al historial
