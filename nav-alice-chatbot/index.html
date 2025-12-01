@@ -90,11 +90,14 @@
     <aside class="sidebar d-flex flex-column justify-content-between p-3" aria-label="Menú principal">
       <div class="top-section d-flex flex-column align-items-center">
         <div class="d-flex align-items-center user-info mb-4">
-          <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="" class="user-icon me-2" aria-hidden="true">
+          <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="" class="user-icon me-2"
+            aria-hidden="true">
           <span id="userEmail" class="fw-semibold" aria-label="Usuario conectado">Cargando...</span>
         </div>
         <button id="opinionBtn" class="btn btn-primary w-100 btn-lg">Danos tu opinión</button>
-        <button id="verGraficaBtn" class="sidebar-btn">📊 Ver mi evolución</button>
+        <a href="../nav-alice-psicologo/psicIndex.html" class="sidebar-btn" id="verGraficaBtn">
+          AGENDAR CITAS
+        </a>
       </div>
       <button id="logoutBtn" class="btn btn-danger w-100 mt-3">Cerrar sesión</button>
     </aside>
@@ -102,29 +105,32 @@
     <main class="chat-area flex-grow-1 d-flex flex-column justify-content-end align-items-center" role="main">
       <div class="text-center mb-3">
         <img src="logo-alice.png" alt="Logo de Alice IA" class="logo">
-        <h1 class="h4 mt-2">Bienvenido a Alice IA!</h1> <p>¿Cómo te sientes hoy?🌷</p>
+        <h1 class="h4 mt-2">Bienvenido a Alice IA!</h1>
+        <p>¿Cómo te sientes hoy?🌷</p>
       </div>
-      
-      <div id="chatBox" class="chat-box" aria-live="polite" role="log" tabindex="0" aria-label="Historial de chat"></div>
-      
-<div class="input-group mb-3" style="max-width:700px;">
-  <label for="userMessage" class="visually-hidden">Escribe tu mensaje</label>
-  <input type="text" id="userMessage" class="form-control" placeholder="Escribe aquí..." autocomplete="off">
-  
-  <button class="btn btn-secondary" id="micBtn" aria-label="Activar dictado por voz">
-    🎤
-  </button>
-  
-  <button class="btn btn-primary" id="sendBtn" aria-label="Enviar mensaje">Enviar</button>
-</div>
+
+      <div id="chatBox" class="chat-box" aria-live="polite" role="log" tabindex="0" aria-label="Historial de chat">
+      </div>
+
+      <div class="input-group mb-3" style="max-width:700px;">
+        <label for="userMessage" class="visually-hidden">Escribe tu mensaje</label>
+        <input type="text" id="userMessage" class="form-control" placeholder="Escribe aquí..." autocomplete="off">
+
+        <button class="btn btn-secondary" id="micBtn" aria-label="Activar dictado por voz">
+          🎤
+        </button>
+
+        <button class="btn btn-primary" id="sendBtn" aria-label="Enviar mensaje">Enviar</button>
+      </div>
     </main>
   </div>
 
-  <div id="opinionModal" class="modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div id="opinionModal" class="modal" style="display:none;" role="dialog" aria-modal="true"
+    aria-labelledby="modalTitle">
     <div class="modal-content">
       <h2 id="modalTitle">💬 Danos tu opinión</h2>
       <p>Tu experiencia con Alice nos ayuda a mejorar 🌷</p>
-      
+
       <div class="stars" role="radiogroup" aria-label="Calificación">
         <span data-value="1" role="radio" aria-checked="false" tabindex="0" aria-label="1 estrella">★</span>
         <span data-value="2" role="radio" aria-checked="false" tabindex="0" aria-label="2 estrellas">★</span>
@@ -132,10 +138,10 @@
         <span data-value="4" role="radio" aria-checked="false" tabindex="0" aria-label="4 estrellas">★</span>
         <span data-value="5" role="radio" aria-checked="false" tabindex="0" aria-label="5 estrellas">★</span>
       </div>
-      
+
       <label for="opinionText" class="visually-hidden">Tu comentario</label>
       <textarea id="opinionText" placeholder="Escribe tu comentario aquí..." maxlength="300"></textarea>
-      
+
       <div class="modal-buttons">
         <button id="enviarOpinionBtn">Enviar</button>
         <button id="cancelarOpinionBtn">Cancelar</button>
@@ -145,26 +151,33 @@
 
   <style>
     .visually-hidden {
-      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-      overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
     }
+
     /* Efecto de foco visible para navegación por teclado */
     *:focus-visible {
       outline: 3px solid #6bcf9d;
       outline-offset: 2px;
     }
   </style>
-<div id="accessibility-widget" class="accessibility-widget">
-  <button id="toggle-access-btn" class="access-float-btn" aria-label="Abrir menú de accesibilidad">
-    ♿
-  </button>
-  <div id="access-menu" class="access-menu" style="display: none;">
-    <button onclick="cambiarTexto(1)" aria-label="Aumentar tamaño de texto">A+</button>
-    <button onclick="cambiarTexto(-1)" aria-label="Disminuir tamaño de texto">A-</button>
-    <button onclick="toggleAltoContraste()" aria-label="Activar alto contraste">Contrast</button>
-    <button onclick="resetAccesibilidad()" aria-label="Restablecer configuración">Reset</button>
+  <div id="accessibility-widget" class="accessibility-widget">
+    <button id="toggle-access-btn" class="access-float-btn" aria-label="Abrir menú de accesibilidad">
+      ♿
+    </button>
+    <div id="access-menu" class="access-menu" style="display: none;">
+      <button onclick="cambiarTexto(1)" aria-label="Aumentar tamaño de texto">A+</button>
+      <button onclick="cambiarTexto(-1)" aria-label="Disminuir tamaño de texto">A-</button>
+      <button onclick="toggleAltoContraste()" aria-label="Activar alto contraste">Contrast</button>
+      <button onclick="resetAccesibilidad()" aria-label="Restablecer configuración">Reset</button>
+    </div>
   </div>
-</div>
 
   <script src="chatbot.js"></script>
   <script type="module" src="script.js"></script>
