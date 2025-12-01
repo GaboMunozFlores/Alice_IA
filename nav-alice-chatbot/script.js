@@ -344,12 +344,33 @@ stars.forEach((star, index) => { // Agregamos 'index' aquí para saber la posici
 });
 
   let enviandoOpinion = false;
-  const malasPalabras = ["puta", "mierda", "estupido", "idiota"]; // Lista resumida
+// Lista de malas palabras (puedes agregar más)
+const malasPalabras = ["puta", "mierda", "estupido", "idiota", "pendejo", "imbecil","huevos","prostituta","pene","culo","verga"];
 
-  function contieneGroserias(texto) {
-    const normalizado = texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    return malasPalabras.some(palabra => normalizado.includes(palabra));
-  }
+function contieneGroserias(texto) {
+  // 1. Convertir a minúsculas
+  let textoLimpio = texto.toLowerCase();
+
+  // 2. Reemplazar "trucos" visuales (símbolos por letras)
+  textoLimpio = textoLimpio
+      .replace(/@/g, 'a')
+      .replace(/4/g, 'a')
+      .replace(/1/g, 'i')
+      .replace(/!/g, 'i')
+      .replace(/3/g, 'e')
+      .replace(/0/g, 'o')
+      .replace(/\$/g, 's');
+
+  // 3. Quitar acentos normales (á -> a)
+  textoLimpio = textoLimpio.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+  // 4. Verificar si contiene las palabras prohibidas
+  // Usamos Regex con \b para buscar la palabra completa (evita borrar "computadora")
+  return malasPalabras.some(palabra => {
+    const regex = new RegExp(`\\b${palabra}\\b`, 'i');
+    return regex.test(textoLimpio);
+  });
+}
 
   enviarOpinionBtn.addEventListener('click', async () => {
     if (enviandoOpinion) return;
