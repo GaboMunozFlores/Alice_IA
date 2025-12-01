@@ -139,7 +139,8 @@ document.getElementById("btnNuevaSesion").addEventListener("click", () => {
 function mostrarSesionEnLista(sesion) {
   const contenedor = document.getElementById("listaSesiones");
 
-  if (contenedor.textContent.includes("Selecciona un paciente")) {
+  // Si hay un mensaje de "Cargando..." o "No hay sesiones", lo limpiamos antes de agregar la primera tarjeta
+  if (contenedor.textContent.includes("Cargando sesiones") || contenedor.textContent.includes("No hay sesiones")) {
     contenedor.innerHTML = "";
   }
 
@@ -157,7 +158,8 @@ function mostrarSesionEnLista(sesion) {
   `;
 
   contenedor.prepend(div);
-  cargarHistorial();
+  
+  // ❌ AQUÍ ESTABA EL ERROR: cargarHistorial();  <-- BORRA ESTA LÍNEA
 }
 
 // =========================
