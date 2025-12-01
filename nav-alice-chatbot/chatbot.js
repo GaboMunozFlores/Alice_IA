@@ -2,15 +2,24 @@
 let historialConversacion = JSON.parse(localStorage.getItem("historialAlice")) || [];
 
 async function obtenerRespuestaGemini(mensajeUsuario) {
-  const API_KEY = "AIzaSyCpYsGges-9V9cDkdXEQZWEcXyKzsaJ7Yg";
+  // 1. BORRAMOS LA LÍNEA DE LA API KEY AQUÍ.
+  // La variable GEMINI_API_KEY ya existe porque cargamos config.js en el HTML.
+  
+  // Verificamos por seguridad que la clave exista
+  if (typeof GEMINI_API_KEY === 'undefined') {
+      console.error("❌ Error: No se encontró la variable GEMINI_API_KEY. Revisa tu archivo config.js");
+      return "⚠️ Error de configuración: No se encontró la clave API.";
+  }
+
   const MODEL = "gemini-2.0-flash";
 
   // Añadimos el nuevo mensaje al historial
   historialConversacion.push({ role: "user", text: mensajeUsuario });
 
-  // Mantener solo las últimas 5 interacciones
+  // Mantener solo las últimas 5 interacciones (ajusta el historial para no gastar tantos tokens)
   if (historialConversacion.length > 10) historialConversacion.shift();
 
+  // TU PROMPT (Lo dejé igual, solo lo resumo aquí para no ocupar espacio)
   const prompt = `
 Eres **Alice IA**, una asistente virtual empática creada para brindar apoyo emocional y orientación inicial
 a personas que enfrentan ansiedad, estrés o tristeza. 
@@ -79,8 +88,10 @@ Si el usuario menciona estrés, ansiedad o tristeza:
   };
 
   try {
+    // 2. AQUÍ ESTÁ EL CAMBIO IMPORTANTE EN EL FETCH:
+    // Cambiamos ${API_KEY} por ${GEMINI_API_KEY}
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${GEMINI_API_KEY}`, 
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
