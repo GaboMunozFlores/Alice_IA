@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Historial Clínico</title>
+
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+
+  <style>
+
+    /* NAV BAR */
+    nav {
+      background:#74a6ce;
+      padding:12px 20px;
+      display:flex;
+      justify-content:center;
+      box-shadow:0 2px 4px rgba(0,0,0,0.15);
+    }
+
+    nav ul {
+      list-style:none;
+      display:flex;
+      gap:25px;
+      margin:0;
+      padding:0;
+    }
+
+    nav ul li a {
+      color:white;
+      text-decoration:none;
+      font-size:18px;
+      font-weight:600;
+    }
+
+    nav ul li a:hover {
+      text-decoration:underline;
+    }
+
+
+    /* TU CSS ORIGINAL */
+    body { background:#f2f2f2; font-family: Arial, sans-serif; margin:0; padding:20px; }
+    .container { max-width:900px; margin:auto; background:#fff; padding:22px; border-radius:10px; border:1px solid #ddd; }
+    h2{margin:0 0 10px 0;color:#333}
+    .row{display:flex; gap:14px; flex-wrap:wrap}
+    .col{flex:1 1 220px; min-width:200px}
+    label{font-weight:600; display:block; margin-bottom:6px}
+    select,input,textarea{width:100%; padding:10px; border-radius:6px; border:1px solid #ccc; background:#fbfdfe; box-sizing:border-box}
+    textarea{min-height:80px; resize:vertical}
+    button{padding:10px 14px; background:#74a6ce; color:#fff; border:none; border-radius:8px; cursor:pointer}
+    button:hover{background:#5d93bc}
+    .form-new-session{background:#eef4fa; padding:14px; border-radius:8px; margin-top:12px; display:none}
+    .session-card{background:#f9fbfd;border:1px solid #d4d4d4;padding:12px;border-radius:6px;margin-bottom:10px}
+    .muted{color:#666; font-size:14px}
+  </style>
+  
+</head>
+<body>
+
+  <!-- NAV BAR -->
+  <nav>
+    <ul>
+      <li><a href="/nav-alice-psicologo/perfilPsic.html">Inicio</a></li>
+      <li><a href="/psicologo_/historial_clinico.html">Historial Clínico</a></li>
+      <li><a href="../nav-alice-centros/centros.html">Centros de Ayuda</a></li>
+    </ul>
+  </nav>
+
+  <br><br><br>
+
+  <div class="container">
+    <h2>Historial Clínico</h2>
+
+    <div class="row" style="align-items:center; margin-bottom:12px">
+      <div class="col">
+        <label>Psicólogo</label>
+        <span id="nombrePsicologo" class="muted">Cargando...</span>
+      </div>
+    </div>
+
+    <hr style="margin:12px 0">
+
+    <div style="display:flex; gap:12px; align-items:center; margin-bottom:8px">
+      <button id="btnNuevaSesion">➕ Nueva sesión</button>
+    </div>
+
+    <!-- FORM PARA NUEVA SESIÓN -->
+    <div class="form-new-session" id="nuevaSesionForm">
+      <h3>Nueva sesión</h3>
+
+      <label>Seleccionar paciente</label>
+      <select id="selectPaciente">
+        <option value="">Cargando pacientes...</option>
+      </select>
+
+      <label>Motivo</label>
+      <input id="motivo" placeholder="Motivo de consulta">
+
+      <label>Notas</label>
+      <textarea id="notas" placeholder="Notas de la sesión"></textarea>
+
+      <label>Diagnóstico</label>
+      <input id="diagnostico" placeholder="Diagnóstico">
+
+      <div style="margin-top:10px; display:flex; gap:8px">
+        <button id="guardarSesion">Guardar Sesión</button>
+        <button id="cancelarSesion" type="button" style="background:#ccc; color:#111">Cancelar</button>
+      </div>
+    </div>
+
+    <h3 style="margin-top:18px">Sesiones registradas</h3>
+    <div id="listaSesiones">
+    </div>
+  </div>
+
+  <!-- TU JS ORIGINAL -->
+  <script src="historial_clinico.js"></script>
+
+  <!-- 🔥 AGREGADO SOLO ESTO (NO SE MODIFICÓ TU JS) -->
+  <script>
+    // CERRAR FORMULARIO AL DAR CLICK EN "CANCELAR"
+    document.getElementById("cancelarSesion").addEventListener("click", () => {
+      document.getElementById("nuevaSesionForm").style.display = "none";
+    });
+  </script>
+
+</body>
+</html>
