@@ -315,9 +315,13 @@ import {
                     alert('Por favor, completa todos los campos requeridos.');
                     return;
                 }
-
+                if (!auth.currentUser) {
+                    alert("Debes iniciar sesión para agendar una cita.");
+                    return;
+                }
                 const nuevaCita = {
                     psicologoId: psicologoIdGlobal,
+                    usuarioId: auth.currentUser.uid,
                     fecha: fecha,
                     hora: hora,
                     paciente: nombrePaciente,
