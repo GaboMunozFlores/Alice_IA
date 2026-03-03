@@ -37,7 +37,67 @@ const preguntas = [
 ========================= */
 
 window.addEventListener("DOMContentLoaded", () => {
+const opinionBtn = document.getElementById("opinionBtn");
+const opinionModal = document.getElementById("opinionModal");
+const cancelOpinion = document.getElementById("cancelOpinion");
+const submitOpinion = document.getElementById("submitOpinion");
+const starContainer = document.getElementById("starContainer");
+const opinionText = document.getElementById("opinionText");
 
+let rating = 0;
+
+// Abrir modal
+opinionBtn?.addEventListener("click", () => {
+  opinionModal.classList.remove("hidden");
+});
+
+// Cancelar
+cancelOpinion?.addEventListener("click", () => {
+  opinionModal.classList.add("hidden");
+  rating = 0;
+  opinionText.value = "";
+  document.querySelectorAll(".stars span").forEach(s => s.classList.remove("active"));
+});
+
+// Selección estrellas
+starContainer?.querySelectorAll("span").forEach(star => {
+  star.addEventListener("click", () => {
+    rating = parseInt(star.dataset.value);
+    document.querySelectorAll(".stars span").forEach(s => {
+      s.classList.toggle("active", parseInt(s.dataset.value) <= rating);
+    });
+  });
+});
+
+// Enviar opinión
+submitOpinion?.addEventListener("click", async () => {
+
+  if (!rating || !opinionText.value.trim()) {
+    Swal.fire("Completa los campos", "Selecciona estrellas y escribe tu opinión.", "warning");
+    return;
+  }
+
+  try {
+
+    await addDoc(collection(db, "opiniones"), {
+      nombre: userEmailSpan.textContent || "Anónimo",
+      texto: opinionText.value.trim(),
+      calificacion: rating,
+      timestamp: serverTimestamp()
+    });
+
+    Swal.fire("¡Gracias! 🌷", "Tu opinión fue enviada.", "success");
+
+    opinionModal.classList.add("hidden");
+    opinionText.value = "";
+    rating = 0;
+
+  } catch (error) {
+    console.error("Error guardando opinión:", error);
+    Swal.fire("Error", "No se pudo guardar la opinión.", "error");
+  }
+
+});
   const chatbox = document.getElementById("chatBox");
   const userInputField = document.getElementById("userMessage");
   const sendBtn = document.getElementById("sendBtn");

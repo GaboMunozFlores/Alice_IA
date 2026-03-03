@@ -31,7 +31,7 @@
           <i>💬</i> Danos tu opinión
         </button>
         <a href="../nav-alice-psicologo/psicIndex.html" class="nav-link highlight">
-          <i>🗓️</i> Agendar Citaaa
+          <i>🗓️</i> Agendar Cita
         </a>
       </nav>
 
@@ -78,5 +78,26 @@
 
   <!-- Script principal -->
   <script type="module" src="script.js"></script>
+  <!-- Modal Opinión -->
+<div id="opinionModal" class="modal-opinion hidden">
+  <div class="modal-content">
+    <h3>¿Qué te pareció Alice? 🌷</h3>
+
+    <div class="stars" id="starContainer">
+      <span data-value="1">★</span>
+      <span data-value="2">★</span>
+      <span data-value="3">★</span>
+      <span data-value="4">★</span>
+      <span data-value="5">★</span>
+    </div>
+
+    <textarea id="opinionText" placeholder="Escribe tu opinión..." maxlength="300"></textarea>
+
+    <div class="modal-buttons">
+      <button id="cancelOpinion">Cancelar</button>
+      <button id="submitOpinion">Enviar</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
