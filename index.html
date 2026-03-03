@@ -334,7 +334,11 @@
             let testimonios = [];
 
             try {
-                const q = query(collection(db, "opiniones"), orderBy("fecha", "desc"), limit(5));
+                const q = query(
+                collection(db, "opiniones"),
+                orderBy("timestamp", "desc"),
+                limit(5)
+                );
                 const snapshot = await getDocs(q);
 
                 snapshot.forEach(doc => {
