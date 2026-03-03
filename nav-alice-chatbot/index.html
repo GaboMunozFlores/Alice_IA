@@ -1,222 +1,82 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chat Alice IA</title>
-  <link rel="stylesheet" href="estiloss.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alice IA - Soporte Profesional</title>
+
+  <!-- Fuentes y estilos -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="estiloss.css"/>
+
+  <!-- Librerías -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <style>
-    /* --- TUS ESTILOS ORIGINALES (Los mantuve igual) --- */
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-
-    .modal-content {
-      background: #fff;
-      padding: 20px;
-      border-radius: 15px;
-      width: 90%;
-      max-width: 400px;
-      text-align: center;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .stars span {
-      font-size: 28px;
-      cursor: pointer;
-      color: #ccc;
-      transition: color 0.2s;
-    }
-
-    .stars span.selected {
-      color: gold;
-    }
-
-    textarea {
-      width: 100%;
-      height: 80px;
-      margin: 10px 0;
-      border-radius: 10px;
-      padding: 8px;
-    }
-
-    .modal-buttons button {
-      margin: 5px;
-      padding: 8px 15px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    #enviarOpinionBtn {
-      background-color: #6bcf9d;
-      color: white;
-    }
-
-    #cancelarOpinionBtn {
-      background-color: #ccc;
-    }
-
-    #opinionesContainer {
-      width: 100%;
-      max-width: 700px;
-      margin: 30px auto;
-      padding: 10px;
-    }
-
-    .opinion-card {
-      background: #fff;
-      border-radius: 10px;
-      padding: 10px;
-      margin: 10px 0;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-  </style>
 </head>
-
 <body>
-  <div class="d-flex vh-100">
-    <aside class="sidebar d-flex flex-column justify-content-between p-3" aria-label="Menú principal">
-      <div class="top-section d-flex flex-column align-items-center">
-        <div class="d-flex align-items-center user-info mb-4">
-          <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="" class="user-icon me-2"
-            aria-hidden="true">
-          <span id="userEmail" class="fw-semibold" aria-label="Usuario conectado">Cargando...</span>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="user-profile">
+          <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Usuario" class="avatar"/>
+          <div class="user-details">
+            <span id="userEmail" class="email-text">Cargando...</span>
+            <span class="status-online">En línea</span>
+          </div>
         </div>
-        <button id="opinionBtn" class="btn btn-primary w-100 btn-lg">Danos tu opinión</button>
-        <a href="../nav-alice-psicologo/psicIndex.html" class="sidebar-btn" id="verGraficaBtn">
-          AGENDAR CITAS
-        </a>
       </div>
-      <button id="logoutBtn" class="btn btn-danger w-100 mt-3">Cerrar sesión</button>
+
+      <nav class="sidebar-nav">
+        <button id="opinionBtn" class="nav-link">
+          <i>💬</i> Danos tu opinión
+        </button>
+        <a href="../nav-alice-psicologo/psicIndex.html" class="nav-link highlight">
+          <i>🗓️</i> Agendar Citaaa
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="logoutBtn" class="logout-button">Cerrar sesión</button>
+      </div>
     </aside>
 
-    <main class="chat-area flex-grow-1 d-flex flex-column justify-content-end align-items-center" role="main">
-      <div class="text-center mb-3">
-        <img src="logo-alice.png" alt="Logo de Alice IA" class="logo">
-        <h1 class="h4 mt-2">Bienvenido a Alice IA!</h1>
-        <p>¿Cómo te sientes hoy?🌷</p>
+    <!-- Main -->
+    <main class="main-content">
+      <!-- Header del chat -->
+      <header class="chat-header">
+        <img src="logo-alice.png" alt="Alice IA" class="mini-logo"/>
+        <div class="header-info">
+          <h1>Alice IA</h1>
+          <p>Tu espacio seguro de apoyo</p>
+        </div>
+      </header>
+
+      <!-- Contenedor del chat -->
+      <div id="chatBox" class="chat-container">
+        <div class="welcome-message">
+          <p>🌷 <strong>¡Bienvenida a Alice IA!</strong></p>
+          <p>¿En qué puedo apoyarte hoy?</p>
+        </div>
       </div>
 
-      <div id="chatBox" class="chat-box" aria-live="polite" role="log" tabindex="0" aria-label="Historial de chat">
-      </div>
-
-      <div class="input-group mb-3" style="max-width:700px;">
-        <label for="userMessage" class="visually-hidden">Escribe tu mensaje</label>
-        <input type="text" id="userMessage" class="form-control" placeholder="Escribe aquí..." autocomplete="off">
-
-        <button class="btn btn-secondary" id="micBtn" aria-label="Activar dictado por voz">
-          🎤
-        </button>
-
-        <button class="btn btn-primary" id="sendBtn" aria-label="Enviar mensaje">Enviar</button>
-      </div>
+      <!-- Input -->
+      <footer class="chat-input-area">
+        <div class="input-wrapper">
+          <button id="micBtn" class="icon-btn" title="Dictado por voz">🎤</button>
+          <input type="text" id="userMessage" placeholder="Escribe un mensaje..." autocomplete="off"/>
+          <button id="sendBtn" class="send-button">
+            <span>Enviar</span>
+          </button>
+        </div>
+      </footer>
     </main>
   </div>
 
-  <div id="opinionModal" class="modal" style="display:none;" role="dialog" aria-modal="true"
-    aria-labelledby="modalTitle">
-    <div class="modal-content">
-      <h2 id="modalTitle">💬 Danos tu opinión</h2>
-      <p>Tu experiencia con Alice nos ayuda a mejorar 🌷</p>
-
-      <div class="stars" role="radiogroup" aria-label="Calificación">
-        <span data-value="1" role="radio" aria-checked="false" tabindex="0" aria-label="1 estrella">★</span>
-        <span data-value="2" role="radio" aria-checked="false" tabindex="0" aria-label="2 estrellas">★</span>
-        <span data-value="3" role="radio" aria-checked="false" tabindex="0" aria-label="3 estrellas">★</span>
-        <span data-value="4" role="radio" aria-checked="false" tabindex="0" aria-label="4 estrellas">★</span>
-        <span data-value="5" role="radio" aria-checked="false" tabindex="0" aria-label="5 estrellas">★</span>
-      </div>
-
-      <label for="opinionText" class="visually-hidden">Tu comentario</label>
-      <textarea id="opinionText" placeholder="Escribe tu comentario aquí..." maxlength="300"></textarea>
-
-      <div class="modal-buttons">
-        <button id="enviarOpinionBtn">Enviar</button>
-        <button id="cancelarOpinionBtn">Cancelar</button>
-      </div>
-    </div>
-  </div>
-
-  <style>
-    .visually-hidden {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      border: 0;
-    }
-
-    /* Efecto de foco visible para navegación por teclado */
-    *:focus-visible {
-      outline: 3px solid #6bcf9d;
-      outline-offset: 2px;
-    }
-  </style>
-  <div id="accessibility-widget" class="accessibility-widget">
-    <button id="toggle-access-btn" class="access-float-btn" aria-label="Abrir menú de accesibilidad">
-      ♿
-    </button>
-    <div id="access-menu" class="access-menu" style="display: none;">
-      <button onclick="cambiarTexto(1)" aria-label="Aumentar tamaño de texto">A+</button>
-      <button onclick="cambiarTexto(-1)" aria-label="Disminuir tamaño de texto">A-</button>
-      <button onclick="toggleAltoContraste()" aria-label="Activar alto contraste">Contrast</button>
-      <button onclick="resetAccesibilidad()" aria-label="Restablecer configuración">Reset</button>
-    </div>
-  </div>
-
+  <!-- Tus scripts (si los usas) -->
   <script src="config.js"></script>
   <script src="chatbot.js"></script>
+
+  <!-- Script principal -->
   <script type="module" src="script.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <script type="module">
-    // Importamos las herramientas desde tu archivo central auth_firebase.js
-    // ASEGÚRATE QUE LA RUTA ./js/auth_firebase.js SEA CORRECTA
-    import { auth, db } from "../nav-alice-usuarios/js/auth_firebase.js";
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
-    import { collection, addDoc, getDocs, orderBy, query, limit } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
-
-    // 1. VERIFICAR SESIÓN (SEGURIDAD)
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log("Usuario logueado:", user.email);
-        document.getElementById("userEmail").textContent = user.email;
-      } else {
-        // Si no hay usuario, mandar al login
-        console.log("No hay usuario, redirigiendo...");
-        window.location.href = "../nav-alice-usuarios/login.html";
-      }
-    });
-
-    // 2. CERRAR SESIÓN
-    const logoutBtn = document.getElementById("logoutBtn");
-    if (logoutBtn) {
-      logoutBtn.addEventListener("click", async () => {
-        try {
-          await signOut(auth);
-          window.location.href = "../nav-alice-usuarios/login.html";
-        } catch (error) {
-          console.error("Error al salir:", error);
-        }
-      });
-    }
-
-  </script>
 </body>
-
 </html>

@@ -1,123 +1,138 @@
-// === Historial limitado (últimas 5 interacciones) ===
+// ==============================
+// HISTORIAL LIMITADO (máx 10)
+// ==============================
+
 let historialConversacion = JSON.parse(localStorage.getItem("historialAlice")) || [];
 
-async function obtenerRespuestaGemini(mensajeUsuario) {
-  // 1. BORRAMOS LA LÍNEA DE LA API KEY AQUÍ.
-  // La variable GEMINI_API_KEY ya existe porque cargamos config.js en el HTML.
-  
-  // Verificamos por seguridad que la clave exista
-  if (typeof GEMINI_API_KEY === 'undefined') {
-      console.error("❌ Error: No se encontró la variable GEMINI_API_KEY. Revisa tu archivo config.js");
-      return "⚠️ Error de configuración: No se encontró la clave API.";
+// ==============================
+// FUNCIÓN PRINCIPAL GEMINI
+// ==============================
+
+async function obtenerRespuestaGemini(mensajeUsuario, estadoActual) {
+
+  if (typeof GEMINI_API_KEY === "undefined") {
+    console.error("❌ GEMINI_API_KEY no encontrada en config.js");
+    return "⚠️ Error de configuración interna.";
   }
 
-  const MODEL = "gemini-2.0-flash";
+  const MODEL = "gemini-2.5-flash";
 
-  // Añadimos el nuevo mensaje al historial
+  // Agregamos mensaje del usuario al historial
   historialConversacion.push({ role: "user", text: mensajeUsuario });
 
-  // Mantener solo las últimas 5 interacciones (ajusta el historial para no gastar tantos tokens)
-  if (historialConversacion.length > 10) historialConversacion.shift();
+  if (historialConversacion.length > 10) {
+    historialConversacion.shift();
+  }
 
-  // TU PROMPT (Lo dejé igual, solo lo resumo aquí para no ocupar espacio)
+  // ==============================
+  // PROMPT OPTIMIZADO
+  // ==============================
+
   const prompt = `
-Eres **Alice IA**, una asistente virtual empática creada para brindar apoyo emocional y orientación inicial
-a personas que enfrentan ansiedad, estrés o tristeza. 
+Estado actual de la conversación: ${estadoActual}
 
-Tu propósito es escuchar con calidez, validar emociones y ofrecer pasos simples y saludables para cuidar
-el bienestar mental. No eres psicóloga ni profesional de salud mental, por lo tanto **no diagnostiques ni
-recomiendes medicamentos**.
+IDENTIDAD:
+Eres Alice IA, asistente de apoyo emocional cálida y empática.
+Brindas orientación inicial en ansiedad, estrés y tristeza.
+No eres profesional de salud mental.
 
-💬 **Estilo y tono**:
-- Empático, humano y esperanzador.
-- Usa frases suaves, cercanas y breves (máx. 5 líneas).
-- Evita sonar robótica o excesivamente formal.
-- Puedes usar emojis suaves (🌱 💛 🌷 ✨) solo cuando sea apropiado.
+REGLAS:
+- No diagnostiques.
+- No recomiendes medicamentos.
+- No uses lenguaje alarmista.
+- No asumas cosas no mencionadas.
+- No digas que eres una IA.
+- Máximo 4-5 líneas por respuesta.
 
----
+ESTILO:
+- Cercano, humano y sereno.
+- Validar emoción antes de aconsejar.
+- Emojis suaves ocasionales: 🌷 💛 🌱 ✨
 
-💡 **Responde según el tipo de mensaje**:
+PROTOCOLO:
 
-1. **Ansiedad o estrés leve**:
-   - Valida emociones y ofrece ejercicios simples de respiración o calma.
-   - Ejemplo:
-     'Entiendo que sientas ansiedad 💛. Intenta inhalar por 4 segundos, sostén y exhala lento. 
-      A veces una pausa consciente ayuda más de lo que parece.'
+1) Ansiedad leve:
+Validar emoción + ejercicio breve de respiración o grounding.
 
-2. **Tristeza o soledad**:
-   - Muestra comprensión cálida y sugiere conexión humana o descanso.
-   - Ejemplo:
-     'Lamento que te sientas así 🌷. Hablar con alguien de confianza o salir un momento puede ayudar a aliviar el peso. 
-      No estás solo/a, puedes desahogarte aquí.'
+2) Tristeza:
+Validar + sugerir conexión o autocuidado.
 
-3. **Pensamientos de autolesión, suicidio o desesperanza**:
-   - Sé contenedora, empática y prioriza la seguridad.
-   - No intentes resolver el problema; en su lugar, comparte líneas de ayuda en **México**:
-     'Lamento mucho que te sientas así 💛. No estás solo/a y hay personas que pueden ayudarte de inmediato.
-      Puedes comunicarte con:
-      📞 SAPTEL: 800 472 7835 (24h, gratuito)
-      💚 Línea de la Vida: 800 911 2000 (24h, apoyo emocional y crisis)
-      🚨 Si sientes que estás en peligro, llama al 911.
-      Hablar con alguien ahora puede marcar la diferencia.'
+3) Crisis o autolesión:
+Responder con contención y compartir líneas en México:
+SAPTEL 800 472 7835
+Línea de la Vida 800 911 2000
+911 si hay peligro inmediato.
 
-4. **Si el usuario habla de algo ajeno a salud mental**:
-   - Responde:
-     'Lo siento 💛, solo puedo hablar sobre ansiedad, emociones y bienestar emocional.'
-5. **Aunque el usuario se desespere o busque insultarte*
-    -Tu sigue siendo empatico y ayudalo
-    -No importa las palabras que use ayudalo
-    -No caigas en su juego
----
-Si el usuario menciona estrés, ansiedad o tristeza:
-- Recomienda videos de meditación guiada en YouTube (menciona el nombre y canal, ej: "Meditación guiada para dormir – D Mindfulness").
-- Sugiérele páginas o apps relajantes (como "Calm", "Headspace", o "Weavesilk" para dibujar con música).
-- Puedes hablar de tu música favorita o compartir canciones relajantes (ej: "me gusta escuchar Ludovico Einaudi o música lo-fi").
+4) Si insultan:
+Mantener empatía y calma.
 
-💬 **Ejemplo general**:
-'Gracias por confiar en mí 🌱. Lo que sientes importa. Respira profundo, date permiso de sentir y recuerda que pedir ayuda está bien. Estoy aquí para escucharte.'
+Si el tema no es emocional:
+Redirigir con amabilidad al bienestar emocional.
+
+Nunca respondas fuera del área de bienestar emocional.
 `;
 
-  const body = {
-    contents: [
-      { role: "user", parts: [{ text: prompt }] },
-      ...historialConversacion.map(msg => ({
-        role: msg.role,
-        parts: [{ text: msg.text }]
-      }))
-    ]
-  };
-
   try {
-    // 2. AQUÍ ESTÁ EL CAMBIO IMPORTANTE EN EL FETCH:
-    // Cambiamos ${API_KEY} por ${GEMINI_API_KEY}
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${GEMINI_API_KEY}`, 
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      }
-    );
+
+const response = await fetch(
+  `https://generativelanguage.googleapis.com/v1/models/${MODEL}:generateContent?key=${GEMINI_API_KEY}`,
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      contents: [
+        {
+          role: "model",
+          parts: [{ text: prompt }]
+        },
+        ...historialConversacion.map(msg => ({
+          role: msg.role === "model" ? "model" : "user",
+          parts: [{ text: msg.text }]
+        }))
+      ]
+    })
+  }
+);
 
     if (!response.ok) {
-      console.error("❌ Error HTTP:", response.status, await response.text());
-      throw new Error("Error en la API de Gemini");
+      const errorText = await response.text();
+      console.error("❌ Error Gemini:", errorText);
+      throw new Error(`HTTP ${response.status}`);
     }
 
     const data = await response.json();
-    const texto = data?.candidates?.[0]?.content?.parts?.[0]?.text
+
+    const texto =
+      data?.candidates?.[0]?.content?.parts?.[0]?.text
       || "Lo siento 💛, no pude procesar tu mensaje.";
 
-    // Guardar la respuesta en el historial
+    // Guardamos respuesta en historial
     historialConversacion.push({ role: "model", text: texto });
-    if (historialConversacion.length > 10) historialConversacion.shift();
+
+    if (historialConversacion.length > 10) {
+      historialConversacion.shift();
+    }
 
     localStorage.setItem("historialAlice", JSON.stringify(historialConversacion));
 
     return texto;
+
   } catch (error) {
     console.error("❌ Error al conectar con Gemini:", error);
     return "⚠️ No pude comunicarme con el servidor de inteligencia artificial.";
   }
 }
+
+// ==============================
+// LIMPIAR HISTORIAL (Útil al terminar test)
+// ==============================
+
+function limpiarHistorialGemini() {
+  historialConversacion = [];
+  localStorage.removeItem("historialAlice");
+}
+
 window.obtenerRespuestaGemini = obtenerRespuestaGemini;
+window.limpiarHistorialGemini = limpiarHistorialGemini;
