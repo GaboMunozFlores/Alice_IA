@@ -5,210 +5,256 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     
-    <link rel="stylesheet" href="../nav-alice-centros/main.css" />
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <style>
-        /* --- CORRECCIÓN DEFINITIVA DEL NAV --- */
-        
-        /* 1. Hacemos que el nav ocupe espacio real y no flote */
-        #nav {
-            position: relative !important; 
-            height: auto !important;
-            top: auto !important;
-            left: auto !important;
-            line-height: normal !important;
-            padding-bottom: 10px; /* Un poco de aire abajo */
-        }
+/* =========================
+   MINI FRAMEWORK - ALICE IA
+   ========================= */
 
-        /* 2. Ajustamos la caja azul para que se adapte al contenido */
-        #header-wrapper {
-            background-color: #80B5D1 !important; 
-            padding: 1.5em 0 !important; /* Padding uniforme arriba y abajo */
-            height: auto !important;
-        }
-        
-        #header {
-            margin-bottom: 0;
-            height: auto !important;
-        }
-
-        /* 3. Alineación vertical de los elementos del menú */
-        #nav > ul {
-            display: flex;
-            align-items: center; /* Centra verticalmente texto y botones */
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px; /* Espacio entre elementos si se juntan mucho */
-        }
-        
-        #nav > ul > li {
-            display: inline-block;
-            margin: 0 0.5em;
-        }
-
-        /* --- FOOTER MINIMALISTA --- */
-        #footer-wrapper {
-            background-color: #f5f7fa !important;
-            padding: 2em 0 !important;
-            border-top: 1px solid rgba(0,0,0,0.05) !important; /* Línea súper sutil */
-            text-align: center;
-        }
-
-        #copyright {
-            margin: 0 !important;
-            padding: 0 !important;
-            border: none !important;
-            color: #aaa;
-            font-size: 0.85em;
-            font-weight: 300;
-        }
-
-        /* --- ESTILOS GENERALES --- */
-        .main-layout {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            min-height: 60vh;
-        }
-
-        /* Barra de Búsqueda */
-        .filter-bar {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
-            text-align: center;
-            border: 1px solid #eee;
-            margin-top: 20px;
-        }
-
-        .search-input {
-            width: 80%;
-            max-width: 500px;
-            padding: 12px 20px;
-            border: 2px solid #eee;
-            border-radius: 50px;
-            font-size: 1em;
-            outline: none;
-            margin-bottom: 15px;
-        }
-        .search-input:focus { border-color: #80B5D1; }
-
-        /* Filtros */
-        .filter-chips {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .filter-chip {
-            padding: 8px 20px;
-            background: #f4f6f8;
-            border-radius: 20px;
-            font-size: 0.9em;
-            cursor: pointer;
-            transition: 0.3s;
-            border: 1px solid #ddd;
-        }
-        .filter-chip:hover { background: #e2e6ea; }
-        .filter-chip.active {
-            background: #80B5D1;
-            color: white;
-            border-color: #80B5D1;
-        }
-
-        /* Tarjetas */
-        #consultorios-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-
-        .center-card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            transition: transform 0.3s;
-            border: 1px solid #f0f0f0;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-        }
-        .center-card:hover { transform: translateY(-5px); border-color: #80B5D1; }
-
-        .card-image { height: 160px; width: 100%; object-fit: cover; }
-        .card-content { padding: 15px; flex-grow: 1; }
-        .card-title { font-weight: bold; color: #2c3e50; margin-bottom: 5px; font-size: 1.1em; }
-        .card-details { color: #666; font-size: 0.9em; margin-bottom: 10px; }
-        
-        .tags { display: flex; gap: 5px; margin-top: auto; }
-        .tag { padding: 3px 8px; border-radius: 4px; font-size: 0.75em; font-weight: 600; }
-        .tag-tipo { background: #e3f2fd; color: #1976d2; }
-        .tag-costo { background: #e8f5e9; color: #388e3c; }
-
-        /* Mapa */
-        .map-wrapper {
-            border: 4px solid white;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        #map { height: 350px; width: 100%; }
-
-        .section-title { 
-            color: #52575c; 
-            text-align: center; 
-            margin: 30px 0 15px 0; 
-            font-weight: 300;
-        }
-        /* ===== DROPDOWN ===== */
-
-#nav ul li {
-    position: relative;
+:root {
+    --primary: #80B5D1;
+    --primary-dark: #5a9bbd;
+    --text: #2c3e50;
+    --light: #f5f7fa;
+    --card-bg: #ffffff;
+    --border: #e5e7eb;
 }
 
-/* Submenu oculto por defecto */
-#nav ul li ul {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: white;
-    padding: 10px 0;
-    border-radius: 10px;
-    min-width: 220px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    display: none;
-    flex-direction: column;
-    z-index: 999;
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* Mostrar al pasar el mouse */
-#nav ul li:hover > ul {
+body {
+    font-family: "Segoe UI", sans-serif;
+    background: #fafafa;
+    color: var(--text);
+}
+
+/* ================= NAVBAR ================= */
+
+#header-wrapper {
+    background: var(--primary);
+    padding: 1.2rem 0;
+}
+
+#nav ul {
+    list-style: none;
     display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
 }
 
-/* Items del submenu */
-#nav ul li ul li {
-    width: 100%;
-}
-
-#nav ul li ul li a {
-    display: block;
-    padding: 10px 15px;
-    color: #2c3e50 !important;
-    font-size: 0.9em;
+#nav a {
     text-decoration: none;
+    color: white;
+    font-weight: 500;
     transition: 0.2s;
 }
 
-#nav ul li ul li a:hover {
-    background: #f4f6f8;
+#nav a:hover {
+    opacity: 0.8;
+}
+
+/* Dropdown */
+
+#nav li {
+    position: relative;
+}
+
+#nav li ul {
+    position: absolute;
+    top: 120%;
+    left: 0;
+    background: white;
+    border-radius: 10px;
+    padding: 10px 0;
+    min-width: 200px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    display: none;
+}
+
+#nav li:hover > ul {
+    display: block;
+}
+
+#nav li ul a {
+    color: var(--text);
+    display: block;
+    padding: 8px 15px;
+}
+
+#nav li ul a:hover {
+    background: var(--light);
+}
+
+/* Botón nav */
+
+.button {
+    background: white;
+    color: var(--primary) !important;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+/* ================= LAYOUT ================= */
+
+.main-layout {
+    max-width: 1200px;
+    margin: auto;
+    padding: 40px 20px;
+}
+
+/* ================= FILTROS ================= */
+
+.filter-bar {
+    background: var(--card-bg);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.search-input {
+    width: 100%;
+    max-width: 500px;
+    padding: 12px 20px;
+    border-radius: 50px;
+    border: 1px solid var(--border);
+    margin-bottom: 15px;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.filter-chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filter-chip {
+    padding: 8px 18px;
+    border-radius: 20px;
+    background: var(--light);
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: 0.2s;
+}
+
+.filter-chip.active {
+    background: var(--primary);
+    color: white;
+}
+
+/* ================= GRID ================= */
+
+#consultorios-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+/* ================= CARD ================= */
+
+.center-card {
+    background: var(--card-bg);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.center-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-image {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.card-content {
+    padding: 15px;
+}
+
+.card-title {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.card-details {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 3px 8px;
     border-radius: 6px;
+    margin-right: 5px;
+}
+
+.tag-tipo {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.tag-costo {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+/* ================= MAP ================= */
+
+.map-wrapper {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+#map {
+    height: 350px;
+}
+
+/* ================= FOOTER ================= */
+
+#footer-wrapper {
+    background: var(--light);
+    text-align: center;
+    padding: 25px;
+    font-size: 0.8rem;
+    color: #777;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+
+    #nav ul {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .main-layout {
+        padding: 20px;
+    }
+
 }
     </style>
 </head>
@@ -294,12 +340,7 @@
 
     </div>
 
-<script src="../assets/js/jquery.min.js"></script>
-<script src="../assets/js/jquery.dropotron.min.js"></script>
-<script src="../assets/js/browser.min.js"></script>
-<script src="../assets/js/breakpoints.min.js"></script>
-<script src="../assets/js/util.js"></script>
-<script src="../assets/js/main.js"></script>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script type="module">
