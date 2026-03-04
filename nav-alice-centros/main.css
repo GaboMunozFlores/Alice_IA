@@ -3770,3 +3770,26 @@ estilos del login
 	margin-right: 0.75rem;
 	/* 12px */
 }
+/* NAV MÁS PRO */
+#nav > ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 35px;
+}
+
+#nav > ul > li a {
+    font-size: 16px !important;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+#header-wrapper {
+    padding: 1.2em 0 !important;
+}
+
+#nav .button {
+    padding: 8px 18px !important;
+    border-radius: 20px !important;
+    font-size: 14px !important;
+}
