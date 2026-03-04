@@ -237,6 +237,8 @@
     <script src="../assets/js/main.js"></script>
 
     <script type="module">
+        import { initializeApp } 
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { 
   getFirestore, 
   collection, 
@@ -263,7 +265,7 @@ import {
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-
+        const auth = getAuth(app);
         let psicologoIdGlobal = null;
         const PSICOLOGOS_COLLECTION = "psicologos";
         const CITAS_COLLECTION = "citas_pendientes";
