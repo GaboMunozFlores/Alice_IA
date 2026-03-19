@@ -7,90 +7,163 @@
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f2f2f2;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f5f7fa;
       height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
-    .container {
+    .wrapper {
       width: 90%;
-      max-width: 900px;
-      height: 450px;
+      max-width: 1000px;
+      text-align: center;
+    }
+
+    .header {
+      margin-bottom: 50px;
+    }
+
+    .header .welcome {
+      font-size: 30px;
+      color: #37638f;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .header p {
+      font-size: 25px;
+      color: #5e6f88;
+      letter-spacing: 0.3px;
+      font-weight: 300;
+    }
+
+    .container {
       display: flex;
-      background: #ffffff;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      gap: 30px;
+      justify-content: center;
+      align-items: center;
     }
 
     .box {
-      width: 50%;
+      flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 40px;
+      padding: 55px 45px;
       text-align: center;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      min-height: 390px;
+      border: 1px solid #eef2f6;
     }
 
-    .left {
-      background: #4a90e2;
-      color: white;
+    .box:hover {
+      box-shadow: 0 20px 40px rgba(128, 181, 209, 0.15);
+      border-color: #80B5D1;
     }
 
-    .right {
-      background: #50c878;
-      color: white;
-    }
-
-    h2 {
-      font-size: 28px;
-      margin-bottom: 20px;
-    }
-
-    p {
-      margin-bottom: 25px;
-      font-size: 16px;
+    .icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+      color: #80B5D1;
       opacity: 0.9;
     }
 
+    .left .icon {
+      color: #2c3e50;
+    }
+
+    h2 {
+      font-size: 30px;
+      margin-bottom: 15px;
+      color: #2c3e50;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+    }
+
+    .badge {
+      font-size: 20px;
+      background: #f0f7fa;
+      color: #80B5D1;
+      padding: 5px 12px;
+      border-radius: 30px;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    p {
+      margin-bottom: 35px;
+      font-size: 20px;
+      color: #5e6f88;
+      line-height: 1.6;
+    }
+
     .btn {
-      padding: 12px 30px;
-      background: white;
-      color: black;
+      padding: 18px 36px;
+      background: #80B5D1;
+      color: white;
       border: none;
-      border-radius: 25px;
-      font-size: 17px;
+      border-radius: 8px;
+      font-size: 20px;
       cursor: pointer;
-      transition: 0.3s;
+      transition: 0.2s;
+      width: 100%;
+      max-width: 220px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
     }
 
     .btn:hover {
-      transform: scale(1.05);
+      background: #6da3bd;
     }
 
+    .left .btn {
+      background: #2c3e50;
+    }
+
+    .left .btn:hover {
+      background: #1e2b37;
+    }
+
+    .left .badge {
+      background: #eef2f6;
+      color: #2c3e50;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+    }
   </style>
 </head>
 <body>
-
-  <div class="container">
-
-    <div class="box left">
-      <h2>Iniciar Sesión Usuario</h2>
-      <p>Accede a tu cuenta como paciente para ver y gestionar tus citas.</p>
-      <button class="btn" onclick="location.href='login.html'">Entrar como Usuario</button>
+  <div class="wrapper">
+    <div class="header">
+      <div class="welcome"> Nos alegra verte de nuevo</div>
+      <p>Selecciona tu rol para continuar</p>
     </div>
 
-    <div class="box right">
-      <h2>Iniciar Sesión Psicólogo</h2>
-      <p>Accede a tu panel profesional para administrar tus pacientes.</p>
-      <button class="btn" onclick="location.href='/psicologo_/login.html'">Entrar como Psicólogo</button>
-    </div>
+    <div class="container">
+      <div class="box left">
+        <div class="icon">👤</div>
+        <span class="badge">PACIENTE</span>
+        <p>Accede a tu espacio personal</p>
+        <button class="btn" onclick="location.href='login.html'">Usuario</button>
+      </div>
 
+      <div class="box right">
+        <div class="icon">📋</div>
+        <span class="badge">PROFESIONAL</span>
+        <p>Panel profesional para gestionar pacientes</p>
+        <button class="btn" onclick="location.href='/psicologo_/login.html'">Psicólogo</button>
+      </div>
+    </div>
   </div>
-
 </body>
 </html>

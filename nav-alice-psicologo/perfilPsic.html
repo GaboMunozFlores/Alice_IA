@@ -189,9 +189,8 @@
             <nav id="nav" class="psic-index-nav">
                 <ul>
                     <li><a href="perfilPsic.html">Inicio</a></li>
-                     <li><a href="/psicologo_/historial_clinico.html">Historial Clínico</a></li>
+                    <li><a href="/psicologo_/historial_clinico.html">Historial Clínico</a></li>
                     <li>
-                        <a href="psicIndex.html">Ayuda inmediata</a>
                         <ul>
                             <li>
                                 <a href="tel:+525521288236" class="phone-link">
@@ -228,7 +227,7 @@
         <div class="grid-perfil">
             <!-- Columna Izquierda - Mis Datos -->
             <section class="seccion-perfil">
-                <h2 class="seccion-titulo">📋 Mis Datos</h2>
+                <h2 class="seccion-titulo"> Mis Datos</h2>
                 
                 <div class="info-perfil">
                     <div class="info-item">
@@ -251,6 +250,7 @@
                         <span class="info-valor" id="info-disponibilidad">Cargando...</span>
                     </div>
                     
+                    <!-- FOTO DE PERFIL EN VISTA PRINCIPAL -->
                     <div class="info-item">
                         <span class="info-label">Foto de perfil:</span>
                         <div class="info-valor">
@@ -260,21 +260,21 @@
                 </div>
 
                 <div class="botones-accion">
-                    <button class="btn-editar" onclick="abrirModalEditar()">✏️ Editar Perfil</button>
-                    <button class="btn-eliminar" onclick="abrirModalEliminar()">🗑️ Eliminar Cuenta</button>
+                    <button class="btn-editar" onclick="abrirModalEditar()"> Editar Perfil</button>
+                    <button class="btn-eliminar" onclick="abrirModalEliminar()"> Eliminar Cuenta</button>
                 </div>
             </section>
 
             <!-- Columna Derecha - Mis Citas -->
             <section class="seccion-perfil">
-                <h2 class="seccion-titulo">📅 Mis Citas</h2>
+                <h2 class="seccion-titulo"> Mis Citas</h2>
                 
                 <div class="lista-citas" id="lista-citas">
                     <div class="loading-citas">Cargando citas...</div>
                 </div>
 
                 <div style="text-align: center; margin-top: 20px;">
-                    <button class="btn-editar" onclick="abrirModalDisponibilidad()">🕐 Gestionar Disponibilidad</button>
+                    <button class="btn-editar" onclick="abrirModalDisponibilidad()"> Gestionar Disponibilidad</button>
                 </div>
             </section>
         </div>
@@ -307,14 +307,32 @@
                     <textarea id="edit-disponibilidad" rows="3" required></textarea>
                 </div>
                 
+                <!-- SECCIÓN DE FOTO EN MODAL (CORREGIDA) -->
                 <div class="form-grupo">
-                    <label for="edit-foto">URL de foto de perfil:</label>
-                    <input type="url" id="edit-foto">
+                    <label>Elige una nueva foto de perfil:</label>
+                    
+                    <!-- Subida de archivos en modal -->
+                    <div style="margin-top: 5px; position: relative;">
+    <input type="text" id="foto-placeholder" readonly placeholder="Ningún archivo seleccionado" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; box-sizing: border-box; cursor: pointer;" onclick="document.getElementById('modal-foto-input').click();">
+    <input type="file" id="modal-foto-input" accept="image/*" style="display: none;">
+    <span id="modal-foto-nombre" style="display: block; margin-top: 5px; font-size: 12px; color: #666;"></span>
+</div>
+                    
+                    <!-- Preview en modal -->
+                    <div id="modal-preview-container" style="margin-top: 10px; display: none;">
+                        <img id="modal-preview-foto" src="" alt="Vista previa" style="max-width: 100px; border-radius: 4px;">
+                        <button onclick="confirmarSubidaModal()" class="btn-editar" style="margin-left: 10px; padding: 5px 10px; background-color: #2196F3;" type="button">
+                            Usar esta foto
+                        </button>
+                    </div>
+                    
+                    <!-- Campo oculto para guardar la URL de la foto -->
+                    <input type="hidden" id="edit-foto-url">
                 </div>
                 
                 <div class="botones-accion">
-                    <button type="button" class="btn-editar" onclick="guardarCambios()">💾 Guardar Cambios</button>
-                    <button type="button" class="btn-eliminar" onclick="cerrarModalEditar()">❌ Cancelar</button>
+                    <button type="button" class="btn-editar" onclick="guardarCambios()">Guardar Cambios</button>
+                    <button type="button" class="btn-eliminar" onclick="cerrarModalEditar()"> Cancelar</button>
                 </div>
             </form>
         </div>
@@ -324,13 +342,13 @@
     <div id="modal-eliminar" class="modal">
         <div class="modal-contenido">
             <span class="cerrar-modal" onclick="cerrarModalEliminar()">&times;</span>
-            <h2>⚠️ Confirmar Eliminación</h2>
+            <h2>Confirmar Eliminación</h2>
             <p>¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.</p>
             <p><strong>Todos tus datos y citas se perderán permanentemente.</strong></p>
             
             <div class="botones-accion">
-                <button class="btn-eliminar" onclick="eliminarCuenta()">🗑️ Sí, eliminar cuenta</button>
-                <button class="btn-editar" onclick="cerrarModalEliminar()">↩️ Cancelar</button>
+                <button class="btn-eliminar" onclick="eliminarCuenta()"> Sí, eliminar cuenta</button>
+                <button class="btn-editar" onclick="cerrarModalEliminar()">↩ Cancelar</button>
             </div>
         </div>
     </div>
@@ -347,8 +365,8 @@
             </div>
             
             <div class="botones-accion">
-                <button type="button" class="btn-editar" onclick="guardarDisponibilidad()">💾 Actualizar Disponibilidad</button>
-                <button type="button" class="btn-eliminar" onclick="cerrarModalDisponibilidad()">❌ Cancelar</button>
+                <button type="button" class="btn-editar" onclick="guardarDisponibilidad()"> Actualizar Disponibilidad</button>
+                <button type="button" class="btn-eliminar" onclick="cerrarModalDisponibilidad()"> Cancelar</button>
             </div>
         </div>
     </div>
@@ -364,25 +382,28 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-storage-compat.js"></script>
 
     <script>
-       const firebaseConfig = {
-        apiKey: "AIzaSyCq2lQnID4SSkFIKh_ja6paB4aHuq4KU0M",
-         authDomain: "proyectercerparcial.firebaseapp.com",
-  databaseURL: "https://proyectercerparcial-default-rtdb.firebaseio.com",
-  projectId: "proyectercerparcial",
-  storageBucket: "proyectercerparcial.appspot.com",
-  messagingSenderId: "39792129165",
-         appId: "1:39792129165:web:631ce9e0c7fb657a135ec4"
-    };
+        const firebaseConfig = {
+            apiKey: "AIzaSyCq2lQnID4SSkFIKh_ja6paB4aHuq4KU0M",
+            authDomain: "proyectercerparcial.firebaseapp.com",
+            databaseURL: "https://proyectercerparcial-default-rtdb.firebaseio.com",
+            projectId: "proyectercerparcial",
+            storageBucket: "proyectercerparcial.appspot.com",
+            messagingSenderId: "39792129165",
+            appId: "1:39792129165:web:631ce9e0c7fb657a135ec4"
+        };
 
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
+        const storage = firebase.storage();
 
         // Variables globales
         let psicologoIdGlobal = null;
         let psicologoDocRef = null;
+        let archivoSeleccionadoModal = null;
 
         // ESPERAR A QUE EL DOM ESTÉ CARGADO
         document.addEventListener('DOMContentLoaded', function() {
@@ -398,60 +419,50 @@
         });
 
         // CARGAR DATOS DEL PSICÓLOGO
-
         function cargarDatosPsicologo(email) {
-    db.collection("psicologos")
-      .where("email", "==", email)
-      .get()
-      .then((querySnapshot) => {
-          if (!querySnapshot.empty) {
-              const doc = querySnapshot.docs[0];
-              
-              // DEBUG DETALLADO
-              console.log("=== DEBUG DETALLADO ===");
-              console.log("📄 Documento completo:", doc);
-              console.log("🆔 doc.id:", doc.id);
-              console.log("🔍 doc.data():", doc.data());
-              console.log("📧 Email en datos:", doc.data().email);
-              console.log("👤 Nombre en datos:", doc.data().nombre);
-              
-              //psicologoIdGlobal = "4weWQf2WnveX3xRn2pnY";
-              psicologoIdGlobal = doc.id; 
-              console.log("✅ psicologoIdGlobal asignado:", psicologoIdGlobal);
-              console.log("=== FIN DEBUG ===");
-              
-              psicologoDocRef = doc.ref;
-              const datos = doc.data();
-              console.log("✅ Datos encontrados:", datos);
-              
-              document.getElementById('info-nombre').textContent = datos.nombre || 'No especificado';
-              document.getElementById('info-especialidad').textContent = datos.especialidad || 'No especificado';
-              document.getElementById('info-email').textContent = datos.email || 'No especificado';
-              document.getElementById('info-disponibilidad').textContent = datos.disponibilidad || 'No especificada';
-              
-              if (datos.foto) {
-                  let fotoUrl = datos.foto.replace(/\n/g, '').trim();
-                  if (fotoUrl.includes('photo-1559839734-2b71ea197ec2') && !fotoUrl.includes('?')) {
-                      fotoUrl = 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&fit=crop';
+            db.collection("psicologos")
+              .where("email", "==", email)
+              .get()
+              .then((querySnapshot) => {
+                  if (!querySnapshot.empty) {
+                      const doc = querySnapshot.docs[0];
+                      
+                      psicologoIdGlobal = doc.id; 
+                      console.log("✅ psicologoIdGlobal asignado:", psicologoIdGlobal);
+                      
+                      psicologoDocRef = doc.ref;
+                      const datos = doc.data();
+                      console.log("✅ Datos encontrados:", datos);
+                      
+                      document.getElementById('info-nombre').textContent = datos.nombre || 'No especificado';
+                      document.getElementById('info-especialidad').textContent = datos.especialidad || 'No especificado';
+                      document.getElementById('info-email').textContent = datos.email || 'No especificado';
+                      document.getElementById('info-disponibilidad').textContent = datos.disponibilidad || 'No especificada';
+                      
+                      // Mostrar foto si existe
+                      if (datos.foto) {
+                          let fotoUrl = datos.foto.replace(/\n/g, '').trim();
+                          if (fotoUrl.includes('photo-1559839734-2b71ea197ec2') && !fotoUrl.includes('?')) {
+                              fotoUrl = 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&fit=crop';
+                          }
+                          document.getElementById('info-foto').src = fotoUrl;
+                          document.getElementById('info-foto').style.display = 'block';
+                      }
+                      
+                      // Cargar citas después de tener el ID
+                      cargarCitasPsicologo();
+                      
+                  } else {
+                      console.log("❌ No se encontraron datos para:", email);
+                      mostrarErrorDatos();
                   }
-                  document.getElementById('info-foto').src = fotoUrl;
-                  document.getElementById('info-foto').style.display = 'block';
-              }
-              
-              // Cargar citas después de tener el ID
-              cargarCitasPsicologo();
-              
-          } else {
-              console.log("❌ No se encontraron datos para:", email);
-              mostrarErrorDatos();
-          }
-      })
-      .catch((error) => {
-          console.error("❌ Error buscando psicólogo:", error);
-          mostrarErrorDatos();
-      });
-}
-    
+              })
+              .catch((error) => {
+                  console.error("❌ Error buscando psicólogo:", error);
+                  mostrarErrorDatos();
+              });
+        }
+
         function mostrarErrorDatos() {
             document.getElementById('info-nombre').textContent = 'Error al cargar';
             document.getElementById('info-especialidad').textContent = 'Error al cargar';
@@ -460,45 +471,36 @@
         }
 
         function cargarCitasPsicologo() {
-    console.log("🔍 Buscando citas...");
-    console.log("psicologoIdGlobal:", psicologoIdGlobal);
-    console.log("Tipo de psicologoIdGlobal:", typeof psicologoIdGlobal);
-    
-    if (!psicologoIdGlobal) {
-        console.log("❌ No hay psicologoIdGlobal");
-        return;
-    }
+            if (!psicologoIdGlobal) {
+                console.log("❌ No hay psicologoIdGlobal");
+                return;
+            }
 
-    db.collection("citas_pendientes")
-      .where("psicologoId", "==", psicologoIdGlobal)
-      .get()
-      .then((querySnapshot) => {
-          console.log("📊 Citas encontradas:", querySnapshot.size);
-          console.log("Documentos:", querySnapshot.docs);
-          
-          const listaCitas = document.getElementById('lista-citas');
-          
-          if (querySnapshot.empty) {
-              console.log("❌ No se encontraron citas - Query vacía");
-              listaCitas.innerHTML = '<div class="sin-citas">No tienes citas pendientes</div>';
-              return;
-          }
+            db.collection("citas_pendientes")
+              .where("psicologoId", "==", psicologoIdGlobal)
+              .get()
+              .then((querySnapshot) => {
+                  const listaCitas = document.getElementById('lista-citas');
+                  
+                  if (querySnapshot.empty) {
+                      listaCitas.innerHTML = '<div class="sin-citas">No tienes citas pendientes</div>';
+                      return;
+                  }
 
-          let htmlCitas = '';
-          querySnapshot.forEach((doc) => {
-              console.log("Cita encontrada:", doc.id, doc.data());
-              const cita = doc.data();
-              htmlCitas += crearHTMLCita(cita, doc.id);
-          });
+                  let htmlCitas = '';
+                  querySnapshot.forEach((doc) => {
+                      const cita = doc.data();
+                      htmlCitas += crearHTMLCita(cita);
+                  });
 
-          listaCitas.innerHTML = htmlCitas;
-      })
-      .catch((error) => {
-          console.error("Error completo cargando citas:", error);
-      });
-}
-        
-        function crearHTMLCita(cita, citaId) {
+                  listaCitas.innerHTML = htmlCitas;
+              })
+              .catch((error) => {
+                  console.error("Error cargando citas:", error);
+              });
+        }
+
+        function crearHTMLCita(cita) {
             const fechaFormateada = new Date(cita.fecha).toLocaleDateString('es-ES');
             return `
                 <div class="cita-item">
@@ -513,13 +515,83 @@
             `;
         }
 
+        // FUNCIONES PARA FOTOS
+        // Evento para input de archivo en modal
+        document.getElementById('modal-foto-input')?.addEventListener('change', function(e) {
+            archivoSeleccionadoModal = e.target.files[0];
+            
+            if (archivoSeleccionadoModal) {
+                if (!archivoSeleccionadoModal.type.startsWith('image/')) {
+                    alert('Solo se permiten imágenes');
+                    return;
+                }
+                if (archivoSeleccionadoModal.size > 5 * 1024 * 1024) {
+                    alert('La imagen no debe exceder 5MB');
+                    return;
+                }
+                
+                document.getElementById('modal-foto-nombre').textContent = archivoSeleccionadoModal.name;
+                
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('modal-preview-foto').src = event.target.result;
+                    document.getElementById('modal-preview-container').style.display = 'block';
+                };
+                reader.readAsDataURL(archivoSeleccionadoModal);
+            }
+        });
+
+        async function confirmarSubidaModal() {
+            if (!archivoSeleccionadoModal) {
+                alert('Selecciona un archivo primero');
+                return;
+            }
+            
+            try {
+                const user = auth.currentUser;
+                if (!user) {
+                    alert('Debes iniciar sesión');
+                    return;
+                }
+                
+                const btn = document.querySelector('#modal-preview-container .btn-editar');
+                btn.textContent = 'Subiendo...';
+                btn.disabled = true;
+                
+                const timestamp = Date.now();
+                const extension = archivoSeleccionadoModal.name.split('.').pop();
+                const nombreArchivo = `FotosPsic/${user.email}/${timestamp}.${extension}`;
+                const imagenRef = storage.ref().child(nombreArchivo);
+                
+                await imagenRef.put(archivoSeleccionadoModal);
+                const urlDescarga = await imagenRef.getDownloadURL();
+                
+                // Guardar URL en campo oculto
+                document.getElementById('edit-foto-url').value = urlDescarga;
+                document.getElementById('modal-preview-container').style.display = 'none';
+                document.getElementById('modal-foto-nombre').textContent = '';
+                archivoSeleccionadoModal = null;
+                
+                // Indicador sutil de éxito
+                document.getElementById('modal-foto-nombre').style.color = 'green';
+                document.getElementById('modal-foto-nombre').textContent = '✓ Foto lista';
+                
+                btn.textContent = 'Usar esta foto';
+                btn.disabled = false;
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Error: ' + error.message);
+            }
+        }
+        
+        // FUNCIONES DEL MODAL EDITAR
         function abrirModalEditar() {
             if (!psicologoDocRef) {
                 alert('Error: No se pueden cargar los datos del perfil');
                 return;
             }
 
-            // Cargar datos actuales en el modal
             psicologoDocRef.get().then((doc) => {
                 if (doc.exists) {
                     const datos = doc.data();
@@ -527,7 +599,11 @@
                     document.getElementById('edit-especialidad').value = datos.especialidad || '';
                     document.getElementById('edit-email').value = datos.email || '';
                     document.getElementById('edit-disponibilidad').value = datos.disponibilidad || '';
-                    document.getElementById('edit-foto').value = datos.foto || '';
+                    
+                    // Limpiar campos de foto
+                    document.getElementById('modal-foto-nombre').textContent = '';
+                    document.getElementById('modal-preview-container').style.display = 'none';
+                    document.getElementById('edit-foto-url').value = '';
                     
                     document.getElementById('modal-editar').style.display = 'block';
                 }
@@ -538,25 +614,40 @@
             document.getElementById('modal-editar').style.display = 'none';
         }
 
-        function guardarCambios() {
-            const nuevosDatos = {
-                nombre: document.getElementById('edit-nombre').value,
-                especialidad: document.getElementById('edit-especialidad').value,
-                email: document.getElementById('edit-email').value,
-                disponibilidad: document.getElementById('edit-disponibilidad').value,
-                foto: document.getElementById('edit-foto').value
-            };
-
-            psicologoDocRef.update(nuevosDatos)
-                .then(() => {
-                    alert('✅ Perfil actualizado correctamente');
-                    cerrarModalEditar();
-                    location.reload();
-                })
-                .catch((error) => {
-                    console.error("Error actualizando perfil:", error);
-                    alert('❌ Error al actualizar el perfil');
-                });
+        async function guardarCambios() {
+            try {
+                // Verificar sesión
+                const user = auth.currentUser;
+                if (!user) {
+                    alert('Sesión expirada');
+                    return;
+                }
+                
+                // Preparar datos básicos
+                const nuevosDatos = {
+                    nombre: document.getElementById('edit-nombre').value,
+                    especialidad: document.getElementById('edit-especialidad').value,
+                    email: document.getElementById('edit-email').value,
+                    disponibilidad: document.getElementById('edit-disponibilidad').value
+                };
+                
+                // Si hay URL de foto en el campo oculto, agregarla
+                const fotoUrl = document.getElementById('edit-foto-url').value;
+                if (fotoUrl) {
+                    nuevosDatos.foto = fotoUrl;
+                }
+                
+                // Guardar en Firestore
+                await psicologoDocRef.update(nuevosDatos);
+                
+                // Cerrar modal y recargar (sin alerta)
+                cerrarModalEditar();
+                location.reload();
+                
+            } catch (error) {
+                console.error("Error:", error);
+                alert('❌ Error al actualizar: ' + error.message);
+            }
         }
 
         function abrirModalEliminar() {

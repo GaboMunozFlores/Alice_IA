@@ -7,60 +7,81 @@
     <link rel="stylesheet" href="../assets/css/main.css">
 
 <style>
-
 #nav.psic-index-nav {
-    background: #80B5D1 !important;
-    padding: 15px 0 !important;
-    width: 100% !important;
+    background: #80B5D1;
+    padding: 15px 0;
+    width: 100%;
 }
 
 #nav.psic-index-nav > ul {
-    display: flex !important;
-    justify-content: center !important;
-    gap: 30px !important;
-    list-style: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 #nav.psic-index-nav > ul > li {
     position: relative;
 }
 
-#nav.psic-index-nav > ul > li > a {
-    color: white !important;
-    text-decoration: none !important;
-    padding: 8px 16px !important;
-    font-family: Arial, sans-serif !important;
-    font-size: 16px !important;
+#nav.psic-index-nav ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    display: block;
 }
 
 /* OCULTAR "Inicia sesión" y "Regístrate" */
 #nav.psic-index-nav > ul > li:nth-last-child(1),
 #nav.psic-index-nav > ul > li:nth-last-child(2) {
-    display: none !important;
+    display: none;
 }
 
-/* Submenú (WhatsApp) */
+/* ESTILOS DEL SUBMENÚ - CORREGIDOS */
 #nav.psic-index-nav ul ul {
     position: absolute;
-    background: #6da3bd !important;
-    margin-top: 10px;
-    padding: 10px;
+    background: #6da3bd;
+    top: 100%;
+    left: 0;
+    min-width: 250px;
+    padding: 10px 0;
     border-radius: 8px;
-    list-style: none !important;
+    list-style: none;
     display: none;
+    z-index: 1000;
 }
 
 #nav.psic-index-nav ul li:hover > ul {
     display: block;
 }
 
+#nav.psic-index-nav ul ul li {
+    width: 100%;
+}
+
 #nav.psic-index-nav ul ul li a {
-    color: white !important;
-    font-size: 14px !important;
-    white-space: nowrap !important;
-    padding: 5px !important;
+    color: white;
+    font-size: 14px;
+    padding: 10px 20px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#nav.psic-index-nav ul ul li a:hover {
+    background-color: #4a8bb0;
+}
+
+/* Para los íconos */
+#nav.psic-index-nav ul li a i,
+#nav.psic-index-nav ul ul li a i {
+    color: white;
+    font-size: 16px;
 }
 
 /* Estilos para las tarjetas de psicólogos */
@@ -167,7 +188,6 @@
     display: none;
 }
 </style>
-
 </head>
 <body>
 
@@ -176,32 +196,36 @@
     <div id="header" class="container">
 
         <!-- NAV CON EL ESTILO NUEVO -->
-        <nav id="nav" class="psic-index-nav">
+    <nav id="nav" class="psic-index-nav">
+    <ul>
+        <li><a href="../index.html">Inicio</a></li>
+        <li>
+            <a href="#">Ayuda inmediata</a>
             <ul>
-                <li><a href="../index.html">Inicio</a></li>
-
                 <li>
-                    <a href="nav-alice-psicologo/psicIndex.html">Ayuda inmediata</a>
-                    <ul>
-                        <li>
-                            <a href="https://api.whatsapp.com/send?phone=525635164983&text=tengo%20una%20crisis%20y%20necesito%20asistencia"
-                                target="_blank"
-                                class="whatsapp-link">
-                                <img src="images/Whatsapp.png" class="whatsapp-icon">
-                                Ayuda por WhatsApp
-                            </a>
-                        </li>
-                    </ul>
+                    <a href="https://api.whatsapp.com/send?phone=525635164983&text=tengo%20una%20crisis" target="_blank">
+                        <i class="fab fa-whatsapp" style="margin-right: 8px;"></i> Ayuda por WhatsApp
+                    </a>
                 </li>
-
-                <li><a href="Chatbot/chatbot.php">Alice</a></li>
-                <li><a href="nav-alice-centros/centros.html">Centros de Ayuda</a></li>
-
-                <!-- Estos se ocultan por CSS -->
-                <li><a href="nav-alice-usuarios/login.html" class="btn-Derecha">Inicia sesión</a></li>
-                <li><a href="nav-alice-usuarios/signin.html" class="btn-Derecha">Registrate</a></li>
+                <li>
+                    <a href="tel:+525524814754">
+                        <i class="fas fa-headset" style="margin-right: 8px; color: #007bff;"></i> Línea de Ayuda
+                    </a>
+                </li>
+                <li>
+                    <a href="tel:+525564214951">
+                        <i class="fas fa-headset" style="margin-right: 8px; color: #007bff;"></i> Consejo ciudadano
+                    </a>
+                </li>
+                <li><a href="../nav-alice-psicologo/login_psicologo.html">🔐 Acceso Psicólogos</a></li>
             </ul>
-        </nav>
+        </li>
+        <li><a href="/nav-alice-chatbot/index.html">Alice</a></li>
+        <li><a href="../nav-alice-centros/centros.html">Centros de Ayuda</a></li>
+        <li class="break"><a href="../nav-alice-usuarios/selecciondeinicio.html">Inicia sesión</a></li>
+        <li><a href="../nav-alice-usuarios/seleccionregis.html">Regístrate</a></li>
+    </ul>
+</nav>
 
     </div>
 </div>
