@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Psicóloogo</title>
+
+ 
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-storage-compat.js"></script>
+
+  <link rel="stylesheet" href="styles_registro.css">
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>Registro de Psicólogo</h2>
+
+    <input id="nombre" type="text" placeholder="Nombre completo">
+
+    <input id="email" type="email" placeholder="Correo electrónico">
+
+    
+    <div class="password-container">
+      <input id="password" type="password" placeholder="Contraseña">
+      <span id="togglePassword" class="eye-icon">👁️</span>
+    </div>
+
+    
+    <ul id="passwordRules">
+      <li id="ruleLength">⚫ Mínimo 8 caracteres</li>
+      <li id="ruleUpper">⚫ Una letra mayúscula</li>
+      <li id="ruleNumber">⚫ Un número</li>
+      <li id="ruleSpecial">⚫ Un carácter especial</li>
+    </ul>
+
+    
+    <label class="file-label">
+      📄 Subir cédula profesional (PDF o imagen)
+      <input type="file" id="archivoCedula" accept=".pdf,.png,.jpg,.jpeg">
+    </label>
+
+    
+    <select id="especialidad">
+      <option value="">Selecciona tu especialidad</option>
+      <option value="Psicología Clínica">Psicología Clínica</option>
+      <option value="Psicología Infantil">Psicología Infantil</option>
+      <option value="Psicología Educativa">Psicología Educativa</option>
+      <option value="Psicología Organizacional">Psicología Organizacional</option>
+      <option value="Terapia Cognitivo Conductual">Terapia Cognitivo Conductual</option>
+      <option value="Neuropsicología">Neuropsicología</option>
+      <option value="Psicología Familiar y de Pareja">Psicología Familiar y de Pareja</option>
+    </select>
+
+    <textarea id="experiencia" placeholder="Experiencia profesional (opcional)"></textarea>
+
+    <select id="modalidad">
+      <option value="">Modalidad de atención</option>
+      <option value="Presencial">Presencial</option>
+      <option value="Online">Online</option>
+      <option value="Mixta">Mixta</option>
+    </select>
+
+    <p id="mensajeError" class="mensaje-error"></p>
+    <p id="mensajeExito" class="mensaje-exito">✅ Registro exitoso, redirigiendo...</p>
+
+    <button id="registrarBtn">Registrar Psicólogo</button>
+  </div>
+
+  <script src="registro_psicologo.js"></script>
+</body>
+</html>

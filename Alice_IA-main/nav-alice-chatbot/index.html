@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alice IA - Soporte Profesional</title>
+
+  <!-- Fuentes y estilos -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="estiloss.css"/>
+
+  <!-- Librerías -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="user-profile">
+          <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Usuario" class="avatar"/>
+          <div class="user-details">
+            <span id="userEmail" class="email-text">Cargando...</span>
+            <span class="status-online">En línea</span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button id="opinionBtn" class="nav-link">
+          <i>💬</i> Danos tu opinión
+        </button>
+        <a href="../nav-alice-psicologo/psicIndex.html" class="nav-link highlight">
+          <i>🗓️</i> Agendar Cita
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="logoutBtn" class="logout-button">Cerrar sesión</button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content">
+      <!-- Header del chat -->
+      <header class="chat-header">
+        <img src="logo-alice.png" alt="Alice IA" class="mini-logo"/>
+        <div class="header-info">
+          <h1>Alice IA</h1>
+          <p>Tu espacio seguro de apoyo</p>
+        </div>
+      </header>
+
+      <!-- Contenedor del chat -->
+      <div id="chatBox" class="chat-container">
+        <div class="welcome-message">
+          <p>🌷 <strong>¡Bienvenida a Alice IA!</strong></p>
+          <p>¿En qué puedo apoyarte hoy?</p>
+        </div>
+      </div>
+
+      <!-- Input -->
+      <footer class="chat-input-area">
+        <div class="input-wrapper">
+          <button id="micBtn" class="icon-btn" title="Dictado por voz">🎤</button>
+          <input type="text" id="userMessage" placeholder="Escribe un mensaje..." autocomplete="off"/>
+          <button id="sendBtn" class="send-button">
+            <span>Enviar</span>
+          </button>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Tus scripts (si los usas) -->
+  <script src="config.js"></script>
+  <script src="chatbot.js"></script>
+
+  <!-- Script principal -->
+  <script type="module" src="script.js"></script>
+  <!-- Modal Opinión -->
+<div id="opinionModal" class="modal-opinion hidden">
+  <div class="modal-content">
+    <h3>¿Qué te pareció Alice? 🌷</h3>
+
+    <div class="stars" id="starContainer">
+      <span data-value="1">★</span>
+      <span data-value="2">★</span>
+      <span data-value="3">★</span>
+      <span data-value="4">★</span>
+      <span data-value="5">★</span>
+    </div>
+
+    <textarea id="opinionText" placeholder="Escribe tu opinión..." maxlength="300"></textarea>
+
+    <div class="modal-buttons">
+      <button id="cancelOpinion">Cancelar</button>
+      <button id="submitOpinion">Enviar</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

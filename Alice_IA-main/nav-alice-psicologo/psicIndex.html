@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psicólogos Disponibles - Alice IA</title>
+    <link rel="stylesheet" href="../assets/css/main.css">
+
+<style>
+#nav.psic-index-nav {
+    background: #80B5D1;
+    padding: 15px 0;
+    width: 100%;
+}
+
+#nav.psic-index-nav > ul {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#nav.psic-index-nav > ul > li {
+    position: relative;
+}
+
+#nav.psic-index-nav ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    display: block;
+}
+
+/* OCULTAR "Inicia sesión" y "Regístrate" */
+#nav.psic-index-nav > ul > li:nth-last-child(1),
+#nav.psic-index-nav > ul > li:nth-last-child(2) {
+    display: none;
+}
+
+/* ESTILOS DEL SUBMENÚ - CORREGIDOS */
+#nav.psic-index-nav ul ul {
+    position: absolute;
+    background: #6da3bd;
+    top: 100%;
+    left: 0;
+    min-width: 250px;
+    padding: 10px 0;
+    border-radius: 8px;
+    list-style: none;
+    display: none;
+    z-index: 1000;
+}
+
+#nav.psic-index-nav ul li:hover > ul {
+    display: block;
+}
+
+#nav.psic-index-nav ul ul li {
+    width: 100%;
+}
+
+#nav.psic-index-nav ul ul li a {
+    color: white;
+    font-size: 14px;
+    padding: 10px 20px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#nav.psic-index-nav ul ul li a:hover {
+    background-color: #4a8bb0;
+}
+
+/* Para los íconos */
+#nav.psic-index-nav ul li a i,
+#nav.psic-index-nav ul ul li a i {
+    color: white;
+    font-size: 16px;
+}
+
+/* Estilos para las tarjetas de psicólogos */
+.psychologists-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.psychologist-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.psychologist-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-content {
+    padding: 20px;
+}
+
+.card-content h3 {
+    color: #288488;
+    margin-bottom: 10px;
+    font-family: Arial, sans-serif;
+}
+
+.specialty {
+    color: #666;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.availability, .email {
+    color: #555;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-cita {
+    display: inline-block;
+    background: #288488;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 10px;
+    transition: background 0.3s ease;
+}
+
+.btn-cita:hover {
+    background: #1f6d70;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+}
+
+.spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #288488;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 2s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error-message {
+    background: #ffebee;
+    color: #c62828;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.hidden {
+    display: none;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div id="header-wrapper">
+    <div id="header" class="container">
+
+        <!-- NAV CON EL ESTILO NUEVO -->
+    <nav id="nav" class="psic-index-nav">
+    <ul>
+        <li><a href="../index.html">Inicio</a></li>
+        <li>
+            <a href="#">Ayuda inmediata</a>
+            <ul>
+                <li>
+                    <a href="https://api.whatsapp.com/send?phone=525635164983&text=tengo%20una%20crisis" target="_blank">
+                        <i class="fab fa-whatsapp" style="margin-right: 8px;"></i> Ayuda por WhatsApp
+                    </a>
+                </li>
+                <li>
+                    <a href="tel:+525524814754">
+                        <i class="fas fa-headset" style="margin-right: 8px; color: #007bff;"></i> Línea de Ayuda
+                    </a>
+                </li>
+                <li>
+                    <a href="tel:+525564214951">
+                        <i class="fas fa-headset" style="margin-right: 8px; color: #007bff;"></i> Consejo ciudadano
+                    </a>
+                </li>
+                <li><a href="../nav-alice-psicologo/login_psicologo.html">🔐 Acceso Psicólogos</a></li>
+            </ul>
+        </li>
+        <li><a href="/nav-alice-chatbot/index.html">Alice</a></li>
+        <li><a href="../nav-alice-centros/centros.html">Centros de Ayuda</a></li>
+        <li class="break"><a href="../nav-alice-usuarios/selecciondeinicio.html">Inicia sesión</a></li>
+        <li><a href="../nav-alice-usuarios/seleccionregis.html">Regístrate</a></li>
+    </ul>
+</nav>
+
+    </div>
+</div>
+
+<!-- MAIN -->
+<main class="main-container">
+    <div class="container">
+
+        <!-- LOADING -->
+        <div id="estado-carga" class="loading">
+            <div class="spinner"></div>
+            <p>Cargando psicólogos disponibles...</p>
+        </div>
+
+        <!-- ERROR -->
+        <div id="estado-error" class="error-message hidden">
+            <p>No se pudieron cargar los psicólogos. Intenta más tarde.</p>
+        </div>
+
+        <!-- SECCIÓN PRINCIPAL -->
+        <section id="seccion-psicologos" class="psychologists-section hidden">
+            <h2 style="text-align:center;color:#288488;font-family:monospace;margin-bottom:30px;">
+                Nuestros Psicólogos Especializados
+            </h2>
+
+            <p style="text-align:center;margin-bottom:40px;color:#666;">
+                Encuentra el profesional que mejor se adapte a tus necesidades
+            </p>
+
+            <div id="contenedor-psicologos" class="psychologists-grid"></div>
+        </section>
+
+    </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="main-footer">
+    <div class="container">
+        <p>&copy; 2024 Alice IA - Plataforma de Apoyo Psicológico</p>
+    </div>
+</footer>
+
+<!-- FIREBASE APP -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCq2lQnID4SSkFIKh_ja6paB4aHuq4KU0M",
+    authDomain: "proyectercerparcial.firebaseapp.com",
+    databaseURL: "https://proyectercerparcial-default-rtdb.firebaseio.com",
+    projectId: "proyectercerparcial",
+    storageBucket: "proyectercerparcial.appspot.com",
+    messagingSenderId: "39792129165",
+    appId: "1:39792129165:web:631ce9e0c7fb657a135ec4"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function cargarPsicologos() {
+    const estadoCarga = document.getElementById('estado-carga');
+    const estadoError = document.getElementById('estado-error');
+    const seccionPsicologos = document.getElementById('seccion-psicologos');
+    const contenedorPsicologos = document.getElementById('contenedor-psicologos');
+
+    console.log("🔍 Iniciando carga de psicólogos...");
+
+    try {
+        const q = query(
+            collection(db, "psicologos"), 
+            where("estado", "==", "aprobado")
+        );
+        
+        const querySnapshot = await getDocs(q);
+        console.log("📊 Datos recibidos:", querySnapshot.size, "psicólogos encontrados");
+
+        contenedorPsicologos.innerHTML = '';
+
+        if (querySnapshot.empty) {
+            console.log("❌ No se encontraron psicólogos aprobados");
+            estadoCarga.classList.add('hidden');
+            estadoError.classList.remove('hidden');
+            estadoError.innerHTML = '<p>No hay psicólogos disponibles en este momento.</p>';
+            seccionPsicologos.classList.add('hidden');
+            return;
+        }
+
+        let psicologosCargados = 0;
+        
+        querySnapshot.forEach((documento) => {
+            console.log("👨‍⚕️ Procesando psicólogo:", documento.id, documento.data());
+            
+            const datos = documento.data();
+            const psicologo = {
+                id: documento.id,
+                nombre: datos.nombre || 'Nombre no disponible',
+                especialidad: datos.especialidad || 'Especialidad no especificada',
+                disponibilidad: datos.disponibilidad || 'Disponibilidad no especificada',
+                email: datos.email || 'Email no disponible',
+                foto: datos.foto ? datos.foto.replace(/\n/g, '').trim() : '../assets/images/default-avatar.png'
+            };
+
+            if (psicologo.foto.includes('photo-1559839734-2b71ea197ec2') && !psicologo.foto.includes('?')) {
+                psicologo.foto = 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&fit=crop';
+            }
+
+            const tarjeta = crearTarjetaPsicologo(psicologo);
+            contenedorPsicologos.appendChild(tarjeta);
+            psicologosCargados++;
+        });
+
+        console.log("✅ Psicólogos cargados exitosamente:", psicologosCargados);
+
+        estadoCarga.classList.add('hidden');
+        seccionPsicologos.classList.remove('hidden');
+        estadoError.classList.add('hidden');
+
+    } catch (error) {
+        console.error("❌ Error al cargar psicólogos:", error);
+        estadoCarga.classList.add('hidden');
+        estadoError.classList.remove('hidden');
+        estadoError.innerHTML = `
+            <p><strong>Error al cargar los psicólogos:</strong> ${error.message}</p>
+            <p>Por favor, verifica tu conexión a internet e intenta nuevamente.</p>
+            <small>Detalles técnicos: ${error.code || 'Error de conexión'}</small>
+        `;
+    }
+}
+
+function crearTarjetaPsicologo(psicologo) {
+    const tarjeta = document.createElement('div');
+    tarjeta.className = 'psychologist-card';
+
+    tarjeta.innerHTML = `
+        <div class="card-image">
+            <img src="${psicologo.foto}" 
+                 alt="Foto de ${psicologo.nombre}"
+                 onerror="this.src='../assets/images/default-avatar.png'">
+        </div>
+
+        <div class="card-content">
+            <h3>${psicologo.nombre}</h3>
+            <p class="specialty">${psicologo.especialidad}</p>
+
+            <p class="availability">
+                <span>🕐</span>
+                ${psicologo.disponibilidad}
+            </p>
+
+            <p class="email">
+                <span>📧</span>
+                ${psicologo.email}
+            </p>
+
+            <a href="../nav-alice-psicologo/agendar_cita.html?psicologo_id=${psicologo.id}"
+                class="btn-cita">
+                Agendar Cita
+            </a>
+        </div>
+    `;
+
+    return tarjeta;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("🚀 DOM cargado, iniciando carga de psicólogos...");
+    cargarPsicologos();
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+/* Estilos internos para anular el padding del encabezado */
+#header-wrapper {
+    padding-top: 2.5em !important;
+    padding-bottom: 2.5em !important;
+    min-height: 110px !important; /* Arreglado: antes decía 100x */
+}
+
+#header {
+    padding: 0 !important;
+}
+
+/* ******* ESTILO DE NAVEGACIÓN MÍNIMA ******* */
+#nav-minimal {
+    display: flex;
+    justify-content: flex-start; 
+    align-items: center;
+    padding: 0 2em;
+    width: 100%;
+}
+
+#nav-minimal h1 {
+    color: white;
+    margin: 0;
+    font-size: 1.5em;
+    font-family: monospace;
+}
+
+/* Estilos para el diseño de tarjeta de formulario */
+.dashboard-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 2em;
+    margin-bottom: 2em;
+}
+
+/* Estilo para destacar el nombre del psicólogo */
+#psicologo-title span {
+    color: #288488;
+    font-weight: bold;
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Psicólogo</title>
+
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-storage-compat.js"></script>
+
+  <link rel="stylesheet" href="styles_registr.css">
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>Registro de Psicólogo</h2>
+
+    <input id="nombre" type="text" placeholder="Nombre completo">
+    <span id="errorNombre" class="mensaje-error">Este campo es obligatorio.</span>
+
+    <input id="email" type="email" placeholder="Correo electrónico">
+    <span id="errorEmail" class="mensaje-error">Introduce un correo válido.</span>
+
+    <div class="password-container">
+      <input id="password" type="password" placeholder="Contraseña">
+      <span id="togglePassword" class="eye-icon">👁️</span>
+    </div>
+
+    <ul id="passwordRules">
+      <li id="ruleLength" class="invalid">⚫ Mínimo 8 caracteres</li>
+      <li id="ruleUpper" class="invalid">⚫ Una letra mayúscula</li>
+      <li id="ruleNumber" class="invalid">⚫ Un número</li>
+      <li id="ruleSpecial" class="invalid">⚫ Un carácter especial</li>
+    </ul>
+
+    <span id="errorPassword" class="mensaje-error">La contraseña no cumple los requisitos.</span>
+
+    <input id="numCedula" type="text" placeholder="Número de cédula (solo escribir)">
+    <span id="errorCedula" class="mensaje-error">Introduce una cédula válida de 7 a 8 dígitos.</span>
+
+    <select id="especialidad">
+      <option value="">Selecciona tu especialidad</option>
+      <option value="Psicología Clínica">Psicología Clínica</option>
+      <option value="Psicología Infantil">Psicología Infantil</option>
+      <option value="Psicología Educativa">Psicología Educativa</option>
+      <option value="Psicología Organizacional">Psicología Organizacional</option>
+      <option value="Terapia Cognitivo Conductual">Terapia Cognitivo Conductual</option>
+      <option value="Neuropsicología">Neuropsicología</option>
+      <option value="Psicología Familiar y de Pareja">Psicología Familiar y de Pareja</option>
+    </select>
+    <span id="errorEspecialidad" class="mensaje-error">Selecciona una especialidad.</span>
+
+    <textarea id="experiencia" placeholder="Experiencia profesional (opcional)"></textarea>
+
+    <select id="modalidad">
+      <option value="">Modalidad de atención</option>
+      <option value="Presencial">Presencial</option>
+      <option value="Online">Online</option>
+      <option value="Mixta">Mixta</option>
+    </select>
+    <span id="errorModalidad" class="mensaje-error">Selecciona una modalidad.</span>
+
+    <p id="mensajeError" class="mensaje-error"></p>
+    <p id="mensajeExito" class="mensaje-exito">✅ Registro exitoso, redirigiendo...</p>
+
+    <button id="registrarBtn">Registrar Psicólogo</button>
+  </div>
+
+  <script src="registro_psicolog.js"></script>
+</body>
+</html>

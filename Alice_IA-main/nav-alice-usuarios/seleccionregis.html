@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seleccionar Inicio de Sesión</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 900px;
+      height: 450px;
+      display: flex;
+      background: #ffffff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .box {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .left {
+      background: #4a90e2;
+      color: white;
+    }
+
+    .right {
+      background: #50c878;
+      color: white;
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    p {
+      margin-bottom: 25px;
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      background: white;
+      color: black;
+      border: none;
+      border-radius: 25px;
+      font-size: 17px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <div class="box left">
+      <h2>Registrarse como Usuario</h2>
+      <p>Accede a tu cuenta como paciente para ver y gestionar tus citas.</p>
+      <button class="btn" onclick="location.href='signin.html'">Entrar como Usuario</button>
+    </div>
+
+    <div class="box right">
+      <h2>Registrarse como Psicólogo</h2>
+      <p>Accede a tu panel profesional para administrar tus pacientes.</p>
+      <button class="btn" onclick="location.href='/psicologo_/registro_p.html'">Entrar como Psicólogo</button>
+    </div>
+
+  </div>
+
+</body>
+</html>
