@@ -156,6 +156,30 @@ function toggleView(id) {
   const el = document.getElementById(id);
   el.style.display = (el.style.display === "block") ? "none" : "block";
 }
+const express = require('express');
+const app = express();
+
+// Middleware de seguridad personalizado
+const protegerPerfil = (req, res, next) => {
+    const idEnUrl = req.params.id; // Lo que viene en /perfil/:id
+    const idEnSesion = req.session.userId; // El ID real del usuario logeado
+
+    // Verificamos si hay sesión y si el ID coincide
+    if (!idEnSesion) {
+        return res.status(401).send("Debes iniciar sesión primero.");
+    }
+
+    if (idEnUrl !== idEnSesion.toString()) {
+        return res.status(403).send("No tienes permiso para ver este perfil.");
+    }
+
+    next(); // Si todo está bien, continúa a la ruta
+};
+
+// Aplicamos el middleware a la ruta del perfil
+app.get('/perfil/:id', protegerPerfil, (req, res) => {
+    res.send(`Bienvenido a tu panel privado, usuario ${req.params.id}`);
+});
 
 // Botones de interfaz
 document.getElementById("btnNuevaSesion").onclick = () => document.getElementById("nuevaSesionForm").style.display = "block";
