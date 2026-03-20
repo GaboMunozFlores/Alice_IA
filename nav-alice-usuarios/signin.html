@@ -1,117 +1,223 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="es">
 
 <head>
     <title>Crear Cuenta</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="../assets/css/main.css" />
+    
     <script type="module" src="../nav-alice-usuarios/js/auth_firebase.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="module" src="../main.js"></script>
 
     <style>
-        .valid {
-            color: green;
+        /* FONDO Y CUERPO */
+        body {
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        /* CONTENEDOR PRINCIPAL (Simulando .form-container) */
+        .estilo_login {
+            max-width: 420px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+
+        .titulo {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 28px;
             font-weight: bold;
         }
 
-        .invalid {
-            color: red;
+        /* ETIQUETAS */
+        .etiqueta-texto label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #555;
+            font-weight: bold;
         }
 
-        #password-validation-list {
-            list-style: none;
-            /* Opcional: para quitar los puntos */
-            padding-left: 0;
-            margin-top: 10px;
+        /* INPUTS */
+        input[type="email"],
+        input[type="password"],
+        input[type="text"] {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 15px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            transition: border-color 0.3s;
+            background: white;
         }
+
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0,123,255,0.3);
+        }
+
+        /* LISTAS DE VALIDACIÓN */
+        #password-validation-list, #password-validation-match {
+            list-style: none;
+            padding-left: 0;
+            margin: -5px 0 15px 0;
+            font-size: 13px;
+        }
+
+        .valid { color: green; font-weight: bold; }
+        .invalid { color: red; }
+
+        /* BOTÓN PRINCIPAL */
+        .button-continuar {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 12px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+
+        .button-continuar:hover {
+            background-color: #0056b3;
+        }
+
+        /* BOTÓN GOOGLE */
+        #btn-google {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 15px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: #ffffff;
+            color: #333;
+            border: 1px solid #ccc;
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        #btn-google:hover {
+            background-color: #f5f5f5;
+        }
+
+        #btn-google img {
+            width: 20px;
+            margin-right: 10px;
+        }
+
+        /* TEXTO LEGAL */
+        .texto-legal {
+            text-align: center;
+            font-size: 13px;
+            color: #666;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            line-height: 1.5;
+        }
+
+        .texto-legal a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .texto-legal a:hover {
+            text-decoration: underline;
+        }
+
+        /* Quitar estilos de row/col que puedan estorbar */
+        .row { margin: 0; }
+        .col-12 { padding: 0; width: 100%; }
+        ul.actions { padding: 0; list-style: none; margin: 0; }
     </style>
 </head>
 
-<body class="col-12 is-preload">
-    <div id="page-wrapper">
+<body>
+    <section class="estilo_login">
+        <header>
+            <h2 class="titulo">Crear Cuenta</h2>
+        </header>
 
-        <div class="wrapper">
-            <div class="container" id="login-main-content">
-
-                <section class="col-6 col-12-narrower estilo_login">
-
-                    <header>
-                        <h2 class="titulo">Crear Cuenta</h2>
-                    </header>
-
-                    <form method="post" id="signin-form">
-                        <div class="row gtr-50">
-
-                            <div class="col-12 etiqueta-texto">
-                                <label for="signin_email">Correo Electrónico</label>
-                            </div>
-
-                            <div class="col-12">
-                                <input name="email" id="signin_email" type="text" required
-                                    placeholder="Ingresa tu correoelectrónico " />
-                            </div>
-
-
-                            <div class="col-12 etiqueta-texto">
-                                <label for="signin_password">Contraseña </label>
-                            </div>
-
-                            <div class="col-12">
-                                <input name="password" id="signin_password" type="password" required
-                                    placeholder="Ingresa tu contraseña" />
-                            </div>
-
-                            <div class="col-12">
-                                <ul id="password-validation-list">
-                                    <li id="val-length" class="invalid">Mínimo 8 caracteres</li>
-                                    <li id="val-uppercase" class="invalid">Al menos una letra mayúscula (A-Z)</li>
-                                    <li id="val-number" class="invalid">Al menos un número (0-9)</li>
-                                </ul>
-                            </div>
-
-                            <div class="col-12 etiqueta-texto">
-                                <label for="signin_confirm_password">Confirma tu contraseña</label>
-                            </div>
-
-                            <div class="col-12">
-                                <input name="confirm_password" id="signin_confirm_password" type="password" required
-                                    placeholder="Confirma tu contraseña" />
-                            </div>
-
-                            <div class="col-12">
-                                <ul id="password-validation-match">
-                                    <li id="val-match" class="invalid">Las contraseñas deben coincidir</li>
-                                </ul>
-                            </div>
-
-
-                            <div class="col-12">
-                                <ul class="actions">
-                                    <li><input type="submit" value="Continuar" class="button-continuar" /></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </form>
-                    <section class="flex justify-center items-center min-h-screen bg-gray-100">
-                        <div class="bg-white p-8 rounded-lg shadow-lg w-96 text-center">
-                            <h1 class="text-2xl font-semibold text-gray-800 mb-6">crear cuenta con: </h1>
-
-                            <button id="btn-google"> <img src="../images/googleLogo.png" alt="Google Icon"
-                                    class="w-6 h-6 mr-2"> Iniciar sesión con Google </button>
-
-                                                                <div class="col-12 texto-legal">
-                                <p>Al continuar, aceptas las <a href="#">Condiciones de uso</a> y el <a href="#">Aviso
-                                        de privacidad</a> de la compañía.</p>
-                            </div>
-                        </div>
-                    </section>
-                </section>
-
+        <form method="post" id="signin-form">
+            <div class="col-12 etiqueta-texto">
+                <label for="signin_email">Correo Electrónico</label>
             </div>
-        </div>
+            <div class="col-12">
+                <input name="email" id="signin_email" type="email" required placeholder="Ingresa tu correo electrónico" />
+            </div>
 
+            <div class="col-12 etiqueta-texto">
+                <label for="signin_password">Contraseña</label>
+            </div>
+            <div class="col-12">
+                <input name="password" id="signin_password" type="password" required placeholder="Ingresa tu contraseña" />
+            </div>
+
+            <div class="col-12">
+                <ul id="password-validation-list">
+                    <li id="val-length" class="invalid">Mínimo 8 caracteres</li>
+                    <li id="val-uppercase" class="invalid">Al menos una letra mayúscula (A-Z)</li>
+                    <li id="val-number" class="invalid">Al menos un número (0-9)</li>
+                </ul>
+            </div>
+
+            <div class="col-12 etiqueta-texto">
+                <label for="signin_confirm_password">Confirma tu contraseña</label>
+            </div>
+            <div class="col-12">
+                <input name="confirm_password" id="signin_confirm_password" type="password" required placeholder="Confirma tu contraseña" />
+            </div>
+
+            <div class="col-12">
+                <ul id="password-validation-match">
+                    <li id="val-match" class="invalid">Las contraseñas deben coincidir</li>
+                </ul>
+            </div>
+
+            <div class="col-12">
+                <ul class="actions">
+                    <li><input type="submit" value="Continuar" class="button-continuar" /></li>
+                </ul>
+            </div>
+        </form>
+
+        <div class="divider-text" style="text-align: center; color: #666; margin-top: 10px;">o crear cuenta con:</div>
+
+        <button id="btn-google">
+            <img src="../images/googleLogo.png" alt="Google Icon"> Iniciar con Google
+        </button>
+
+        <div class="texto-legal">
+            <p>Al continuar, aceptas las <a href="#">Condiciones de uso</a> y el <a href="#">Aviso de privacidad</a> de la compañía.</p>
+        </div>
+    </section>
 </body>
 
 </html>
