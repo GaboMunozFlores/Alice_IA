@@ -174,32 +174,26 @@
             </div>
 
             <div class="col-12 etiqueta-texto">
-                <label for="signin_password">Contraseña</label>
-            </div>
-            <div class="col-12">
-                <input name="password" id="signin_password" type="password" required placeholder="Ingresa tu contraseña" />
-            </div>
+    <label for="signin_password">Contraseña</label>
+</div>
+<div class="col-12" style="position: relative;">
+    <input name="password" id="signin_password" type="password" required placeholder="Ingresa tu contraseña" />
+    <span id="togglePassword" style="position: absolute; right: 15px; top: 15px; cursor: pointer; font-size: 20px;">👁️</span>
+</div>
 
-            <div class="col-12">
-                <ul id="password-validation-list">
-                    <li id="val-length" class="invalid">Mínimo 8 caracteres</li>
-                    <li id="val-uppercase" class="invalid">Al menos una letra mayúscula (A-Z)</li>
-                    <li id="val-number" class="invalid">Al menos un número (0-9)</li>
-                </ul>
-            </div>
+<ul id="password-validation-list">
+    <li id="val-length" class="invalid">Mínimo 8 caracteres</li>
+    <li id="val-uppercase" class="invalid">Al menos una letra mayúscula (A-Z)</li>
+    <li id="val-number" class="invalid">Al menos un número (0-9)</li>
+</ul>
 
-            <div class="col-12 etiqueta-texto">
-                <label for="signin_confirm_password">Confirma tu contraseña</label>
-            </div>
-            <div class="col-12">
-                <input name="confirm_password" id="signin_confirm_password" type="password" required placeholder="Confirma tu contraseña" />
-            </div>
-
-            <div class="col-12">
-                <ul id="password-validation-match">
-                    <li id="val-match" class="invalid">Las contraseñas deben coincidir</li>
-                </ul>
-            </div>
+<div class="col-12 etiqueta-texto">
+    <label for="signin_confirm_password">Confirma tu contraseña</label>
+</div>
+<div class="col-12" style="position: relative;">
+    <input name="confirm_password" id="signin_confirm_password" type="password" required placeholder="Confirma tu contraseña" />
+    <span id="toggleConfirmPassword" style="position: absolute; right: 15px; top: 15px; cursor: pointer; font-size: 20px;">👁️</span>
+</div>
 
             <div class="col-12">
                 <ul class="actions">
