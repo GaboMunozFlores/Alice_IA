@@ -59,3 +59,36 @@ button:hover {
   margin-top: 10px;
   font-weight: bold;
 }
+#nav.psic-index-nav {
+            all: initial !important;
+            display: block !important;
+            background: #80B5D1 !important;
+            padding: 15px 0 !important;
+            width: 100% !important;
+        }
+        
+        #nav.psic-index-nav ul {
+            all: initial !important;
+            display: flex !important;
+            justify-content: center !important;
+            gap: 30px !important;
+            list-style: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        
+        #nav.psic-index-nav ul li {
+            all: initial !important;
+            display: block !important;
+        }
+        
+        #nav.psic-index-nav ul li a {
+            all: initial !important;
+            display: block !important;
+            color: white !important;
+            text-decoration: none !important;
+            padding: 8px 16px !important;
+            font-family: Arial, sans-serif !important;
+            font-size: 16px !important;
+        }
+        

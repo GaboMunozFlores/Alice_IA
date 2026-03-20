@@ -1,6 +1,4 @@
-// =========================
-// CONFIG FIREBASE
-// =========================
+// CONFIGURACIÓN FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyCq2lQnID4SSkFIKh_ja6paB4aHuq4KU0M",
   authDomain: "proyectercerparcial.firebaseapp.com",
@@ -15,159 +13,86 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// Variables globales
 let psicologoIdGlobal = "";
-let pacienteSeleccionado = "";
 
-// =========================
-// CARGAR PSICÓLOGO
-// =========================
+// DETECTAR USUARIO
 auth.onAuthStateChanged(user => {
-  if (!user) {
+  if (user) {
+    psicologoIdGlobal = user.uid;
+    cargarDatosIniciales(user.email);
+  } else {
     window.location.href = "../psicologo_/login.html";
-    return;
   }
-
-  // 🔥 usamos el UID real
-  psicologoIdGlobal = user.uid;
-
-  cargarPsicologo(user.email);
 });
 
-function cargarPsicologo(email) {
-  db.collection("psicologos")
-    .where("email", "==", email)
-    .get()
-    .then(q => {
-      if (q.empty) return;
+// ESTA ES LA FUNCIÓN QUE MODIFICAMOS PARA TU NAV BAR
+function cargarDatosIniciales(email) {
+  db.collection("psicologos").where("email", "==", email).get().then(q => {
+    if (!q.empty) {
+      const datosPsicologo = q.docs[0].data();
 
-      const doc = q.docs[0];
-      document.getElementById("nombrePsicologo").textContent = doc.data().nombre;
+      // 1. Poner nombre en el cuerpo de la página
+      document.getElementById("nombrePsicologo").textContent = datosPsicologo.nombre;
 
-      cargarPacientesDeCitas();
-      cargarHistorial(); // Carga todas las sesiones
-    });
-}
-
-// =========================
-// CARGAR PACIENTES CON CITA
-// =========================
-function cargarPacientesDeCitas() {
-  db.collection("citas_pendientes")
-    .where("psicologoId", "==", psicologoIdGlobal)
-    .get()
-    .then(q => {
-      const select = document.getElementById("selectPaciente");
-      select.innerHTML = `<option value="">Selecciona un paciente</option>`;
-
-      if (q.empty) {
-        select.innerHTML = `<option value="">No hay pacientes con cita</option>`;
-        return;
+      // 2. Poner nombre en la NAV BAR (Derecha)
+      if(document.getElementById("navNombrePsicologo")) {
+        document.getElementById("navNombrePsicologo").textContent = datosPsicologo.nombre;
       }
 
-      q.forEach(doc => {
-        const data = doc.data();
-        const option = document.createElement("option");
+      // 3. Poner foto en la NAV BAR (Si existe en Firebase)
+      if(datosPsicologo.fotoPerfil && document.getElementById("navFotoPsicologo")) {
+        document.getElementById("navFotoPsicologo").src = datosPsicologo.fotoPerfil;
+      }
 
-        // 🔥 LIMPIAMOS ESPACIOS EXTRAS
-        option.value = data.paciente.trim();  
-        option.textContent = data.paciente.trim();
-
-        select.appendChild(option);
-      });
-    });
+      cargarPacientesSelect();
+      cargarHistorialAgrupado();
+    }
+  });
 }
 
-// Al seleccionar paciente
-document.getElementById("selectPaciente").addEventListener("change", function () {
-  pacienteSeleccionado = this.value.trim();
+// LLENAR SELECT DE PACIENTES
+function cargarPacientesSelect() {
+  db.collection("citas_pendientes").where("psicologoId", "==", psicologoIdGlobal).get().then(q => {
+    const select = document.getElementById("selectPaciente");
+    if(!select) return;
+    
+    select.innerHTML = '<option value="">Selecciona un paciente</option>';
+    q.forEach(doc => {
+      let nom = doc.data().paciente.trim();
+      select.innerHTML += `<option value="${nom}">${nom}</option>`;
+    });
+  });
+}
 
-  if (pacienteSeleccionado) cargarSesionesPorPaciente(pacienteSeleccionado);
-});
-
-// =========================
 // GUARDAR SESIÓN
-// =========================
-document.getElementById("guardarSesion").addEventListener("click", function () {
+document.getElementById("guardarSesion").onclick = () => {
+  const pac = document.getElementById("selectPaciente").value;
+  const mot = document.getElementById("motivo").value;
+  const not = document.getElementById("notas").value;
+  const dia = document.getElementById("diagnostico").value;
 
-  if (!pacienteSeleccionado) {
-    alert("Selecciona un paciente");
-    return;
-  }
+  if(!pac || !mot) return alert("Completa los datos");
 
-  const motivo = document.getElementById("motivo").value.trim();
-  const notas = document.getElementById("notas").value.trim();
-  const diagnostico = document.getElementById("diagnostico").value.trim();
-
-  if (!motivo || !notas || !diagnostico) {
-    alert("Llena todos los campos");
-    return;
-  }
-
-  const nuevaSesion = {
+  db.collection("historial_clinico").add({
     psicologoId: psicologoIdGlobal,
-    paciente: pacienteSeleccionado.trim(),
-    motivo: motivo,
-    notas: notas,
-    diagnostico: diagnostico,
+    paciente: pac,
+    motivo: mot,
+    notas: not,
+    diagnostico: dia,
     fecha: new Date().toISOString()
-  };
+  }).then(() => {
+    alert("Guardado");
+    document.getElementById("nuevaSesionForm").style.display = "none";
+    cargarHistorialAgrupado(); 
+  });
+};
 
-  db.collection("historial_clinico").add(nuevaSesion)
-    .then(() => {
-      alert("Sesión guardada correctamente");
-
-      document.getElementById("nuevaSesionForm").style.display = "none";
-
-      // limpiar campos
-      document.getElementById("motivo").value = "";
-      document.getElementById("notas").value = "";
-      document.getElementById("diagnostico").value = "";
-
-      cargarSesionesPorPaciente(pacienteSeleccionado);
-    });
-});
-
-// Mostrar formulario
-document.getElementById("btnNuevaSesion").addEventListener("click", () => {
-  document.getElementById("nuevaSesionForm").style.display = "block";
-});
-
-// =========================
-// MOSTRAR SESIÓN EN LISTA
-// =========================
-function mostrarSesionEnLista(sesion) {
+// --- FUNCIÓN CLAVE: AGRUPAR POR PACIENTE ---
+function cargarHistorialAgrupado() {
   const contenedor = document.getElementById("listaSesiones");
-
-  // Si hay un mensaje de "Cargando..." o "No hay sesiones", lo limpiamos antes de agregar la primera tarjeta
-  if (contenedor.textContent.includes("Cargando sesiones") || contenedor.textContent.includes("No hay sesiones")) {
-    contenedor.innerHTML = "";
-  }
-
-  const div = document.createElement("div");
-  div.className = "session-card";
-
-  div.innerHTML = `
-    <h3 style="margin:0 0 5px; color:#2c3e50">${sesion.paciente}</h3>
-
-    <p><strong>Motivo:</strong> ${sesion.motivo}</p>
-    <p><strong>Notas:</strong> ${sesion.notas}</p>
-    <p><strong>Diagnóstico:</strong> ${sesion.diagnostico}</p>
-
-    <p class="muted">${new Date(sesion.fecha).toLocaleString()}</p>
-  `;
-
-  contenedor.prepend(div);
+  if(!contenedor) return;
   
-  // ❌ AQUÍ ESTABA EL ERROR: cargarHistorial();  <-- BORRA ESTA LÍNEA
-}
-
-// =========================
-// CARGAR HISTORIAL COMPLETO
-// =========================
-function cargarHistorial() {
-  const contenedor = document.getElementById("listaSesiones");
-  contenedor.innerHTML = "<p class='muted'>Cargando sesiones...</p>";
+  contenedor.innerHTML = "Cargando...";
 
   db.collection("historial_clinico")
     .where("psicologoId", "==", psicologoIdGlobal)
@@ -175,40 +100,63 @@ function cargarHistorial() {
     .get()
     .then(q => {
       contenedor.innerHTML = "";
-
       if (q.empty) {
-        contenedor.innerHTML = "<p class='muted'>Aún no hay sesiones registradas.</p>";
+        contenedor.innerHTML = "No hay sesiones.";
         return;
       }
 
+      const grupos = {};
       q.forEach(doc => {
-        mostrarSesionEnLista(doc.data());
+        const d = doc.data();
+        if (!grupos[d.paciente]) grupos[d.paciente] = [];
+        grupos[d.paciente].push(d);
       });
+
+      for (const paciente in grupos) {
+        crearTarjetaPaciente(paciente, grupos[paciente]);
+      }
     });
 }
+ const fotoUrl = document.getElementById('edit-foto-url').value;
+                if (fotoUrl) {
+                    nuevosDatos.foto = fotoUrl;
+                }
 
-// =========================
-// CARGAR SESIONES POR PACIENTE
-// =========================
-function cargarSesionesPorPaciente(pacienteId) {
+function crearTarjetaPaciente(nombre, sesiones) {
   const contenedor = document.getElementById("listaSesiones");
-  contenedor.innerHTML = "<p class='muted'>Cargando sesiones...</p>";
+  const idDiv = "collapse-" + nombre.replace(/\s+/g, '');
 
-  db.collection("historial_clinico")
-    .where("psicologoId", "==", psicologoIdGlobal)
-    .where("paciente", "==", pacienteId.trim())
-    .orderBy("fecha", "desc")
-    .get()
-    .then(q => {
-      contenedor.innerHTML = "";
+  const card = document.createElement("div");
+  card.className = "paciente-group-card";
 
-      if (q.empty) {
-        contenedor.innerHTML = "<p class='muted'>No hay sesiones para este paciente.</p>";
-        return;
-      }
+  let sesionesHTML = "";
+  sesiones.forEach(s => {
+    sesionesHTML += `
+      <div class="sesion-item">
+        <p><strong>📅 Fecha:</strong> ${new Date(s.fecha).toLocaleString()}</p>
+        <p><strong>Motivo:</strong> ${s.motivo}</p>
+        <p><strong>Notas:</strong> ${s.notas}</p>
+        <p><strong>Diagnóstico:</strong> ${s.diagnostico}</p>
+      </div>`;
+  });
 
-      q.forEach(doc => {
-        mostrarSesionEnLista(doc.data());
-      });
-    });
+  card.innerHTML = `
+    <div class="paciente-header" onclick="toggleView('${idDiv}')">
+      <h3>${nombre}</h3>
+      <span class="badge-sesiones">${sesiones.length} Sesiones ▼</span>
+    </div>
+    <div id="${idDiv}" class="detalle-sesiones" style="display:none;">
+      ${sesionesHTML}
+    </div>
+  `;
+  contenedor.appendChild(card);
 }
+
+function toggleView(id) {
+  const el = document.getElementById(id);
+  el.style.display = (el.style.display === "block") ? "none" : "block";
+}
+
+// Botones de interfaz
+document.getElementById("btnNuevaSesion").onclick = () => document.getElementById("nuevaSesionForm").style.display = "block";
+document.getElementById("cancelarSesion").onclick = () => document.getElementById("nuevaSesionForm").style.display = "none";
