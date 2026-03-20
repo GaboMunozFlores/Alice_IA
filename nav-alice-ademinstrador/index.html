@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Panel Admin</title>
+
+<link rel="stylesheet" href="style.css">
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+
+<div class="topbar">
+
+<div class="topbar-left">
+<h2>Dashboard</h2>
+</div>
+
+<div class="topbar-right">
+<span id="usuarioActual">Cargando...</span>
+<button onclick="cerrarSesion()">Cerrar sesión</button>
+</div>
+
+</div>
+
+<aside class="sidebar">
+
+<h2 class="logo">Alice Panel Admin</h2>
+
+<nav>
+<div class="menu-item">
+<a href="#" onclick="cambiarSeccion('dashboard')">Dashboard</a>
+<a href="#" onclick="irUsuarios()">Usuarios</a>
+
+<!--<a href="#" onclick="window.abrirUsuarios()">Usuarios</a>-->
+
+
+</nav>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="main">
+
+<header class="topbar">
+
+<h1>Dashboard</h1>
+
+<div class="admin">
+Admin
+</div>
+
+</header>
+<!-- SECCIÓN USUARIOS -->
+<section id="seccionUsuarios" style="display:none;">
+
+<h2>Usuarios registrados</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Email</th>
+<th>Logueos</th>
+</tr>
+</thead>
+
+<tbody id="tablaUsuarios"></tbody>
+
+</table>
+
+</section>
+<!-- HASTA AQUÍ SECCIÓN USUARIOS -->
+
+<!-- CARDS -->
+
+<section class="cards">
+
+<div class="card">
+<h3>Usuarios activos</h3>
+<p id="usuariosActivos">0</p>
+</div>
+
+<div class="card">
+<h3>Sesiones hoy</h3>
+<p id="sesionesHoy">0</p>
+</div>
+
+</section>
+
+<section class="panel">
+
+<section id="dashboard">
+  <!-- tu dashboard actual -->
+   <canvas id="graficaUsuarios" height="100"></canvas>
+</section>
+
+<section id="seccionUsuarios" style="display:none;">
+  <h2>Usuarios</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Email</th>
+        <th>Último login</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+
+    <tbody id="tablaUsuarios"></tbody>
+  </table>
+</section>
+
+<section id="seccionLogs" style="display:none;">
+
+<h2>Historial de accesos</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Email</th>
+<th>Acción</th>
+<th>Fecha</th>
+</tr>
+</thead>
+
+<tbody id="tablaLogs"></tbody>
+
+</table>
+
+</section>
+
+<h2>Validación de CV</h2>
+
+<table class="tabla-cv">
+
+<thead>
+<tr>
+<th>Archivo</th>
+<th>Perfil</th>
+<th>Resultado IA</th>
+<th>Estado</th>
+<th>Acción</th>
+</tr>
+</thead>
+
+<tbody id="tablaCV"></tbody>
+
+</table>
+
+<div class="card">
+</div>
+
+</section>
+</main>
+
+</div>
+<script src="app.js"></script>
+</body>
+</html>
