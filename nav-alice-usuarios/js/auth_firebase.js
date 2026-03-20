@@ -92,7 +92,7 @@ function displaySuccessAlert(title, text) {
 // --- 4. LÓGICA DE AUTENTICACIÓN ---
 
 // A. Iniciar Sesión con Google
-const btnGoogle = document.getElementById("googleLogin");
+const btnGoogle = document.getElementById("btn-google");
 if (btnGoogle) {
     btnGoogle.addEventListener("click", async () => {
         const provider = new GoogleAuthProvider();
