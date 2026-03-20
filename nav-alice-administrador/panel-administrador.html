@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Panel Admin</title>
+
+<link rel="stylesheet" href="style.css">
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="module" src="app.js"></script>
+</head>
+
+<body>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+<h2 class="logo">Alice Panel Admin</h2>
+
+<nav>
+<a href="#" onclick="cambiarSeccion('dashboard')">Dashboard</a>
+<a href="#" onclick="irUsuarios()">Usuarios</a>
+</nav>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- TOPBAR (SOLO UNO) -->
+<header class="topbar">
+<h2>Dashboard</h2>
+
+<div class="user-box">
+<button id="btnLogout">Cerrar sesión</button>
+</div>
+</header>
+
+<!-- DASHBOARD -->
+<section id="dashboard">
+
+<section class="cards">
+<div class="card">
+<h3>Usuarios activos</h3>
+<p id="usuariosActivos">0</p>
+</div>
+
+<div class="card">
+<h3>Sesiones hoy</h3>
+<p id="sesionesHoy">0</p>
+</div>
+</section>
+
+<div class="panel">
+<canvas id="graficaUsuarios"></canvas>
+</div>
+
+<h2>Validación de CV</h2>
+
+<table class="tabla-cv">
+
+<thead>
+<tr>
+<th>Archivo</th>
+<th>Perfil</th>
+<th>Resultado IA</th>
+<th>Estado</th>
+<th>Acción</th>
+</tr>
+</thead>
+
+<tbody id="tablaCVs"></tbody>
+
+</table>
+</section>
+
+<tbody id="tablaUsuarios"></tbody>
+</table>
+</section>
+
+</main>
+
+</div>
+
+</body>
+</html>

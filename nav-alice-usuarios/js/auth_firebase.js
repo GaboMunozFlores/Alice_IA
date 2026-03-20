@@ -1,19 +1,74 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-import { GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, getAuth } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
-// ✅ IMPORTANTE: Agregamos getFirestore para la base de datos
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js"; 
+import { 
+    GoogleAuthProvider, 
+    signInWithPopup, 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, 
+    getAuth 
+} from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+import { 
+    getFirestore, 
+    doc, 
+    setDoc, 
+    getDoc, 
+    serverTimestamp 
+} from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js"; 
 
 import { firebaseConfig } from "../../firebase.js"; 
 
-// Inicializar Firebase
+// 1. Inicialización
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app); // ✅ IMPORTANTE: Inicializamos la BD aquí
+const db = getFirestore(app);
 
-// ✅ IMPORTANTE: Agregamos 'db' a la lista de exports
-export { auth, db, displayErrorAlert, displaySuccessAlert };
+export { auth, db };
 
-// --- Funciones de Alerta (SweetAlert2) ---
+// --- 2. FUNCIÓN DE REDIRECCIÓN POR ROL (SISTEMA DE SEGURIDAD) ---
+async function redirectByUserRole(user) {
+    try {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        
+        // Si el documento existe y tiene el campo 'role'
+        if (userDoc.exists() && userDoc.data().role) {
+            const role = userDoc.data().role;
+            console.log("Rol detectado:", role);
+
+            switch (role) {
+                case "administrador":
+                    // Salimos de la carpeta actual y entramos a la de admin
+                    window.location.href = "../nav-alice-administrador/panel-administrador.html";
+                    break;
+                case "psicologo":
+                    // Salimos de la carpeta actual y entramos a la de psicólogos
+                    window.location.href = "../nav-alice-psicologos/psicIndex.html";
+                    break;
+                case "usuario":
+                default:
+                    // Salimos de la carpeta actual y entramos a la del chatbot
+                    window.location.href = "../nav-alice-chatbot/index.html";
+                    break;
+            }
+        } else {
+            // Caso: Usuario nuevo o sin rol definido
+            console.warn("Sin rol definido. Asignando 'usuario' por defecto.");
+            await setDoc(doc(db, "users", user.uid), {
+                uid: user.uid,
+                email: user.email,
+                role: "usuario",
+                lastLogin: serverTimestamp(),
+                createdAt: serverTimestamp()
+            }, { merge: true });
+
+            window.location.href = "nav-alice-chatbot/index.html";
+        }
+    } catch (error) {
+        console.error("Error en redirección:", error);
+        // Fallback: Si falla la conexión, enviar a la ruta base de usuario
+        window.location.href = "nav-alice-chatbot/index.html";
+    }
+}
+
+// --- 3. ALERTAS (SweetAlert2) ---
 function displayErrorAlert(title, text) {
     Swal.fire({
         title: title,
@@ -24,127 +79,66 @@ function displayErrorAlert(title, text) {
     });
 }
 
-function displaySuccessAlert(title, text, redirectUrl) {
+function displaySuccessAlert(title, text) {
     Swal.fire({
         title: title,
         text: text,
         icon: 'success',
         showConfirmButton: false,
-        timer: 2000
-    }).then(() => {
-        if(redirectUrl) window.location.href = redirectUrl;
+        timer: 1500
     });
 }
 
-// Función para iniciar sesión con Google
-function signInWithGoogle() {
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-        .then((result) => {
-            console.log('Usuario autenticado con Google:', result.user);
-            displaySuccessAlert('Inicio de sesión exitoso', 'Has iniciado sesión con Google.', 'nav-alice-chatbot/index.php');
-        })
-        .catch((error) => {
-            console.error("Error Google: ", error.message);
-            let errorMessage = "Ocurrió un error inesperado.";
-            if (error.code === 'auth/popup-closed-by-user') {
-                errorMessage = "Se canceló el inicio de sesión.";
+// --- 4. LÓGICA DE AUTENTICACIÓN ---
+
+// A. Iniciar Sesión con Google
+const btnGoogle = document.getElementById("googleLogin");
+if (btnGoogle) {
+    btnGoogle.addEventListener("click", async () => {
+        const provider = new GoogleAuthProvider();
+        try {
+            const result = await signInWithPopup(auth, provider);
+            await redirectByUserRole(result.user);
+        } catch (error) {
+            console.error("Error Google:", error);
+            if (error.code !== 'auth/popup-closed-by-user') {
+                displayErrorAlert("Error de Google", "No se pudo iniciar sesión.");
             }
-            displayErrorAlert("Error de Google", errorMessage);
-        });
-}
-
-// --- LÓGICA DE VALIDACIÓN (Igual que antes) ---
-const min_password_length = 8;
-
-function validatePassword(password, confirmPassword) {
-    const isLengthValid = password.length >= min_password_length;
-    const hasUppercase = /[A-Z]/.test(password);
-    const hasNumber = /[0-9]/.test(password);
-    const passwordsMatch = password === confirmPassword && confirmPassword.length > 0;
-
-    return { isLengthValid, hasUppercase, hasNumber, passwordsMatch };
-}
-
-function updateValidationUI(validationResults) {
-    const { isLengthValid, hasUppercase, hasNumber, passwordsMatch } = validationResults;
-    const lengthItem = document.querySelector("#val-length");
-    const uppercaseItem = document.querySelector("#val-uppercase");
-    const numberItem = document.querySelector("#val-number");
-    const matchItem = document.querySelector("#val-match");
-
-    const applyStyle = (element, isValid) => {
-        if (element) {
-            element.classList.toggle('valid', isValid);
-            element.classList.toggle('invalid', !isValid);
-            const estadoTexto = isValid ? "Requisito cumplido: " : "Requisito pendiente: ";
-            element.setAttribute("aria-label", estadoTexto + element.innerText);
         }
-    };
-
-    applyStyle(lengthItem, isLengthValid);
-    applyStyle(uppercaseItem, hasUppercase);
-    applyStyle(numberItem, hasNumber);
-    applyStyle(matchItem, passwordsMatch);
+    });
 }
 
-// --- EVENTOS DEL DOM ---
+// B. Iniciar Sesión con Email/Password (Login Form)
 document.addEventListener('DOMContentLoaded', () => {
-    const signInEmailPassword = document.querySelector("#signin-form");
-    const passwordInput = document.querySelector("#signin_password");
-    const confirmPasswordInput = document.querySelector("#signin_confirm_password");
-    const btnGoogle = document.getElementById("btn-google");
-
-    if (btnGoogle) btnGoogle.addEventListener("click", signInWithGoogle);
-
-    if (signInEmailPassword && passwordInput && confirmPasswordInput) {
-        const handleValidation = () => {
-            const results = validatePassword(passwordInput.value, confirmPasswordInput.value);
-            updateValidationUI(results);
-            const isValid = results.isLengthValid && results.hasUppercase && results.hasNumber;
-            passwordInput.setAttribute("aria-invalid", !isValid);
-        };
-
-        passwordInput.addEventListener('input', handleValidation);
-        confirmPasswordInput.addEventListener('input', handleValidation);
-
-        signInEmailPassword.addEventListener('submit', async (e) => {
+    const loginForm = document.getElementById("login-form");
+    
+    if (loginForm) {
+        loginForm.addEventListener("submit", async (e) => {
             e.preventDefault();
-            const email = document.getElementById('signin_email').value;
-            const password = passwordInput.value;
-            const confirmPassword = confirmPasswordInput.value;
-
-            const validationResults = validatePassword(password, confirmPassword);
-            const isPasswordValid = validationResults.isLengthValid && validationResults.hasUppercase && validationResults.hasNumber;
-
-            if (password !== confirmPassword) {
-                displayErrorAlert("Error", "Las contraseñas no coinciden.");
-                updateValidationUI(validationResults);
-                confirmPasswordInput.focus(); 
-                return;
-            }
-
-            if (!isPasswordValid) {
-                displayErrorAlert("Contraseña Débil", "Revisa los requisitos marcados en rojo.");
-                updateValidationUI(validationResults);
-                passwordInput.focus();
-                return;
-            }
+            
+            const email = document.getElementById("login-email").value;
+            const password = document.getElementById("login-password").value;
+            const errorMsg = document.getElementById("loginError");
+            const exitoMsg = document.getElementById("loginExito");
 
             try {
-                await createUserWithEmailAndPassword(auth, email, password);
-                displaySuccessAlert("¡Cuenta Creada!", "Bienvenido a Alice IA.", "../nav-alice-chatbot/index.html");
+                // Limpiar mensajes previos
+                if(errorMsg) errorMsg.style.display = "none";
+                
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                
+                if(exitoMsg) exitoMsg.style.display = "block";
+                displaySuccessAlert("Bienvenido", "Validando acceso...");
+                
+                await redirectByUserRole(userCredential.user);
+
             } catch (error) {
-                console.error("Error Registro:", error);
-                if (error.code === 'auth/email-already-in-use') {
-                    displayErrorAlert("Email en uso", "Este correo ya está registrado.");
-                } else if (error.code === 'auth/invalid-email') {
-                    displayErrorAlert("Email inválido", "El formato del correo no es correcto.");
-                } else if (error.code === 'auth/weak-password') {
-                    displayErrorAlert("Contraseña Débil", "Firebase requiere al menos 6 caracteres.");
-                } else {
-                    displayErrorAlert("Error", error.message);
+                console.error("Error Login:", error.code);
+                if(errorMsg) {
+                    errorMsg.innerText = "Correo o contraseña incorrectos.";
+                    errorMsg.style.display = "block";
                 }
+                displayErrorAlert("Acceso Denegado", "Verifica tus credenciales.");
             }
         });
     }

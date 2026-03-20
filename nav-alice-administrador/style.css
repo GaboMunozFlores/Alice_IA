@@ -6,7 +6,7 @@ font-family:Segoe UI;
 }
 
 body{
-background:#615d5d;
+background:#ffffff;
 }
 
 .layout{
@@ -181,3 +181,16 @@ color:white;
 button:hover{
 opacity:0.8;
 } 
+
+.sidebar{
+position:fixed;
+left:0;
+top:0;
+height:100vh;
+width:220px;
+}
+
+.main{
+margin-left:220px;
+width:calc(100% - 220px);
+}
