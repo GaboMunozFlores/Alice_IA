@@ -152,6 +152,23 @@ nav ul {
       margin-bottom: 10px;
       border-left: 4px solid #80B5D1;
     }
+    /* Estilos para el enlace del nombre en la Nav Bar */
+.link-blanco {
+    color: white !important;          /* Forzamos el texto blanco */
+    text-decoration: none !important; /* Eliminamos el subrayado morado */
+    font-family: Arial, sans-serif;  /* Tipografía limpia */
+    font-size: 16px;
+    font-weight: 600;                 /* Un poco más grueso (opcional) */
+    cursor: pointer;
+}
+
+/* También nos aseguramos de que siga siendo blanco al pasar el mouse */
+.link-blanco:hover, 
+.link-blanco:visited, 
+.link-blanco:active {
+    color: white !important;
+    text-decoration: none !important;
+}
   </style>
 </head>
 <body>
@@ -159,11 +176,13 @@ nav ul {
   <nav>
     <ul>
       <li><a href="/nav-alice-psicologo/perfilPsic.html">Inicio</a></li>
-      <li><a href="../nav-alice-centros/centros.html">Centros de Ayuda</a></li>
     </ul>
 
     <div class="user-profile">
-     <a href="/nav-alice-psicologo/perfilPsic.html"><span id="navNombrePsicologo">Cargando...</span></a> 
+    <a href="/nav-alice-psicologo/perfilPsic.html" class="link-blanco">
+        <span id="navNombrePsicologo">Karla Daniela Pacheco Villa</span>
+    </a>
+
     </div>
 </nav>
 
