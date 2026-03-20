@@ -156,6 +156,16 @@ function toggleView(id) {
   const el = document.getElementById(id);
   el.style.display = (el.style.display === "block") ? "none" : "block";
 }
+function cerrarSesion() {
+    // 1. Borramos cualquier dato guardado
+    localStorage.clear(); 
+    sessionStorage.clear();
+
+    // 2. Usamos replace en lugar de href
+    // .replace() sobreescribe la URL actual en el historial, 
+    // haciendo que la página "privada" deje de existir para el navegador.
+    window.location.replace("/index.html");
+}
 
 // Botones de interfaz
 document.getElementById("btnNuevaSesion").onclick = () => document.getElementById("nuevaSesionForm").style.display = "block";
