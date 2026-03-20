@@ -156,22 +156,16 @@ function toggleView(id) {
   const el = document.getElementById(id);
   el.style.display = (el.style.display === "block") ? "none" : "block";
 }
-// Este código debe ejecutarse apenas cargue la página
-(function() {
-    const usuarioLogeado = JSON.parse(sessionStorage.getItem('usuario')); 
-    // Usamos sessionStorage porque se borra al cerrar la pestaña, es más seguro.
+function cerrarSesion() {
+    // 1. Borramos cualquier dato guardado
+    localStorage.clear(); 
+    sessionStorage.clear();
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const idEnUrl = urlParams.get('user'); // Supongamos que la URL es ?user=123
-
-    // VALIDACIÓN CRÍTICA:
-    // 1. ¿Está logeado? 
-    // 2. ¿El ID de la URL es el mismo que el del usuario que inició sesión?
-    if (!usuarioLogeado || usuarioLogeado.id !== idEnUrl) {
-        alert("Acceso no autorizado. Redirigiendo...");
-        window.location.href = 'login.html'; 
-    }
-})();
+    // 2. Usamos replace en lugar de href
+    // .replace() sobreescribe la URL actual en el historial, 
+    // haciendo que la página "privada" deje de existir para el navegador.
+    window.location.replace("/index.html");
+}
 
 // Botones de interfaz
 document.getElementById("btnNuevaSesion").onclick = () => document.getElementById("nuevaSesionForm").style.display = "block";
