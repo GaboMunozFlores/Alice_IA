@@ -10,10 +10,7 @@ let historialConversacion = JSON.parse(localStorage.getItem("historialAlice")) |
 
 async function obtenerRespuestaGemini(mensajeUsuario, estadoActual) {
 
-  if (typeof GEMINI_API_KEY === "undefined") {
-    console.error("❌ GEMINI_API_KEY no encontrada en config.js");
-    return "⚠️ Error de configuración interna.";
-  }
+
 
   const MODEL = "gemini-2.5-flash";
 
@@ -74,27 +71,24 @@ Nunca respondas fuera del área de bienestar emocional.
 
   try {
 
-const response = await fetch(
-  `https://generativelanguage.googleapis.com/v1/models/${MODEL}:generateContent?key=${GEMINI_API_KEY}`,
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      contents: [
-        {
-          role: "model",
-          parts: [{ text: prompt }]
-        },
-        ...historialConversacion.map(msg => ({
-          role: msg.role === "model" ? "model" : "user",
-          parts: [{ text: msg.text }]
-        }))
-      ]
-    })
-  }
-);
+const response = await fetch("/api/gemini", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    contents: [
+      {
+        role: "model",
+        parts: [{ text: prompt }]
+      },
+      ...historialConversacion.map(msg => ({
+        role: msg.role === "model" ? "model" : "user",
+        parts: [{ text: msg.text }]
+      }))
+    ]
+  })
+});
 
     if (!response.ok) {
       const errorText = await response.text();
