@@ -156,30 +156,22 @@ function toggleView(id) {
   const el = document.getElementById(id);
   el.style.display = (el.style.display === "block") ? "none" : "block";
 }
-const express = require('express');
-const app = express();
+// Este código debe ejecutarse apenas cargue la página
+(function() {
+    const usuarioLogeado = JSON.parse(sessionStorage.getItem('usuario')); 
+    // Usamos sessionStorage porque se borra al cerrar la pestaña, es más seguro.
 
-// Middleware de seguridad personalizado
-const protegerPerfil = (req, res, next) => {
-    const idEnUrl = req.params.id; // Lo que viene en /perfil/:id
-    const idEnSesion = req.session.userId; // El ID real del usuario logeado
+    const urlParams = new URLSearchParams(window.location.search);
+    const idEnUrl = urlParams.get('user'); // Supongamos que la URL es ?user=123
 
-    // Verificamos si hay sesión y si el ID coincide
-    if (!idEnSesion) {
-        return res.status(401).send("Debes iniciar sesión primero.");
+    // VALIDACIÓN CRÍTICA:
+    // 1. ¿Está logeado? 
+    // 2. ¿El ID de la URL es el mismo que el del usuario que inició sesión?
+    if (!usuarioLogeado || usuarioLogeado.id !== idEnUrl) {
+        alert("Acceso no autorizado. Redirigiendo...");
+        window.location.href = 'login.html'; 
     }
-
-    if (idEnUrl !== idEnSesion.toString()) {
-        return res.status(403).send("No tienes permiso para ver este perfil.");
-    }
-
-    next(); // Si todo está bien, continúa a la ruta
-};
-
-// Aplicamos el middleware a la ruta del perfil
-app.get('/perfil/:id', protegerPerfil, (req, res) => {
-    res.send(`Bienvenido a tu panel privado, usuario ${req.params.id}`);
-});
+})();
 
 // Botones de interfaz
 document.getElementById("btnNuevaSesion").onclick = () => document.getElementById("nuevaSesionForm").style.display = "block";
